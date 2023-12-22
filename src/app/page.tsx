@@ -1,6 +1,5 @@
 "use client";
-
-import Image from "next/image";
+import HomePage from "@/components/HomePage";
 import { useEffect, useState } from "react";
 import socketIOClient, { Socket } from "socket.io-client";
 
@@ -35,9 +34,9 @@ export default function Home() {
 
   const sendMessage = () => {
     socket.emit("send-msg", {
-      reciever: "65742f91faf66f82c43d4269",
+      reciever: "6574bd61378887aeab034740",
       sender: userId,
-      text: "tune bola toh galat hi hoga 2",
+      text: "yash always critisize poonam",
     });
   };
 
@@ -53,7 +52,8 @@ export default function Home() {
 
   return (
     <div>
-      <p>Login</p>
+      <HomePage/>
+      {/* <p>Login</p>
       <label>UserName</label>
       <input
         type="text"
@@ -66,7 +66,7 @@ export default function Home() {
 
       <label>Message</label>
       <textarea onChange={(e) => setMessage(e.target.value)}></textarea>
-      <button onClick={sendMessage}>Send Message</button>
+      <button onClick={sendMessage}>Send Message</button> */}
     </div>
   );
 }
