@@ -11,9 +11,9 @@ import ChatPage from "../../public/chatPage.svg";
 function HomePage() {
   return (
     <div className="">
-      <div className="h-screen bg-[#7083FF] px-10">
+      <div className="h-screen bg-[#7083FF]  px-5 md:px-20">
         <div className="py-8 flex justify-between items-center">
-          <div className="text-white text-3xl flex font-bold text-center items-center gap-3">
+          <div className="text-white text-2xl md:text-3xl flex font-bold text-center items-center gap-3">
             <Image
               src={scapeWhiteLogo}
               alt="logo_white"
@@ -28,41 +28,43 @@ function HomePage() {
             </button>
           </div>
         </div>
-        <div className="grid grid-cols-2">
-          <div className="py-10">
-            <h1 className="text-5xl font-bold text-white mb-10">
-              A Place to make friends & mates
-            </h1>
-            <h3 className="text-2xl text-[#343A40] font-semibold mb-10">
-              Infinite Conversations & Connections to form a Scape community
-            </h3>
-            <button className="bg-[#ffffff] flex items-center gap-4 focus:ring rounded-[20px] px-8 py-2 font-bold cursor-pointer shadow-md">
-              <Image src={ArrowIcon} alt="ArrowIcon" width={20} height={20} />
-              Let's Chat
-            </button>
+        <div className="grid md:grid-cols-2">
+          <div className="flex items-center justify-center">
+            <div className="py-10">
+              <h1 className="text-3xl md:text-5xl text-center md:text-left font-bold text-white mb-10">
+                A Place to make friends & mates
+              </h1>
+              <h3 className="text-xl text-center md:text-left md:text-2xl text-[#343A40] font-semibold mb-10">
+                Infinite Conversations & Connections to form a Scape community
+              </h3>
+              <button className="bg-[#ffffff]  flex items-center gap-4 focus:ring rounded-[20px] px-8 py-2 font-bold cursor-pointer shadow-md">
+                <Image src={ArrowIcon} alt="ArrowIcon" width={20} height={20} />
+                Let's Chat
+              </button>
+            </div>
           </div>
-          <div className="p-10">
+          <div className="hidden md:block m-auto">
             <Image src={SideImage} alt="SideImage" width={500} height={500} />
           </div>
         </div>
       </div>
       {/* next viewpot */}
-      <div className="h-screen px-10 pt-10">
-        <div className="grid grid-cols-2">
+      <div className="h-screen px-5 md:px-20 pt-10">
+        <div className="grid md:grid-cols-2">
           <div className="flex items-center justify-center">
             <Image
               src={ScreenMobile}
               alt="ScreenMobile"
-              width={600}
-              height={600}
+              width={500}
+              height={500}
             />
           </div>
           <div className="flex items-center justify-center">
-            <div className="px-10">
-              <h1 className="text-3xl font-semibold pb-8">
+            <div className="md:px-10">
+              <h1 className="text-2xl md:text-3xl font-semibold pb-8">
                 What Makes Scape Stand Out?
               </h1>
-              <h3 className="text-2xl">
+              <h3 className="md:text-2xl text-sm">
                 Scape is a cutting-edge chat application that brings people
                 together through intuitive and dynamic communication features.
                 Whether you're connecting with friends, colleagues, or creating
@@ -73,14 +75,14 @@ function HomePage() {
           </div>
         </div>
       </div>
-      <div className="h-screen px-10 pt-10 bg-[#F6F6F6]">
-        <div className="grid grid-cols-2">
+      <div className="h-screen px-5 md:px-20 pt-10 bg-[#F6F6F6]">
+        <div className="flex flex-col-reverse md:grid md:grid-cols-2">
           <div className="flex items-center justify-center">
-            <div className="px-10">
-              <h1 className="text-3xl font-semibold pb-8">
+            <div className="md:px-10">
+              <h1 className="text-2xl md:text-3xl font-semibold pb-8">
                 Group Chats for Collaborative Conversations
               </h1>
-              <h3 className="text-2xl">
+              <h3 className="text-sm md:text-2xl">
                 Bring your community or team together in one place with our
                 robust group chat feature. Collaborate on projects, plan events,
                 or just catch up with friends – all within the convenience of a
@@ -89,27 +91,27 @@ function HomePage() {
             </div>
           </div>
           <div className="flex items-center justify-center">
-            <Image src={GroupChat} alt="GroupChat" width={600} height={600} />
+            <Image src={GroupChat} alt="GroupChat" width={500} height={500} />
           </div>
         </div>
       </div>
       {/* next viewpot */}
-      <div className="h-screen px-10 pt-10">
-        <div className="grid grid-cols-2">
+      <div className="h-screen px-5 md:px-20 pt-10 ">
+        <div className="grid md:grid-cols-2">
           <div className="flex items-center justify-center">
             <Image
               src={GroupChatPeople}
               alt="GroupChatPeople"
-              width={600}
-              height={600}
+              width={500}
+              height={500}
             />
           </div>
           <div className="flex items-center justify-center">
-            <div className="px-10">
-              <h1 className="text-3xl font-semibold pb-8">
+            <div className="md:px-10">
+              <h1 className="text-2xl md:text-3xl font-semibold pb-8">
                 Instant Messaging, Anytime, Anywhere
               </h1>
-              <h3 className="text-2xl">
+              <h3 className="text-sm md:text-2xl">
                 Scape offers real-time messaging, enabling you to stay connected
                 with your contacts no matter where you are. Share messages,
                 emojis, and multimedia effortlessly for a truly dynamic chat
@@ -119,13 +121,13 @@ function HomePage() {
           </div>
         </div>
       </div>
-      <div className="h-screen px-10 pt-10 bg-[#F6F6F6]">
+      <div className="h-screen px-5 md:px-20 pt-10 bg-[#F6F6F6]">
         <div className="flex justify-center items-center py-10">
           <div>
-            <h1 className="text-4xl font-semibold pb-8 text-center">
+            <h1 className="text-2xl md:text-4xl font-semibold pb-8 text-center">
               RELIABLE TECH FOR STAYING CLOSE
             </h1>
-            <h3 className="text-2xl pb-8 text-center">
+            <h3 className="text-sm md:text-2xl pb-8 text-center">
               Navigate Scape effortlessly, whether you're a tech enthusiast or a
               casual user
             </h3>

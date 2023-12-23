@@ -1,5 +1,7 @@
 "use client";
 import HomePage from "@/components/HomePage";
+import Footer from "@/components/Footer";
+
 import { useEffect, useState } from "react";
 import socketIOClient, { Socket } from "socket.io-client";
 
@@ -53,6 +55,7 @@ export default function Home() {
   return (
     <div>
       <HomePage/>
+      <Footer/>
       {/* <p>Login</p>
       <label>UserName</label>
       <input
