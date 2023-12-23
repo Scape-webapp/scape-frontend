@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import scapeWhiteLogo from "../../public/scape_logo_white.svg";
+import scapeWhiteLogo from "../../public/logos/scape_logo_white.svg";
 
 function Footer() {
   return (
