@@ -34,7 +34,7 @@ export default function DashBoard() {
           <div className="h-[80%] border-b border-[#36404A]"></div>
 
           <div className="h-[10%] flex items-center px-6 w-full gap-8">
-            <FontAwesomeIcon icon={faFaceSmile} size="2x" color="#7083FF" />
+            <FontAwesomeIcon icon={faFaceSmile} size="lg" color="#7083FF" />
             <div className="flex p-1.5 justify-between items-center bg-[#36404A] rounded-xl w-3/4">
               <input
                 type="text"
