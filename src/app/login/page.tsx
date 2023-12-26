@@ -3,12 +3,15 @@
 import { useState } from "react";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 export default function Login() {
   const [formValues, setFormValues] = useState({
     userName: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
   const loginSchema = Yup.object().shape({
     userName: Yup.string()
       .trim()
@@ -50,8 +53,9 @@ export default function Login() {
                     <label className="text-[#787E83] py-2" htmlFor="UserName">
                       User Name
                     </label>
+
                     <Field
-                      className="border-[1px] border-[#DDD4D4] px-2 py-1 mt-2 rounded"
+                      className="border-[1px] border-[#DDD4D4] px-2 py-1 mt-2 rounded w-full"
                       id="UserName"
                       name="UserName"
                       onChange={(e: any) =>
@@ -62,6 +66,7 @@ export default function Login() {
                       }
                       value={props.values.userName}
                     />
+
                     {props.errors.userName && props.touched.userName ? (
                       <div className="border-[1px] border-[#E95959] text-[#E95959] py-[1px] px-2 my-1 rounded text-sm">
                         {props.errors.userName}
@@ -71,19 +76,41 @@ export default function Login() {
                     <label className="text-[#787E83] py-2" htmlFor="Password">
                       Password
                     </label>
-                    <Field
-                      className="border-[1px] border-[#DDD4D4] px-2 py-1 my-2 rounded"
-                      id="Password"
-                      name="Password"
-                      onChange={(e: any) =>
-                        setFormValues({
-                          userName: props.values.userName,
-                          password: e.target.value,
-                        })
-                      }
-                      type="password"
-                      value={props.values.password}
-                    />
+                    <div className="relative">
+                      <Field
+                        className="border-[1px] border-[#DDD4D4] px-2 py-1 my-2 rounded w-full"
+                        id="Password"
+                        name="Password"
+                        onChange={(e: any) =>
+                          setFormValues({
+                            userName: props.values.userName,
+                            password: e.target.value,
+                          })
+                        }
+                        type={showPassword ? "text" : "password"}
+                        value={props.values.password}
+                      />
+                      {showPassword ? (
+                        <FontAwesomeIcon
+                          icon={faEye}
+                          className="absolute w-5 top-[17px] right-[7px]"
+                          color="#BBC0C3"
+                          onClick={() => {
+                            setShowPassword(false);
+                          }}
+                        />
+                      ) : (
+                        <FontAwesomeIcon
+                          icon={faEyeSlash}
+                          className="absolute w-5 top-[17px] right-[7px]"
+                          color="#BBC0C3"
+                          onClick={() => {
+                            setShowPassword(true);
+                          }}
+                        />
+                      )}
+                    </div>
+
                     {props.errors.password && props.touched.password ? (
                       <div className="border-[1px] border-[#E95959] text-[#E95959] py-[1px] px-2 my-1 rounded text-sm">
                         {props.errors.password}
