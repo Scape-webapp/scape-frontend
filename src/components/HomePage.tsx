@@ -9,8 +9,10 @@ import GroupChatPeople from "../../public/images/group-chat.svg";
 import ChatPage from "../../public/images/chatPage.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { useRouter } from 'next/navigation'
 
 function HomePage() {
+    const router = useRouter()
   return (
     <div className="">
       <div className="h-screen bg-[#7083FF]  px-5 md:px-20">
@@ -25,7 +27,7 @@ function HomePage() {
             Scape
           </div>
           <div className="float-end">
-            <button className="bg-[#ffffff] rounded-[50px] px-10 py-3 font-bold cursor-pointer shadow-md hover:bg-[#343A40] hover:text-white">
+            <button  onClick={() => router.push('/login')} className="bg-[#ffffff] rounded-[50px] px-10 py-3 font-bold cursor-pointer shadow-md hover:bg-[#343A40] hover:text-white">
               Login
             </button>
           </div>

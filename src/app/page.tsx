@@ -1,11 +1,11 @@
 "use client";
 import HomePage from "@/components/HomePage";
 import Footer from "@/components/Footer";
-
 import { useEffect, useState } from "react";
 import socketIOClient, { Socket } from "socket.io-client";
 
 export default function Home() {
+
   let socket: Socket;
   const [userId, setuserId] = useState("");
   const [message, setMessage] = useState("");
