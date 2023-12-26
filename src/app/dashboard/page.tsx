@@ -6,13 +6,21 @@ import { faFaceSmile } from "@fortawesome/free-regular-svg-icons";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
+import { useState } from "react";
 
 export default function DashBoard() {
+  enum activeBar {
+    CHAT = "chat",
+    GROUPCHAT = "groupChat",
+    PROFILE = "profile",
+    SETTING = "setting",
+  }
+  const [activeTab, setActiveTab] = useState<activeBar>(activeBar.CHAT);
   return (
-    <div className="w-screen">
+    <div className="">
       <div className="w-full flex">
-        <SideMenu />
-        <LeftSideBar />
+        <SideMenu setActiveTab={setActiveTab} activeTab={activeTab} />
+        <LeftSideBar activeTab={activeTab}  />
 
         <div className="w-full bg-[#262E35] flex flex-col">
           <div className="h-[10%] border-b border-[#36404A] flex items-center py-2 px-8">
@@ -34,7 +42,7 @@ export default function DashBoard() {
           <div className="h-[80%] border-b border-[#36404A]"></div>
 
           <div className="h-[10%] flex items-center px-6 w-full gap-8">
-            <FontAwesomeIcon icon={faFaceSmile} size="2x" color="#7083FF" />
+            <FontAwesomeIcon icon={faFaceSmile} size="lg" color="#7083FF" />
             <div className="flex p-1.5 justify-between items-center bg-[#36404A] rounded-xl w-3/4">
               <input
                 type="text"

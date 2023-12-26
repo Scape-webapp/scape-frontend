@@ -1,10 +1,18 @@
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
+import Profile from "./Profile";
 
-export default function LeftSideBar() {
+export default function LeftSideBar({activeTab}:{activeTab:any}) {
+   enum activeBar {
+    CHAT = "chat",
+    GROUPCHAT = "groupChat",
+    PROFILE = "profile",
+    SETTING = "setting",
+  }
   return (
     <div className="bg-[#303841] h-screen max-w-[380px] min-w-[380px]">
+      {activeTab === activeBar.CHAT && (<>
       <p className="text-2xl text-white font-semibold pt-8 pl-8"> Chats </p>
       <div className="flex flex-col p-6 gap-4 w-full">
         <div className="bg-[#36404A] py-2 px-5 rounded-md flex items-center gap-2 w-full">
@@ -64,6 +72,9 @@ export default function LeftSideBar() {
           </div>
         </div>
       </div>
+      </>)}
+     {activeTab === activeBar.PROFILE && <Profile/>} 
+      
     </div>
   );
 }

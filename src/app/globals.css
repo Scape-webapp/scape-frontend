@@ -2,9 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-/* html {
-    font-family: var(--font-open_sans);
-} */
+html,
+body {
+    padding: 0;
+    margin: 0;
+    font-family: system-ui, "Open Sans";
+}
 
 ::-webkit-scrollbar {
     width: 15px;
