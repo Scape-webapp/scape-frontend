@@ -3,18 +3,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import Image from "next/image";
 
-function EditProfile() {
+function EditProfile({setIsEdit}:{setIsEdit:any}) {
   return (
     <div>
       <p className="text-2xl text-white font-semibold pt-8 px-8 flex justify-between items-center">
         <FontAwesomeIcon
           className="cursor-pointer"
           icon={faArrowLeftLong}
+          onClick={() => setIsEdit("")}
           size="lg"
         />
         Edit Profile
       </p>
-      <div className="px-8 py-5">
+      <div className="px-8 pt-5">
         <Image
           className="m-auto"
           src="/images/profile-dummy.svg"

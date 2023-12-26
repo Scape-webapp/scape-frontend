@@ -3,9 +3,8 @@ import { faGear, faUser, faUserGroup } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { useState } from "react";
-import Profile from "./Profile";
 
-export default function Sidebar() {
+export default function Sidebar({setActiveTab,activeTab}:{ setActiveTab:Function,activeTab:any}) {
   enum activeBar {
     CHAT = "chat",
     GROUPCHAT = "groupChat",
@@ -13,7 +12,7 @@ export default function Sidebar() {
     SETTING = "setting",
   }
 
-  const [activeTab, setActiveTab] = useState<activeBar>(activeBar.CHAT);
+  // const [activeTab, setActiveTab] = useState<activeBar>(activeBar.CHAT);
 
   const changeTab = (tab: activeBar) => {
     setActiveTab(tab);
