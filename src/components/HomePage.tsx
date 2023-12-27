@@ -7,6 +7,8 @@ import ScreenMobile from "../../public/images/screen2.svg";
 import GroupChat from "../../public/images/group-chat-animate.svg";
 import GroupChatPeople from "../../public/images/group-chat.svg";
 import ChatPage from "../../public/images/chatPage.svg";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 function HomePage() {
   return (
@@ -37,8 +39,9 @@ function HomePage() {
               <h3 className="text-xl text-center md:text-left md:text-2xl text-[#343A40] font-semibold mb-10">
                 Infinite Conversations & Connections to form a Scape community
               </h3>
-              <button className="bg-[#ffffff]  flex items-center gap-4 focus:ring rounded-[20px] px-8 py-2 font-bold cursor-pointer shadow-md">
-                <Image src={ArrowIcon} alt="ArrowIcon" width={20} height={20} />
+              <button className="bg-[#ffffff]  hover:bg-[#343A40] hover:text-white flex items-center gap-4 focus:ring rounded-[20px] px-8 py-2 font-bold cursor-pointer shadow-md">
+                {/* <Image src={ArrowIcon} alt="ArrowIcon" width={20} height={20} /> */}
+                <FontAwesomeIcon icon={faPaperPlane} size="lg" bounce />
                 Let's Chat
               </button>
             </div>

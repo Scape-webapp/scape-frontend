@@ -1,20 +1,27 @@
 import React from "react";
 import Image from "next/image";
 import scapeWhiteLogo from "../../public/logos/scape_logo_white.svg";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function Footer() {
   return (
     <div className="md:mt-10">
       <div className="bg-[#343A40] px-5 md:px-10 py-10">
         <div className="grid md:grid-cols-2 items-center pb-10 md:pb-20 border-b-2 border-[#7083FF]">
-          <div className="text-white text-2xl md:text-3xl flex font-bold text-center items-center gap-3">
-            <Image
-              src={scapeWhiteLogo}
-              alt="logo_white"
-              width={40}
-              height={40}
-            />
-            Scape
+          <div>
+            <div className="text-white text-2xl md:text-3xl flex font-bold text-center items-center gap-3">
+              <Image
+                src={scapeWhiteLogo}
+                alt="logo_white"
+                width={40}
+                height={40}
+              />
+              Scape
+            </div>
+            <div className="flex gap-3 items-center">
+              {/* <FontAwesomeIcon icon={faFacebook} /> */}
+              {/* <FontAwesomeIcon icon={faInstagram} /> */}
+            </div>
           </div>
           <div className="grid grid-cols-2 mt-10 md:mt-0">
             <div className="grid gap-4">
