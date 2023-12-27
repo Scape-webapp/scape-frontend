@@ -53,7 +53,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div>
+    <div className="min-h-screen">
       <HomePage/>
       <Footer/>
       {/* <p>Login</p>

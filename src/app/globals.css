@@ -6,26 +6,27 @@ html {
   font-family: var(--font-open_sans);
 }
 
-::-webkit-scrollbar {
-  width: 4px;
+.chatbox-scroll {
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #343a40;
+    border-radius: 10px;
+  }
 }
 
 ::-webkit-scrollbar-thumb {
   background: #303841;
   border-radius: 10px;
-html,
-body {
+  html,
+  body {
     padding: 0;
     margin: 0;
     font-family: system-ui, "Open Sans";
+  }
 }
 
 ::-webkit-scrollbar {
-    width: 15px;
-}
-
-
-::-webkit-scrollbar-thumb {
-    background: #343A40;
-    border-radius: 10px;
+  width: 15px;
 }
