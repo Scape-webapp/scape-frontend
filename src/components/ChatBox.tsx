@@ -50,8 +50,9 @@ export default function ChatBox() {
             </div>
           </div>
           {/* Messages */}
-          {dummyMessages.map((msg) => (
+          {dummyMessages.map((msg, i) => (
             <div
+              key={i}
               className={`flex gap-2 mx-6 my-4 justify-${
                 msg.recieved === "other" ? "start" : "end"
               }`}
