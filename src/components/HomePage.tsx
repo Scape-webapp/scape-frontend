@@ -2,7 +2,6 @@ import React from "react";
 import Image from "next/image";
 import scapeWhiteLogo from "../../public/logos/scape_logo_white.svg";
 import SideImage from "../../public/images/homepage.svg";
-import ArrowIcon from "../../public/logos/arrow-message.svg";
 import ScreenMobile from "../../public/images/screen2.svg";
 import GroupChat from "../../public/images/group-chat-animate.svg";
 import GroupChatPeople from "../../public/images/group-chat.svg";
@@ -42,7 +41,6 @@ function HomePage() {
                 Infinite Conversations & Connections to form a Scape community
               </h3>
               <button className="bg-[#ffffff]  hover:bg-[#343A40] hover:text-white flex items-center gap-4 focus:ring rounded-[20px] px-8 py-2 font-bold cursor-pointer shadow-md">
-                {/* <Image src={ArrowIcon} alt="ArrowIcon" width={20} height={20} /> */}
                 <FontAwesomeIcon icon={faPaperPlane} size="lg" bounce />
                 Let's Chat
               </button>
