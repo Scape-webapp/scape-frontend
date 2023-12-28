@@ -34,8 +34,8 @@ export default function Register() {
       <div className="flex items-center justify-center absolute lg:grid lg:grid-cols-2 w-full h-screen ">
         <div></div>
 
-        <div className="border-2 rounded-[17px] sm:h-[35rem] lg:h-fit xl:h-[33rem] md:p-4 bg-[#FCF7F8] w-5/6 md:w-3/5 lg:w-2/3 xl:w-4/6 xl:max-w-[30rem] place-self-center ">
-          <p className="text-center text-xl pt-8 pb-4 text-[#262E35] border-b mb-4">
+        <div className="border-2 rounded-[17px] h-fit md:p-4 bg-[#FCF7F8] w-5/6 md:w-3/5 lg:w-2/3 xl:w-4/6 xl:max-w-[30rem] place-self-center ">
+          <p className="text-center text-3xl pt-6 pb-4 text-[#262E35] border-b mb-4">
             Register
           </p>
 
@@ -52,12 +52,12 @@ export default function Register() {
               {(props) => (
                 <Form onSubmit={props.handleSubmit}>
                   <div className="grid">
-                    <label className="text-[#787E83] py-2" htmlFor="UserName">
+                    <label className="text-[#787E83] pt-2" htmlFor="UserName">
                       User Name
                     </label>
 
                     <Field
-                      className="border-[1px] border-[#DDD4D4] px-2 py-1 mt-2 rounded w-full"
+                      className="border-[1px] border-[#DDD4D4] px-2 py-1 mt-1 rounded w-full hover:border-[#5D636A] hover:border-1 focus:ring-0 outline-none"
                       id="UserName"
                       name="UserName"
                       onChange={(e: any) =>
@@ -71,7 +71,7 @@ export default function Register() {
                     />
 
                     {props.errors.userName && props.touched.userName ? (
-                      <div className="border-[1px] border-[#E95959] text-[#E95959] py-[1px] px-2 my-1 rounded text-sm">
+                      <div className="text-[#E95959] py-[1px] px-2 my-1 rounded text-sm">
                         {props.errors.userName}
                       </div>
                     ) : null}
@@ -81,7 +81,7 @@ export default function Register() {
                     </label>
                     <div className="relative">
                       <Field
-                        className="border-[1px] border-[#DDD4D4] px-2 py-1 my-2 rounded w-full"
+                        className="border-[1px] border-[#DDD4D4] px-2 pt-2 mt-1 rounded w-full hover:border-[#5D636A] hover:border-1 focus:ring-0 outline-none"
                         id="Password"
                         name="Password"
                         onChange={(e: any) =>
@@ -97,7 +97,7 @@ export default function Register() {
                       {showPassword ? (
                         <FontAwesomeIcon
                           icon={faEye}
-                          className="absolute w-5 top-[17px] right-[7px] cursor-pointer"
+                          className="absolute w-5 top-[14px] right-[8px] cursor-pointer"
                           color="#BBC0C3"
                           onClick={() => {
                             setShowPassword(false);
@@ -106,7 +106,7 @@ export default function Register() {
                       ) : (
                         <FontAwesomeIcon
                           icon={faEyeSlash}
-                          className="absolute w-5 top-[17px] right-[7px] cursor-pointer"
+                          className="absolute w-5 top-[14px] right-[8px] cursor-pointer"
                           color="#BBC0C3"
                           onClick={() => {
                             setShowPassword(true);
@@ -116,7 +116,7 @@ export default function Register() {
                     </div>
 
                     {props.errors.password && props.touched.password ? (
-                      <div className="border-[1px] border-[#E95959] text-[#E95959] py-[1px] px-2 my-1 rounded text-sm">
+                      <div className="text-[#E95959] py-[1px] px-2 my-1 text-sm">
                         {props.errors.password}
                       </div>
                     ) : null}
@@ -129,7 +129,7 @@ export default function Register() {
                     </label>
                     <div className="relative">
                       <Field
-                        className="border-[1px] border-[#DDD4D4] px-2 py-1 my-2 rounded w-full"
+                        className="border-[1px] border-[#DDD4D4] px-2 pt-2 mt-1 rounded w-full hover:border-[#5D636A] hover:border-1 focus:ring-0 outline-none"
                         id="ConfirmPassword"
                         name="ConfirmPassword"
                         onChange={(e: any) =>
@@ -145,7 +145,7 @@ export default function Register() {
                       {showConfirmPassword ? (
                         <FontAwesomeIcon
                           icon={faEye}
-                          className="absolute w-5 top-[17px] right-[7px] cursor-pointer"
+                          className="absolute w-5 top-[14px] right-[8px] cursor-pointer"
                           color="#BBC0C3"
                           onClick={() => {
                             setShowConfirmPassword(false);
@@ -154,7 +154,7 @@ export default function Register() {
                       ) : (
                         <FontAwesomeIcon
                           icon={faEyeSlash}
-                          className="absolute w-5 top-[17px] right-[7px] cursor-pointer"
+                          className="absolute w-5 top-[14px] right-[8px] cursor-pointer"
                           color="#BBC0C3"
                           onClick={() => {
                             setShowConfirmPassword(true);
@@ -165,14 +165,14 @@ export default function Register() {
 
                     {props.errors.confirmPassword &&
                     props.touched.confirmPassword ? (
-                      <div className="border-[1px] border-[#E95959] text-[#E95959] py-[1px] px-2 my-1 rounded text-sm">
+                      <div className="text-[#E95959] py-[1px] px-2 my-1 text-sm">
                         {props.errors.confirmPassword}
                       </div>
                     ) : null}
 
                     <button
                       type="submit"
-                      className="text-[#ffffff] bg-[#7083FF] py-2 rounded my-6"
+                      className="text-[#ffffff] bg-[#7083FF] py-1 rounded my-4 md:my-6"
                     >
                       Register
                     </button>
