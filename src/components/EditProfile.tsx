@@ -5,8 +5,6 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { patchProfileDetails } from "@/services/api.service";
 
-
-
 function EditProfile({setIsEdit,updateProfileDetails}:{setIsEdit:any,updateProfileDetails: (newDetails: UserDetails) => void}) {
   const [editDetails, setEditDetails] = useState({
     user_name:"",
