@@ -4,40 +4,37 @@ import React from "react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { patchProfileDetails } from "@/services/api.service";
+import { getProfileDetails } from "@/services/api.service";
 
-function EditProfile({setIsEdit,updateProfileDetails}:{setIsEdit:any,updateProfileDetails:any}) {
+function EditProfile({setIsEdit}:
+  {setIsEdit:any}) {
   const [editDetails, setEditDetails] = useState({
-    user_name:"",
     name: "",
     email: "",
     description: "",
   });
-   const getUserDetails = async () => {
-     try {
-      const { data } = await patchProfileDetails({id:"658dbcdfe88244a974676e05"}); 
-      setEditDetails(data);
-      console.log(data)
-     
-    } catch (error) {
-      console.log(error)
-    }
-   }
 
-  useEffect(() => {
-    
-    getUserDetails();
+    const profileData = async (id: string) => {      
+    const resp:any = await getProfileDetails({id});
+    setEditDetails({   
+    name: resp.data.name,
+    email: resp.data.email,
+    description: resp.data.description,
+  })
+    }
+
+   useEffect(() => {
+     const id="658dbcdfe88244a974676e05"
+     profileData(id);
   }, []);
 
    const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
-      await patchProfileDetails({
-        id: "658dbcdfe88244a974676e05",
-        data: editDetails,
-      });
-      updateProfileDetails(editDetails);
-      
-      console.log(editDetails)
+      const resp:any=await patchProfileDetails({
+        ...editDetails,
+        id: "658dbcdfe88244a974676e05",        
+      });    
       console.log("Profile details updated successfully!");
     } catch (error) {
       console.error("Error updating profile details:", error);
@@ -71,12 +68,13 @@ function EditProfile({setIsEdit,updateProfileDetails}:{setIsEdit:any,updateProfi
           width={80}
           alt="dummy"
         />
+        {/* will update this filed with redux state */}
         <p className="text-white text-lg pb-2">Username</p>
         <div className="bg-[#36404A] py-2 px-5  rounded-[8px] flex items-center gap-2 w-full">
           <input
             type="text"
-            value={editDetails?.user_name || ""}
-            onChange={(e) => handleChange(e)}
+            value={editDetails?.user_name}
+            
             placeholder="Username"
             name="user_name"
             className="text-white bg-transparent w-full focus:outline-none placeholder:text-[#909DAB]"

@@ -31,9 +31,9 @@ function Profile() {
      profileData(id);
   }, []);
 
-  const updateProfileDetails = (newDetails: UserDetails) => {
-    setDetails(newDetails);
-  };
+  // const updateProfileDetails = (newDetails: UserDetails) => {
+  //   setDetails(newDetails);
+  // };
 
   return (
     <div>
@@ -83,7 +83,7 @@ function Profile() {
           </div>
         </>
       )}
-      {isEdit === "editProfile" && <EditProfile setIsEdit={setIsEdit} updateProfileDetails={updateProfileDetails} />}
+      {isEdit === "editProfile" && <EditProfile setIsEdit={setIsEdit}  />}
     </div>
   );
 }
