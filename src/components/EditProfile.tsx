@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { patchProfileDetails } from "@/services/api.service";
 
-function EditProfile({setIsEdit,updateProfileDetails}:{setIsEdit:any,updateProfileDetails: (newDetails: UserDetails) => void}) {
+function EditProfile({setIsEdit,updateProfileDetails}:{setIsEdit:any,updateProfileDetails:any}) {
   const [editDetails, setEditDetails] = useState({
     user_name:"",
     name: "",
@@ -36,6 +36,7 @@ function EditProfile({setIsEdit,updateProfileDetails}:{setIsEdit:any,updateProfi
         data: editDetails,
       });
       updateProfileDetails(editDetails);
+      
       console.log(editDetails)
       console.log("Profile details updated successfully!");
     } catch (error) {
@@ -50,10 +51,7 @@ function EditProfile({setIsEdit,updateProfileDetails}:{setIsEdit:any,updateProfi
     });    
   };
    
-  useEffect(() => {
-  console.log("Updated state:", editDetails);
-}, [editDetails]);
-  return (
+ return (
     <div>
       <p className="text-2xl text-white font-semibold pt-8 px-8 flex justify-between items-center">
         <FontAwesomeIcon
