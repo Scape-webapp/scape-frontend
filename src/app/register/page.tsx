@@ -5,6 +5,8 @@ import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { registerApi } from "@/services/api.service";
+import { toast } from "react-toastify";
 
 export default function Register() {
   const [formValues, setFormValues] = useState({
@@ -14,6 +16,7 @@ export default function Register() {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const registerSchema = Yup.object().shape({
     userName: Yup.string()
       .trim()
@@ -29,6 +32,24 @@ export default function Register() {
       .required("Required")
       .oneOf([Yup.ref("password")], "Passwords must match"),
   });
+
+  async function handleSubmit() {
+    try {
+      const body = {
+        user_name: formValues.userName,
+        password: formValues.password,
+      };
+      const resp = await registerApi(body);
+      if (resp.status === 201) {
+        toast.success("Registered successfully!");
+      }
+    } catch (error: any) {
+      if (error.response.data.message === "user_name already taken!")
+        toast.error(error.response.data.message);
+      else toast.error("Something went wrong!");
+    }
+  }
+
   return (
     <div className="h-screen bg-[#262E35] flex bg-cover bg-no-repeat bg-[url(/images/login-bg-shapes.svg)] bg-left lg:bg-center">
       <div className="flex items-center justify-center absolute lg:grid lg:grid-cols-2 w-full h-screen ">
@@ -44,10 +65,7 @@ export default function Register() {
               enableReinitialize={true}
               initialValues={formValues}
               validationSchema={registerSchema}
-              onSubmit={(values) => {
-                console.log("values", values);
-                alert(JSON.stringify(values, null, 2));
-              }}
+              onSubmit={handleSubmit}
             >
               {(props) => (
                 <Form onSubmit={props.handleSubmit}>
@@ -81,9 +99,10 @@ export default function Register() {
                     </label>
                     <div className="relative">
                       <Field
-                        className="border-[1px] border-[#DDD4D4] px-2 pt-2 mt-1 rounded w-full hover:border-[#5D636A] hover:border-1 focus:ring-0 outline-none"
+                        className="border-[1px] border-[#DDD4D4] px-2 py-1 mt-1 rounded w-full hover:border-[#5D636A] hover:border-1 focus:ring-0 outline-none"
                         id="Password"
                         name="Password"
+                        autoComplete="on"
                         onChange={(e: any) =>
                           setFormValues({
                             userName: props.values.userName,
@@ -129,9 +148,10 @@ export default function Register() {
                     </label>
                     <div className="relative">
                       <Field
-                        className="border-[1px] border-[#DDD4D4] px-2 pt-2 mt-1 rounded w-full hover:border-[#5D636A] hover:border-1 focus:ring-0 outline-none"
+                        className="border-[1px] border-[#DDD4D4] px-2 py-1 mt-1 rounded w-full hover:border-[#5D636A] hover:border-1 focus:ring-0 outline-none"
                         id="ConfirmPassword"
                         name="ConfirmPassword"
+                        autoComplete="on"
                         onChange={(e: any) =>
                           setFormValues({
                             userName: props.values.userName,

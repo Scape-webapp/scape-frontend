@@ -5,5 +5,9 @@ export const getProfileDetails = (filter: any) => {
 };
 
 export const patchProfileDetails = (filter: any) => {
-  return globalaxiosInstance.patch(`/user`,filter);
+  return globalaxiosInstance.patch(`/user`, filter);
+};
+
+export const registerApi = (data: any) => {
+  return globalaxiosInstance.post(`/user/register`, data);
 };
