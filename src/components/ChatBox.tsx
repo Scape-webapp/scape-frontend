@@ -92,7 +92,7 @@ export default function ChatBox() {
     // rawMsgs = [...rawMsgs];
     console.log(
       "moment.utc().toLocaleString() :>> ",
-      moment().tz("Asia/Calcutta").format("MMM Do YY").toLocaleString()
+      moment().toLocaleString()
     );
     console.log(rawMsgs);
   };
@@ -124,28 +124,19 @@ export default function ChatBox() {
           {/* Messages */}
           {message.map((msg: any, i: any) => (
             <div key={i}>
-              {moment
-                .utc(msg.createdAt)
-                .format("MMM Do YY")
-                .toLocaleString() ===
-                moment()
-                  .tz("Asia/Calcutta")
-                  .format("MMM Do YY")
-                  .toLocaleString() &&
-              moment.utc(msg.createdAt).format("LL").toLocaleString() !==
-                moment
-                  .utc(message[i - 1]?.createdAt)
-                  .format("LL")
-                  .toLocaleString() ? (
+              {moment.utc(msg.createdAt).format("LL") ===
+                moment().format("LL") &&
+              moment.utc(msg.createdAt).format("LL") !==
+                moment.utc(message[i - 1]?.createdAt).format("LL") ? (
                 <div className="flex items-center mb-3 justify-center">
                   <div className="py-1 px-3 flex rounded justify-center bg-[#36404A]">
                     <p className="text-sm text-white">Today</p>
                   </div>
                 </div>
-              ) : moment.utc(msg.createdAt).toLocaleString() !==
-                  moment.utc(message[i - 1]?.createdAt).toLocaleString() &&
-                moment.utc(msg.createdAt).format("LL").toLocaleString() !==
-                  moment().tz("Asia/Calcutta").format("LL").toLocaleString() ? (
+              ) : moment.utc(msg.createdAt).format("LL") !==
+                  moment.utc(message[i - 1]?.createdAt).format("LL") &&
+                moment.utc(msg.createdAt).format("LL") !==
+                  moment().format("LL") ? (
                 moment.utc(msg.createdAt).format("LL") ===
                 moment().subtract(1, "day").format("LL") ? (
                   <div className="flex items-center mb-3 justify-center">
@@ -170,19 +161,17 @@ export default function ChatBox() {
               )}
               <div
                 className={`flex gap-2 mx-6 my-4 justify-${
-                  msg.receiver.includes("6574b5dcb558663da9b3e808")
-                    ? "start"
-                    : "end"
+                  msg.receiver.includes(reciever) ? "end" : "start"
                 }`}
                 style={
-                  msg.receiver.includes("6574b5dcb558663da9b3e808")
-                    ? { justifyContent: "flex-start" }
-                    : { justifyContent: "flex-end" }
+                  msg.receiver.includes(reciever)
+                    ? { justifyContent: "flex-end" }
+                    : { justifyContent: "flex-start" }
                 }
               >
                 <div className="flex gap-2">
-                  {msg.lastMsg &&
-                  msg.receiver.includes("6574b5dcb558663da9b3e808") ? (
+                  {msg.receiver.includes(sender) &&
+                  msg.sender !== message[i + 1]?.sender ? (
                     <Image
                       src="/images/profile-dummy.svg"
                       alt="profile"
@@ -194,14 +183,15 @@ export default function ChatBox() {
                   )}
                   <div
                     className={`p-3 max-w-sm rounded-t-lg ${
-                      msg.receiver.includes("6574b5dcb558663da9b3e808")
+                      msg.receiver.includes(reciever)
                         ? "bg-[#36404A] rounded-br-lg"
                         : "bg-[#7083FF] rounded-bl-lg"
                     }`}
                   >
                     <p className="text-white text-base">{msg.text}</p>
                   </div>
-                  {msg.lastMsg && msg.sender === "6574b5dcb558663da9b3e808" ? (
+                  {msg.receiver.includes(reciever) &&
+                  msg.receiver[0] !== message[i + 1]?.receiver[0] ? (
                     <Image
                       src="/images/profile-dummy.svg"
                       alt="profile"
