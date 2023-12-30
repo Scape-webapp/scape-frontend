@@ -1,14 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { registerApi } from "@/services/api.service";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 export default function Register() {
+  const router = useRouter();
   const [formValues, setFormValues] = useState({
     userName: "",
     password: "",
@@ -40,15 +42,19 @@ export default function Register() {
         password: formValues.password,
       };
       const resp = await registerApi(body);
-      if (resp.status === 201) {
+      if (resp?.status === 201) {
         toast.success("Registered successfully!");
+        router.push("/login");
       }
     } catch (error: any) {
-      if (error.response.data.message === "user_name already taken!")
+      console.log("error : ", error);
+      if (error?.response?.data?.message === "user_name already taken!")
         toast.error(error.response.data.message);
       else toast.error("Something went wrong!");
     }
   }
+
+  useEffect(() => {}, []);
 
   return (
     <div className="h-screen bg-[#262E35] flex bg-cover bg-no-repeat bg-[url(/images/login-bg-shapes.svg)] bg-left lg:bg-center">
