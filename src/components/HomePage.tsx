@@ -2,7 +2,6 @@ import React from "react";
 import Image from "next/image";
 import scapeWhiteLogo from "../../public/logos/scape_logo_white.svg";
 import SideImage from "../../public/images/homepage.svg";
-import ArrowIcon from "../../public/logos/arrow-message.svg";
 import ScreenMobile from "../../public/images/screen2.svg";
 import GroupChat from "../../public/images/group-chat-animate.svg";
 import GroupChatPeople from "../../public/images/group-chat.svg";
