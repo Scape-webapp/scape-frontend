@@ -11,3 +11,7 @@ export const patchProfileDetails = (filter: any) => {
 export const registerApi = (data: any) => {
   return globalaxiosInstance.post(`/user/register`, data);
 };
+
+export const loginApi = (data: any) => {
+  return globalaxiosInstance.post(`/user/login`, data);
+};

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,6 +8,7 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { registerApi } from "@/services/api.service";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Register() {
   const router = useRouter();
@@ -53,8 +54,6 @@ export default function Register() {
       else toast.error("Something went wrong!");
     }
   }
-
-  useEffect(() => {}, []);
 
   return (
     <div className="h-screen bg-[#262E35] flex bg-cover bg-no-repeat bg-[url(/images/login-bg-shapes.svg)] bg-left lg:bg-center">
@@ -208,9 +207,9 @@ export default function Register() {
             </Formik>
             <p className="text-[#787E83] text-center text-sm py-2 border-t mt-2 mx-6 border-[#BBC0C3]">
               Already have an account ?{" "}
-              <a href="#" className="text-[#407BFF]">
+              <Link href="/login" className="text-[#407BFF]">
                 Login
-              </a>
+              </Link>
             </p>
           </div>
         </div>
