@@ -42,7 +42,7 @@ export default function ChatBox() {
       </div>
 
       <div className="h-[80%] border-b overflow-x-auto border-[#36404A] p-6">
-        <div className="h-full w-full overflow-y-scroll overflow-x-hidden">
+        <div className="h-full w-full overflow-y-scroll chatbox-scroll overflow-x-hidden">
           {/* Date */}
           <div className="flex items-center mb-3 justify-center">
             <div className="py-1 px-3 flex rounded justify-center bg-[#36404A]">
