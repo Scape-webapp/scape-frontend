@@ -5,8 +5,17 @@ import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
+import { loginApi } from "@/services/api.service";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import { login } from "@/redux/features/user-slice";
 
 export default function Login() {
+  const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
   const [formValues, setFormValues] = useState({
     userName: "",
     password: "",
@@ -24,6 +33,23 @@ export default function Login() {
       .required("Required")
       .min(6, "must be at least 6 characters long."),
   });
+
+  async function handleSubmit() {
+    try {
+      const body = {
+        user_name: formValues.userName,
+        password: formValues.password,
+      };
+      const resp: any = await loginApi(body);
+      if (resp?.status === 200) {
+        dispatch(login(resp.data));
+        router.push("/dashboard");
+      }
+    } catch (error: any) {
+      toast.error("Something went wrong!");
+    }
+  }
+
   return (
     <div className="h-screen bg-[#262E35] flex bg-cover bg-no-repeat bg-[url(/images/login-bg-shapes.svg)] bg-left lg:bg-center">
       <div className="flex items-center justify-center absolute lg:grid lg:grid-cols-2 lg:gap-x-10 w-full h-screen ">
@@ -41,10 +67,7 @@ export default function Login() {
               enableReinitialize={true}
               initialValues={formValues}
               validationSchema={loginSchema}
-              onSubmit={(values) => {
-                console.log("values", values);
-                alert(JSON.stringify(values, null, 2));
-              }}
+              onSubmit={handleSubmit}
             >
               {(props) => (
                 <Form onSubmit={props.handleSubmit}>
@@ -57,6 +80,7 @@ export default function Login() {
                       className="border-[1px] border-[#DDD4D4] px-2 py-1 mt-1 mb-2 rounded w-full hover:border-[#5D636A] hover:border-1 focus:ring-0 outline-none"
                       id="UserName"
                       name="UserName"
+                      autoComplete="on"
                       onChange={(e: any) =>
                         setFormValues({
                           userName: e.target.value,
@@ -80,6 +104,7 @@ export default function Login() {
                         className="border-[1px] border-[#DDD4D4] px-2 py-1 my-2 rounded w-full hover:border-[#5D636A] hover:border-1 focus:ring-0 outline-none"
                         id="Password"
                         name="Password"
+                        autoComplete="on"
                         onChange={(e: any) =>
                           setFormValues({
                             userName: props.values.userName,
@@ -128,9 +153,9 @@ export default function Login() {
             </Formik>
             <p className="text-[#787E83] text-center text-sm py-2 border-t mt-2 mx-6 border-[#BBC0C3]">
               New User ?{" "}
-              <a href="#" className="text-[#407BFF]">
-                Signup
-              </a>
+              <Link href="/register" className="text-[#407BFF]">
+                Register
+              </Link>
             </p>
           </div>
         </div>

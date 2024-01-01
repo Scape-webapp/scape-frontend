@@ -8,10 +8,8 @@ export const globalaxiosInstance = axios.create({
 });
 
 const requestHandler = (request: any) => {
-  console.log(process.env.REACT_APP_BACKEND_URL);
   return request;
 };
-
 
 const responseHandler = (response: any) => {
   return response;
