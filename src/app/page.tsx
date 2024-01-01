@@ -5,13 +5,13 @@ import { useEffect, useState } from "react";
 import socketIOClient, { Socket } from "socket.io-client";
 
 export default function Home() {
-
-  let socket: Socket;
+  // let socket: Socket;
   const [userId, setuserId] = useState("");
   const [message, setMessage] = useState("");
+  const [socket, setsocket] = useState<any>(undefined);
 
   const joinChat = async () => {
-    socket = socketIOClient("http://localhost:5000", {
+    const soc = socketIOClient("http://localhost:4000", {
       reconnectionDelay: 1000,
       reconnection: true,
       // reconnectionAttemps: 10,
@@ -21,8 +21,9 @@ export default function Home() {
       rejectUnauthorized: false,
     });
 
-    socket.on("msg-recieve", (data) => {
-      debugger;
+    setsocket(soc);
+
+    socket.on("msg-receive", (data: any) => {
       console.log("object :>> ", data);
     });
   };
@@ -35,8 +36,9 @@ export default function Home() {
   };
 
   const sendMessage = () => {
+    debugger;
     socket.emit("send-msg", {
-      reciever: "6574bd61378887aeab034740",
+      receiver: "6574bd61378887aeab034740",
       sender: userId,
       text: "yash always critisize poonam",
     });
@@ -54,9 +56,9 @@ export default function Home() {
 
   return (
     <div>
-      <HomePage/>
-      <Footer/>
-      {/* <p>Login</p>
+      <HomePage />
+      <Footer />
+      <p>Login</p>
       <label>UserName</label>
       <input
         type="text"
@@ -69,7 +71,7 @@ export default function Home() {
 
       <label>Message</label>
       <textarea onChange={(e) => setMessage(e.target.value)}></textarea>
-      <button onClick={sendMessage}>Send Message</button> */}
+      <button onClick={sendMessage}>Send Message</button>
     </div>
   );
 }
