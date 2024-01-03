@@ -3,11 +3,13 @@
 import ChatBox from "@/components/ChatBox";
 import LeftSideBar from "@/components/LeftSideBar";
 import SideMenu from "@/components/SideMenu";
+import { RootState } from "@/redux/store";
 import { faFaceSmile } from "@fortawesome/free-regular-svg-icons";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import socketIOClient, { Socket, io } from "socket.io-client";
 
 export default function DashBoard() {
@@ -18,8 +20,13 @@ export default function DashBoard() {
     SETTING = "setting",
   }
   const [activeTab, setActiveTab] = useState<activeBar>(activeBar.CHAT);
-  let sender = "6574bd61378887aeab034740";
-  let receiver = "6574b5dcb558663da9b3e808";
+  const { user } = useSelector((state: RootState) => state.userReducer);
+
+  let sender = user._id;
+  let receiver =
+    sender === "6592b777df6b5412b578b2ba"
+      ? "6592bb58df6b5412b578b2c1"
+      : "6592b777df6b5412b578b2ba";
   // let socket: any;
   const [socket, setsocket] = useState<any>(undefined);
 
@@ -43,42 +50,20 @@ export default function DashBoard() {
 
     setsocket(soc);
 
-    // if (socket) {
     soc.emit("add-user", {
       id: sender,
     });
-    soc.on("msg-recieve", (data: any) => {
-      console.log("object :>> ", data);
-    });
-    // console.log("socket :>> ", socket);
-    // }
   };
-
-  // const sendMessage = async (e: any, message: any) => {
-  //   e.preventDefault();
-  //   debugger;
-  //   // if (socket) {
-  //   await socket.emit("send-msg", {
-  //     reciever: [reciever],
-  //     sender: sender,
-  //     text: message,
-  //   });
-  //   // }
-  // };
 
   useEffect(() => {
     joinChat();
+    return () => {
+      if (socket) {
+        socket.removeAllListeners();
+        socket.disconnect();
+      }
+    };
   }, []);
-
-  // useEffect(() => {
-  //   if (socket) {
-  //     addUser();
-  //     socket.on("msg-recieve", (data: any) => {
-  //       console.log("object :>> ", data);
-  //     });
-  //   }
-  //   console.log("socket :>> ", socket);
-  // }, [socket]);
 
   return (
     <div className="">

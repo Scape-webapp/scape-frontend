@@ -3,20 +3,22 @@ import { faEllipsisV, faFaceSmile } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-// var ObjectID = require("bson-objectid");
 import axios from "axios";
 import moment from "moment-timezone";
 import socketIOClient, { Socket, io } from "socket.io-client";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 const ChatBox = ({ socket }: any) => {
-  // let socket: Socket;
-  let sender = "6574bd61378887aeab034740";
-  let receiver = "6574b5dcb558663da9b3e808";
-  // let [socket, setsocket] = useState(null);
-  // let socket: Socket;
   const [chatMessages, setChatMessages] = useState<any>([]);
   const [message, setMessage] = useState("");
   const chatBox = useRef<any>(null);
+  const { user } = useSelector((state: RootState) => state.userReducer);
+  let sender = user._id;
+  let receiver =
+    sender === "6592b777df6b5412b578b2ba"
+      ? "6592bb58df6b5412b578b2c1"
+      : "6592b777df6b5412b578b2ba";
 
   const getMSgs = async () => {
     const msgs = await axios.post(
@@ -27,15 +29,12 @@ const ChatBox = ({ socket }: any) => {
       }
     );
     setChatMessages(msgs.data);
-    // debugger;
     let rawMsgs = [...msgs.data];
     console.log(rawMsgs);
   };
 
   const sendMessage = async (e: any) => {
     e.preventDefault();
-    debugger;
-    // if (socket) {
     let msgToSend = {
       receiver: [receiver],
       sender: sender,
@@ -50,25 +49,30 @@ const ChatBox = ({ socket }: any) => {
       },
     ]);
     setMessage("");
-    // }
   };
 
   useEffect(() => {
     if (chatBox) {
-      debugger;
-      // window.scrollTo(0, chatBox.current.scrollHeight);
-      // chatBox.scrollTop  =
+      chatBox.current.scrollTop = chatBox.current.scrollHeight;
     }
   }, [chatMessages]);
 
   useEffect(() => {
-    const res = getMSgs();
-    // await joinChat();
+    getMSgs();
   }, []);
 
   useEffect(() => {
-    console.log("new :>> ", moment.utc().toISOString());
-    console.log("socket :>> ", socket);
+    if (socket) {
+      socket.on("msg-receive", (data: any) => {
+        setChatMessages((prev: any) => [...prev, data]);
+      });
+    }
+    return () => {
+      if (socket) {
+        socket.removeAllListeners();
+        socket.disconnect();
+      }
+    };
   }, [socket]);
 
   return (
@@ -89,8 +93,9 @@ const ChatBox = ({ socket }: any) => {
         </div>
       </div>
 
-      <div ref={chatBox} className="h-[80%] border-b overflow-x-auto border-[#36404A] p-6">
+      <div className="h-[80%] border-b overflow-x-auto border-[#36404A] p-6">
         <div
+          ref={chatBox}
           className="h-full w-full overflow-y-scroll overflow-x-hidden"
         >
           {/* Messages */}
