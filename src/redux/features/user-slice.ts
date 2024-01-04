@@ -6,7 +6,7 @@ type User = {
   is_online: boolean;
   updatedAt: string;
   user_name: string;
-  _id: "";
+  _id: string;
 };
 
 type UserState = {
