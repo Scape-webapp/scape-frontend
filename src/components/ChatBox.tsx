@@ -13,7 +13,7 @@ const ChatBox = ({ socket }: any) => {
   const [chatMessages, setChatMessages] = useState<any>([]);
   const [message, setMessage] = useState("");
   const chatBox = useRef<any>(null);
-  const { user } = useSelector((state: RootState) => state.userReducer);
+  const user = useSelector((state: RootState) => state.user.user);
   let sender = user._id;
   let receiver =
     sender === "6592b777df6b5412b578b2ba"

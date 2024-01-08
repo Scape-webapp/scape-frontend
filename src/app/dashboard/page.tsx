@@ -20,7 +20,7 @@ export default function DashBoard() {
     SETTING = "setting",
   }
   const [activeTab, setActiveTab] = useState<activeBar>(activeBar.CHAT);
-  const { user } = useSelector((state: RootState) => state.userReducer);
+  const user = useSelector((state: RootState) => state.user.user);
 
   let sender = user._id;
   let receiver =
