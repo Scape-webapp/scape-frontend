@@ -1,27 +1,79 @@
+"use client";
 import { faEllipsisV, faFaceSmile } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
+import axios from "axios";
+import moment from "moment-timezone";
+import socketIOClient, { Socket, io } from "socket.io-client";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
-export default function ChatBox() {
-  const dummyMessages = [
-    {
-      msg: "hello",
-      recieved: "me",
-      sent: "other",
-    },
-    { msg: "hello hi", recieved: "me", sent: "other", lastMsg: true },
-    {
-      msg: "i am fine, hi, am fine, hi, am fine, hi lorem wywybx syx sy yazyaay twvsv",
-      recieved: "other",
-      sent: "me",
-    },
-    { msg: "how doin", recieved: "other", sent: "me", lastMsg: true },
-    { msg: "fantastic", recieved: "me", sent: "other" },
-    { msg: "hello hi", recieved: "me", sent: "other", lastMsg: true },
-    { msg: "i am fine, hi", recieved: "other", sent: "me" },
-    { msg: "how doin", recieved: "other", sent: "me", lastMsg: true },
-    { msg: "fantastic", recieved: "me", sent: "other", lastMsg: true },
-  ];
+const ChatBox = ({ socket }: any) => {
+  const [chatMessages, setChatMessages] = useState<any>([]);
+  const [message, setMessage] = useState("");
+  const chatBox = useRef<any>(null);
+  const user = useSelector((state: RootState) => state.user.user);
+  let sender = user._id;
+  let receiver =
+    sender === "6592b777df6b5412b578b2ba"
+      ? "6592bb58df6b5412b578b2c1"
+      : "6592b777df6b5412b578b2ba";
+
+  const getMSgs = async () => {
+    const msgs = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/message/history`,
+      {
+        receiver: [receiver],
+        sender: sender,
+      }
+    );
+    setChatMessages(msgs.data);
+    let rawMsgs = [...msgs.data];
+    console.log(rawMsgs);
+  };
+
+  const sendMessage = async (e: any) => {
+    e.preventDefault();
+    let msgToSend = {
+      receiver: [receiver],
+      sender: sender,
+      text: message,
+    };
+    await socket.emit("send-msg", msgToSend);
+    setChatMessages((prevMessages: any) => [
+      ...prevMessages,
+      {
+        ...msgToSend,
+        createdAt: moment().toISOString(),
+      },
+    ]);
+    setMessage("");
+  };
+
+  useEffect(() => {
+    if (chatBox) {
+      chatBox.current.scrollTop = chatBox.current.scrollHeight;
+    }
+  }, [chatMessages]);
+
+  useEffect(() => {
+    getMSgs();
+  }, []);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("msg-receive", (data: any) => {
+        setChatMessages((prev: any) => [...prev, data]);
+      });
+    }
+    return () => {
+      if (socket) {
+        socket.removeAllListeners();
+        socket.disconnect();
+      }
+    };
+  }, [socket]);
 
   return (
     <div className="max-h-screen w-full bg-[#262E35] flex flex-col">
@@ -42,56 +94,91 @@ export default function ChatBox() {
       </div>
 
       <div className="h-[80%] border-b overflow-x-auto border-[#36404A] p-6">
-        <div className="h-full w-full overflow-y-scroll chatbox-scroll overflow-x-hidden">
-          {/* Date */}
-          <div className="flex items-center mb-3 justify-center">
-            <div className="py-1 px-3 flex rounded justify-center bg-[#36404A]">
-              <p className="text-xs text-white">Today</p>
-            </div>
-          </div>
+        <div
+          ref={chatBox}
+          className="h-full w-full overflow-y-scroll overflow-x-hidden"
+        >
           {/* Messages */}
-          {dummyMessages.map((msg, i) => (
-            <div
-              key={i}
-              className={`flex gap-2 mx-6 my-4 justify-${
-                msg.recieved === "other" ? "start" : "end"
-              }`}
-              style={
-                msg.recieved === "other"
-                  ? { justifyContent: "flex-start" }
-                  : { justifyContent: "flex-end" }
-              }
-            >
-              <div className="flex gap-2">
-                {msg.lastMsg && msg.recieved === "other" ? (
-                  <Image
-                    src="/images/profile-dummy.svg"
-                    alt="profile"
-                    height={30}
-                    width={30}
-                  />
-                ) : (
-                  <div className="h-8 w-8"></div>
-                )}
-                <div
-                  className={`p-3 max-w-sm rounded-t-lg ${
-                    msg.recieved === "other"
-                      ? "bg-[#36404A] rounded-br-lg"
-                      : "bg-[#7083FF] rounded-bl-lg"
-                  }`}
-                >
-                  <p className="text-white text-base">{msg.msg}</p>
+          {chatMessages.map((msg: any, i: any) => (
+            <div key={i}>
+              {moment.utc(msg.createdAt).format("LL") ===
+                moment().format("LL") &&
+              moment.utc(msg.createdAt).format("LL") !==
+                moment.utc(chatMessages[i - 1]?.createdAt).format("LL") ? (
+                <div className="flex items-center mb-3 justify-center">
+                  <div className="py-1 px-3 flex rounded justify-center bg-[#36404A]">
+                    <p className="text-sm text-white">Today</p>
+                  </div>
                 </div>
-                {msg.lastMsg && msg.sent === "other" ? (
-                  <Image
-                    src="/images/profile-dummy.svg"
-                    alt="profile"
-                    height={30}
-                    width={30}
-                  />
+              ) : moment.utc(msg.createdAt).format("LL") !==
+                  moment.utc(chatMessages[i - 1]?.createdAt).format("LL") &&
+                moment.utc(msg.createdAt).format("LL") !==
+                  moment().format("LL") ? (
+                moment.utc(msg.createdAt).format("LL") ===
+                moment().subtract(1, "day").format("LL") ? (
+                  <div className="flex items-center mb-3 justify-center">
+                    <div className="py-1 px-3 flex rounded justify-center bg-[#36404A]">
+                      <p className="text-sm text-white">Yesterday</p>
+                    </div>
+                  </div> // <div>{new Date(msg.createdAt).toLocaleDateString()}</div>
                 ) : (
-                  <div className="h-8 w-8"></div>
-                )}
+                  <div className="flex items-center mb-3 justify-center">
+                    <div className="py-1 px-3 flex rounded justify-center bg-[#36404A]">
+                      <p className="text-sm text-white">
+                        {moment
+                          .utc(msg.createdAt)
+                          .format("LL")
+                          .toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+                )
+              ) : (
+                <div></div>
+              )}
+              <div
+                className={`flex gap-2 mx-6 my-4 justify-${
+                  msg.receiver.includes(receiver) ? "end" : "start"
+                }`}
+                style={
+                  msg.receiver.includes(receiver)
+                    ? { justifyContent: "flex-end" }
+                    : { justifyContent: "flex-start" }
+                }
+              >
+                <div className="flex gap-2">
+                  {msg.receiver.includes(sender) &&
+                  msg.sender !== chatMessages[i + 1]?.sender ? (
+                    <Image
+                      src="/images/profile-dummy.svg"
+                      alt="profile"
+                      height={30}
+                      width={30}
+                    />
+                  ) : (
+                    <div className="h-8 w-8"></div>
+                  )}
+                  <div
+                    className={`p-3 max-w-sm rounded-t-lg ${
+                      msg.receiver.includes(receiver)
+                        ? "bg-[#36404A] rounded-br-lg"
+                        : "bg-[#7083FF] rounded-bl-lg"
+                    }`}
+                  >
+                    <p className="text-white text-base">{msg.text}</p>
+                  </div>
+                  {msg.receiver.includes(receiver) &&
+                  msg.receiver[0] !== chatMessages[i + 1]?.receiver[0] ? (
+                    <Image
+                      src="/images/profile-dummy.svg"
+                      alt="profile"
+                      height={30}
+                      width={30}
+                    />
+                  ) : (
+                    <div className="h-8 w-8"></div>
+                  )}
+                </div>
               </div>
             </div>
           ))}
@@ -100,15 +187,29 @@ export default function ChatBox() {
 
       <div className="h-[10%] flex items-center px-6 w-full gap-8">
         <FontAwesomeIcon icon={faFaceSmile} size="2x" color="#7083FF" />
-        <div className="flex p-1.5 justify-between items-center bg-[#36404A] rounded-xl w-3/4">
+        <form
+          className="flex p-1.5 justify-between items-center bg-[#36404A] rounded-xl w-3/4"
+          // onSubmit={(e) => sendMessage(e)}
+        >
           <input
             type="text"
             className="px-2 py-1 w-full text-white focus:outline-none bg-transparent placeholder:text-[#A0A0A0]"
             placeholder="Type a Message"
+            required
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
           />
-          <Image src="/logos/send.svg" alt="send" height={50} width={50} />
-        </div>
+          <button
+            type="submit"
+            className="cursor-pointer"
+            onClick={(e) => sendMessage(e)}
+          >
+            <Image src="/logos/send.svg" alt="send" height={50} width={50} />
+          </button>
+        </form>
       </div>
     </div>
   );
-}
+};
+
+export default ChatBox;
