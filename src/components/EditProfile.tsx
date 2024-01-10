@@ -5,8 +5,10 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { patchProfileDetails } from "@/services/api.service";
 import { getProfileDetails } from "@/services/api.service";
+import { AppDispatch, RootState } from "@/redux/store";
+import { useSelector } from "react-redux";
 
-function EditProfile({ setIsEdit }: { setIsEdit: any }) {
+function EditProfile({ setIsEdit,onEditSubmit }: { setIsEdit: any,onEditSubmit: () => void; }) {
   const [userName, setUserName] = useState({
     user_name: "",
   });
@@ -15,9 +17,9 @@ function EditProfile({ setIsEdit }: { setIsEdit: any }) {
     email: "",
     description: "",
   });
-
-  const profileData = async (id: string) => {
-    const resp: any = await getProfileDetails({ id });
+const user = useSelector((state: RootState) => state.user.user);
+  const profileData = async () => {
+    const resp: any = await getProfileDetails(user._id);
     setUserName({ user_name: resp.data.user_name });
     setEditDetails({
       name: resp.data.name,
@@ -27,8 +29,7 @@ function EditProfile({ setIsEdit }: { setIsEdit: any }) {
   };
 
   useEffect(() => {
-    const id = "658dbcdfe88244a974676e05";
-    profileData(id);
+    profileData();
   }, []);
 
   const handleSubmit = async (e: any) => {
@@ -36,8 +37,11 @@ function EditProfile({ setIsEdit }: { setIsEdit: any }) {
     try {
       const resp: any = await patchProfileDetails({
         ...editDetails,
-        id: "658dbcdfe88244a974676e05",
+        ...userName,
+        id: user._id,
       });
+      setIsEdit("");    
+      onEditSubmit();  
       console.log("Profile details updated successfully!");
     } catch (error) {
       console.error("Error updating profile details:", error);
@@ -73,7 +77,7 @@ function EditProfile({ setIsEdit }: { setIsEdit: any }) {
           />
           {/* will update this filed with redux state */}
           <p className="text-white text-lg pb-2">Username</p>
-          <div className="bg-[#36404A] py-2 px-5  rounded-[8px] flex items-center gap-2 w-full">
+          <div className="bg-[#40474e] py-2 px-5  rounded-[8px] flex items-center gap-2 w-full">
             <input
               type="text"
               value={userName.user_name || ""}
@@ -81,7 +85,7 @@ function EditProfile({ setIsEdit }: { setIsEdit: any }) {
               disabled
               placeholder="Username"
               name="user_name"
-              className="text-white bg-transparent w-full focus:outline-none placeholder:text-[#909DAB]"
+              className="text-[#787e83] bg-transparent w-full focus:outline-none placeholder:text-[#909DAB]"
             />
           </div>
           <p className="text-white text-lg py-2">Name</p>

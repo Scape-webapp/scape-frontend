@@ -38,7 +38,7 @@ export default function DashBoard() {
   };
 
   const joinChat = async () => {
-    const soc = io("http://localhost:4000", {
+    const soc = io("http://localhost:5000", {
       reconnectionDelay: 1000,
       reconnection: true,
       // reconnectionAttemps: 10,
