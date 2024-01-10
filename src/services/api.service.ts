@@ -1,7 +1,7 @@
 import { globalaxiosInstance, protectedaxiosInstance } from "./axiosSetup";
 
-export const getProfileDetails = (filter: any) => {
-  return globalaxiosInstance.get(`/user/${filter.id}`);
+export const getProfileDetails = (id: any) => {
+  return globalaxiosInstance.get(`/user/${id}`);
 };
 
 export const patchProfileDetails = (filter: any) => {

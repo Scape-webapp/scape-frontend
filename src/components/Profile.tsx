@@ -7,9 +7,10 @@ import { useParams, useRouter } from "next/navigation";
 import { getProfileDetails } from "@/services/api.service";
 import { useEffect } from "react";
 import moment from "moment";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
 import { logout } from "@/redux/features/user-slice";
+import { login } from "@/redux/features/user-slice";
 
 type UserDetails = {
   user_name: string;
@@ -24,25 +25,31 @@ function Profile() {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const [isEdit, setIsEdit] = useState("");
-  const [details, setDetails] = useState<UserDetails>();
+  const [details, setDetails] = useState<UserDetails>();  
+ const user = useSelector((state: RootState) => state.user.user);
 
-  const profileData = async (id: string) => {
-    const response = await getProfileDetails({ id });
-    setDetails(response.data);
+  const profileData = async () => {
+    try {
+      const response = await getProfileDetails(user._id );
+      setDetails(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
-    const id = "658dbcdfe88244a974676e05";
-    profileData(id);
+    profileData();
   }, []);
-
-  const updateProfileDetails = (newDetails: UserDetails) => {
-    setDetails(newDetails);
-  };
 
   async function handleLogout() {
     dispatch(logout());
     router.push("/login");
+  }
+  async function handleEditSubmit() {
+    console.log("Profile details updated successfully!");
+    setIsEdit(() => {
+      profileData();
+    });
   }
 
   return (
@@ -69,10 +76,10 @@ function Profile() {
               alt="dummy"
             />
             <p className="text-white text-2xl text-center pt-5">
-              {details?.name}
+              @{details?.user_name}
             </p>
             <p className="text-white text-lg text-center">
-              {details?.user_name}
+              {details?.name}
             </p>
             <p className="text-white text-lg text-center pt-3">
               {details?.description}
@@ -98,12 +105,7 @@ function Profile() {
           </div>
         </>
       )}
-      {isEdit === "editProfile" && (
-        <EditProfile
-          setIsEdit={setIsEdit}
-          updateProfileDetails={updateProfileDetails}
-        />
-      )}
+      {isEdit === "editProfile" && <EditProfile setIsEdit={setIsEdit} onEditSubmit={handleEditSubmit}/>}
     </div>
   );
 }
