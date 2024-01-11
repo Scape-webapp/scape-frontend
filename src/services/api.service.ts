@@ -15,3 +15,7 @@ export const registerApi = (data: any) => {
 export const loginApi = (data: any) => {
   return globalaxiosInstance.post(`/user/login`, data);
 };
+
+export const ChatListApi = (id: string) => {
+  return globalaxiosInstance.get(`/message/chat-list/${id}`);
+};

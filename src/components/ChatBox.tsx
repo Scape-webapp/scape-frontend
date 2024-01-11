@@ -58,6 +58,7 @@ const ChatBox = ({ socket }: any) => {
   }, [chatMessages]);
 
   useEffect(() => {
+    console.log({ user });
     getMSgs();
   }, []);
 
