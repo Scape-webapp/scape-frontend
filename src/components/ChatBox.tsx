@@ -202,13 +202,16 @@ const ChatBox = ({ socket }: any) => {
       <div className="h-[10%] flex items-center px-6 w-full gap-8">
       <div className="relative">
       <FontAwesomeIcon
+      className="cursor-pointer"
         icon={faFaceSmile}
         size="2x"
         color="#7083FF"
         onClick={handleIconClick}
       />
       {pickerVisible && (
-        <Picker data={data} previewPosition="none" navPosition="bottom"  onEmojiSelect={handleEmojiSelect} />
+        <div className="absolute bottom-10 ">
+        <Picker data={data} perLine={7} maxFrequentRows={1}  previewPosition="none" navPosition="bottom"  onEmojiSelect={handleEmojiSelect} />
+      </div>
       )}
       </div>  
         
