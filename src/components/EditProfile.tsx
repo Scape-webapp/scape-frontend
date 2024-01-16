@@ -17,7 +17,7 @@ function EditProfile({ setIsEdit,onEditSubmit }: { setIsEdit: any,onEditSubmit: 
     email: "",
     description: "",
   });
-const user = useSelector((state: RootState) => state.user.user);
+const user:any = useSelector((state: RootState) => state.user.user);
   const profileData = async () => {
     const resp: any = await getProfileDetails(user._id);
     setUserName({ user_name: resp.data.user_name });

@@ -8,10 +8,14 @@ import moment from "moment-timezone";
 import socketIOClient, { Socket, io } from "socket.io-client";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import data from '@emoji-mart/data'
+import Picker from '@emoji-mart/react'
 
 const ChatBox = ({ socket }: any) => {
   const [chatMessages, setChatMessages] = useState<any>([]);
   const [message, setMessage] = useState("");
+  const [pickerVisible, setPickerVisible] = useState(false);
+  const [selectedEmojis, setSelectedEmojis] = useState<string[]>([]);
   const chatBox = useRef<any>(null);
   const user = useSelector((state: RootState) => state.user.user);
   let sender = user._id;
@@ -49,6 +53,7 @@ const ChatBox = ({ socket }: any) => {
       },
     ]);
     setMessage("");
+    setPickerVisible(false);
   };
 
   useEffect(() => {
@@ -74,6 +79,15 @@ const ChatBox = ({ socket }: any) => {
       }
     };
   }, [socket]);
+
+  const handleEmojiSelect = (emoji:any) => {
+   setSelectedEmojis((prevEmojis) => [...prevEmojis, emoji.native]);
+    setMessage((prevMessage) => prevMessage + emoji.native);
+  };
+
+  const handleIconClick = () => {
+    setPickerVisible(!pickerVisible);
+  };
 
   return (
     <div className="max-h-screen w-full bg-[#262E35] flex flex-col">
@@ -186,7 +200,22 @@ const ChatBox = ({ socket }: any) => {
       </div>
 
       <div className="h-[10%] flex items-center px-6 w-full gap-8">
-        <FontAwesomeIcon icon={faFaceSmile} size="2x" color="#7083FF" />
+      <div className="relative">
+      <FontAwesomeIcon
+      className="cursor-pointer"
+        icon={faFaceSmile}
+        size="2x"
+        color="#7083FF"
+        onClick={handleIconClick}
+      />
+      {pickerVisible && (
+        <div className="absolute bottom-10 ">
+        <Picker data={data} perLine={7} maxFrequentRows={1}  previewPosition="none" navPosition="bottom"  onEmojiSelect={handleEmojiSelect} />
+      </div>
+      )}
+      </div>  
+        
+        {/* <FontAwesomeIcon icon={faFaceSmile} size="2x" color="#7083FF" /> */}
         <form
           className="flex p-1.5 justify-between items-center bg-[#36404A] rounded-xl w-3/4"
           // onSubmit={(e) => sendMessage(e)}
