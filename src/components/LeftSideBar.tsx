@@ -7,9 +7,17 @@ import { RootState } from "@/redux/store";
 import { ChatListApi } from "@/services/api.service";
 import { useEffect, useState } from "react";
 import moment from "moment";
-import _ from "lodash";
+import uniqWith from "lodash/uniqWith";
 
-export default function LeftSideBar({ activeTab }: { activeTab: any }) {
+export default function LeftSideBar({
+  activeTab,
+  activeChat,
+  setActiveChat,
+}: {
+  activeTab: any;
+  activeChat: object;
+  setActiveChat: Function;
+}) {
   const [list, setList] = useState<any>([]);
   const user = useSelector((state: RootState) => state.user.user);
   enum activeBar {
@@ -25,7 +33,7 @@ export default function LeftSideBar({ activeTab }: { activeTab: any }) {
       let userList = list.data;
 
       // filtering duplicate combination ofsender/receiver messages
-      userList = _.uniqWith(userList, function (arrVal: any, othVal: any) {
+      userList = uniqWith(userList, function (arrVal: any, othVal: any) {
         return arrVal._id === othVal._id;
       });
 
@@ -69,7 +77,15 @@ export default function LeftSideBar({ activeTab }: { activeTab: any }) {
                         width={45}
                         alt="dummy"
                       />
-                      <div className="flex flex-col ms-4">
+                      <div
+                        className="flex flex-col ms-4"
+                        onClick={() => {
+                          setActiveChat({
+                            id: element.user._id,
+                            user_name: element.user.user_name,
+                          });
+                        }}
+                      >
                         <p className="text-lg text-white">
                           {element.user.user_name}
                         </p>

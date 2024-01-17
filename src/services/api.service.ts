@@ -19,3 +19,11 @@ export const loginApi = (data: any) => {
 export const ChatListApi = (id: string) => {
   return globalaxiosInstance.get(`/message/chat-list/${id}`);
 };
+
+export const chatApi = (data: any) => {
+  return globalaxiosInstance.post(`/message/chat`, data);
+};
+
+export const sendMessageApi = (data: any) => {
+  return globalaxiosInstance.post(`/message`, data);
+};

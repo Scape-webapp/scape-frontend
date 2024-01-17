@@ -21,6 +21,10 @@ export default function DashBoard() {
   }
   const [activeTab, setActiveTab] = useState<activeBar>(activeBar.CHAT);
   const user = useSelector((state: RootState) => state.user.user);
+  const [activeChat, setActiveChat] = useState({
+    id: "",
+    user_name: "",
+  });
 
   // let sender = user._id;
   // let receiver =
@@ -69,8 +73,12 @@ export default function DashBoard() {
     <div className="">
       <div className="w-full flex">
         <SideMenu setActiveTab={setActiveTab} activeTab={activeTab} />
-        <LeftSideBar activeTab={activeTab} />
-        <ChatBox socket={socket} />
+        <LeftSideBar
+          activeTab={activeTab}
+          activeChat={activeChat}
+          setActiveChat={setActiveChat}
+        />
+        <ChatBox socket={socket} activeChat={activeChat} />
       </div>
     </div>
   );
