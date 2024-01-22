@@ -8,7 +8,7 @@ import { faFaceSmile } from "@fortawesome/free-regular-svg-icons";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import socketIOClient, { Socket, io } from "socket.io-client";
 
@@ -25,21 +25,11 @@ export default function DashBoard() {
     id: "",
     user_name: "",
   });
+  const activeChatRef = useRef(activeChat);
+  const [list, setList] = useState<any>([]);
+  const listRef = useRef(list);
 
-  // let sender = user._id;
-  // let receiver =
-  //   sender === "6592b777df6b5412b578b2ba"
-  //     ? "6592bb58df6b5412b578b2c1"
-  //     : "6592b777df6b5412b578b2ba";
-  // let socket: any;
   const [socket, setsocket] = useState<any>(undefined);
-
-  // const addUser = async () => {
-  //   debugger;
-  //   await socket.emit("add-user", {
-  //     id: sender,
-  //   });
-  // };
 
   const joinChat = async () => {
     const soc = io("http://localhost:5000", {
@@ -74,11 +64,22 @@ export default function DashBoard() {
       <div className="w-full flex">
         <SideMenu setActiveTab={setActiveTab} activeTab={activeTab} />
         <LeftSideBar
+          list={list}
+          setList={setList}
+          listRef={listRef}
+          activeChatRef={activeChatRef}
           activeTab={activeTab}
           activeChat={activeChat}
           setActiveChat={setActiveChat}
         />
-        <ChatBox socket={socket} activeChat={activeChat} />
+        <ChatBox
+          socket={socket}
+          activeChat={activeChat}
+          activeChatRef={activeChatRef}
+          list={list}
+          setList={setList}
+          listRef={listRef}
+        />
       </div>
     </div>
   );
