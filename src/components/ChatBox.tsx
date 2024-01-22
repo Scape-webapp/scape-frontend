@@ -12,7 +12,21 @@ import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { chatApi } from "@/services/api.service";
 
-const ChatBox = ({ socket, activeChat }: { socket: any; activeChat: any }) => {
+const ChatBox = ({
+  socket,
+  activeChat,
+  activeChatRef,
+  list,
+  setList,
+  listRef,
+}: {
+  socket: any;
+  activeChat: any;
+  activeChatRef: any;
+  list: any;
+  setList: any;
+  listRef: any;
+}) => {
   const [chatMessages, setChatMessages] = useState<any>([]);
   const [message, setMessage] = useState("");
   const [pickerVisible, setPickerVisible] = useState(false);
@@ -62,7 +76,27 @@ const ChatBox = ({ socket, activeChat }: { socket: any; activeChat: any }) => {
   useEffect(() => {
     if (socket) {
       socket.on("msg-receive", (data: any) => {
-        setChatMessages((prev: any) => [...prev, data]);
+        if (data?.sender === activeChatRef.current.id) {
+          setChatMessages((prev: any) => [...prev, data]);
+        } else {
+          const list = listRef.current;
+          const userIndex = (list || []).findIndex(
+            (user: any) => user._id === data?.sender
+          );
+          list[userIndex] = {
+            ...list[userIndex],
+            text: data.text,
+            isRead: false,
+          };
+          const chatList = [...list].sort((a, b) => {
+            const isReadA: any = a.isRead === false;
+            const isReadB: any = b.isRead === false;
+
+            return isReadB - isReadA;
+          });
+          setList([...chatList]);
+          listRef.current = [...chatList];
+        }
       });
     }
     return () => {
