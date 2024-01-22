@@ -143,20 +143,7 @@ export default function LeftSideBar({
                           {searchResult?.user_name}
                         </p>
                        </div> </>)}
-                      {/* // <div
-                      //   className="flex flex-col ms-4"
-                      //   onClick={() => {
-                      //     setActiveChat({
-                      //       id: searchResult?._id,
-                      //       user_name: searchResult?.user_name,
-                      //     });
-                      //   }}
-                      // >
-                      //   <p className="text-lg text-white">
-                      //     {searchResult?.user_name}
-                      //   </p>
-                      // </div> */}
-                      <div>
+                       <div>
                         <p className="text-[#455A64] text-sm mt-2 ">
                           {moment(searchResult.createdAt).format("L")}
                         </p>
