@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
-import { chatApi } from "@/services/api.service";
+import { chatApi, clearChatApi } from "@/services/api.service";
 
 const ChatBox = ({ socket, activeChat }: { socket: any; activeChat: any }) => {
   const [chatMessages, setChatMessages] = useState<any>([]);
@@ -25,8 +25,14 @@ const ChatBox = ({ socket, activeChat }: { socket: any; activeChat: any }) => {
       sender: user._id,
     });
     setChatMessages(msgs.data);
-    let rawMsgs = [...msgs.data];
-    console.log(rawMsgs);
+  };
+
+  const handleClearChat = async () => {
+    await clearChatApi({
+      receiver: activeChat.id,
+      sender: user._id,
+    });
+    await getMsgs();
   };
 
   const sendMessage = async (e: any) => {
@@ -115,6 +121,7 @@ const ChatBox = ({ socket, activeChat }: { socket: any; activeChat: any }) => {
                     <li
                       className="rounded bg-gray-200 hover:bg-gray-400 hover:text-white py-2 px-4 block whitespace-no-wrap"
                       onClick={() => {
+                        handleClearChat();
                         setDropDownVisible(false);
                       }}
                     >
