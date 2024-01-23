@@ -131,19 +131,9 @@ const ChatBox = ({
                   height={45}
                   width={45}
                 />
-                {activeChat.id === user._id ? (
-                  <>
-                    <p className="text-xl font-medium text-white">
-                      {activeChat.user_name} (You)
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <p className="text-xl font-medium text-white">
+                <p className="text-xl font-medium text-white">
                       {activeChat.user_name}
-                    </p>
-                  </>
-                )}
+                </p>
                 <div className="bg-[#2CAC39] h-3 w-3 rounded-full" />
               </div>
               <FontAwesomeIcon icon={faEllipsisV} size="xl" color="#787E83" />
