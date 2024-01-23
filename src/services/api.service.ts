@@ -27,3 +27,7 @@ export const chatApi = (data: any) => {
 export const sendMessageApi = (data: any) => {
   return globalaxiosInstance.post(`/message`, data);
 };
+
+export const clearChatApi = (data: any) => {
+  return globalaxiosInstance.post(`/message/clear-chat`, data);
+};
