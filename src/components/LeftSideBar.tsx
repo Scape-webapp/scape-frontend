@@ -10,15 +10,22 @@ import moment from "moment";
 import uniqWith from "lodash/uniqWith";
 
 export default function LeftSideBar({
+  list,
+  setList,
+  listRef,
+  activeChatRef,
   activeTab,
   activeChat,
   setActiveChat,
 }: {
+  list: any;
+  setList: any;
+  listRef: any;
+  activeChatRef: any;
   activeTab: any;
   activeChat: object;
   setActiveChat: Function;
 }) {
-  const [list, setList] = useState<any>([]);
   const [userSearch, setuserSearch] = useState("");
   const user = useSelector((state: RootState) => state.user.user);
   enum activeBar {
@@ -39,6 +46,7 @@ export default function LeftSideBar({
       });
 
       setList(userList);
+      listRef.current = userList;
     } catch (error) {
       // add fail toast later
       console.log("error in chat list api : ", error);
@@ -218,10 +226,17 @@ export default function LeftSideBar({
                       <div
                         className="flex flex-col ms-4"
                         onClick={() => {
-                          setActiveChat({
+                          const chat = {
                             id: element.user._id,
                             user_name: element.user.user_name,
-                          });
+                          };
+                          element?.isRead === false
+                            ? (element.isRead = true)
+                            : null;
+                          setList([...list]);
+                          listRef.current = [...list];
+                          setActiveChat(chat);
+                          activeChatRef.current = chat;
                         }}
                       >
                         <p className="text-lg text-white">
@@ -234,6 +249,9 @@ export default function LeftSideBar({
                           {moment(element.createdAt).format("L")}
                         </p>
                       </div>
+                      {element?.isRead === false && (
+                        <div className="h-4 w-4 bg-[#7083FF] rounded-full flex justify-center items-center absolute top-6 right-4" />
+                      )}
                     </div>
                   </div>
                 );
