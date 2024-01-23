@@ -3,14 +3,12 @@ import { faEllipsisV, faFaceSmile } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import axios from "axios";
 import moment from "moment-timezone";
-import socketIOClient, { Socket, io } from "socket.io-client";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
-import { chatApi } from "@/services/api.service";
+import { chatApi, clearChatApi } from "@/services/api.service";
 
 const ChatBox = ({
   socket,
@@ -30,6 +28,7 @@ const ChatBox = ({
   const [chatMessages, setChatMessages] = useState<any>([]);
   const [message, setMessage] = useState("");
   const [pickerVisible, setPickerVisible] = useState(false);
+  const [dropDownVisible, setDropDownVisible] = useState(false);
   const [selectedEmojis, setSelectedEmojis] = useState<string[]>([]);
   const chatBox = useRef<any>(null);
   const user = useSelector((state: RootState) => state.user.user);
@@ -40,8 +39,14 @@ const ChatBox = ({
       sender: user._id,
     });
     setChatMessages(msgs.data);
-    let rawMsgs = [...msgs.data];
-    console.log(rawMsgs);
+  };
+
+  const handleClearChat = async () => {
+    await clearChatApi({
+      receiver: activeChat.id,
+      sender: user._id,
+    });
+    await getMsgs();
   };
 
   const sendMessage = async (e: any) => {
@@ -136,7 +141,29 @@ const ChatBox = ({
                 </p>
                 <div className="bg-[#2CAC39] h-3 w-3 rounded-full" />
               </div>
-              <FontAwesomeIcon icon={faEllipsisV} size="xl" color="#787E83" />
+              <div className="dropdown relative cursor-pointer">
+                <FontAwesomeIcon
+                  icon={faEllipsisV}
+                  size="xl"
+                  color="#787E83"
+                  onClick={() => {
+                    setDropDownVisible(!dropDownVisible);
+                  }}
+                />
+                {dropDownVisible && (
+                  <ul className="dropdown-menu absolute right-0 text-gray-700 pt-1 w-32">
+                    <li
+                      className="rounded bg-gray-200 hover:bg-gray-400 hover:text-white py-2 px-4 block whitespace-no-wrap"
+                      onClick={() => {
+                        handleClearChat();
+                        setDropDownVisible(false);
+                      }}
+                    >
+                      Clear Chat
+                    </li>
+                  </ul>
+                )}
+              </div>
             </div>
           </div>
 

@@ -151,7 +151,7 @@ export default function LeftSideBar({
                   {list.map((element: any) => {
                     return (
                       <div
-                        className="bg-[#36404A] flex flex-row py-2 px-3 cursor-pointer "
+                        className="bg-[#36404A] flex flex-row py-2 px-3 relative cursor-pointer "
                         key={element._id}
                       >
                         <div className="flex">
@@ -165,17 +165,23 @@ export default function LeftSideBar({
                           <div
                             className="flex flex-col ms-4"
                             onClick={() => {
-                              setActiveChat({
+                              const chat = {
                                 id: element.user._id,
                                 user_name: element.user.user_name,
-                              });
+                              };
+                              element?.isRead === false
+                                ? (element.isRead = true)
+                                : null;
+                              setList([...list]);
+                              listRef.current = [...list];
+                              setActiveChat(chat);
+                              activeChatRef.current = chat;
                             }}
                           >
-
-                        <p className="text-lg text-white">
+                            <p className="text-lg text-white">
                               {element.user.user_name}
                             </p>
-                            
+
                             <p className="text-[#455A64] w-[150px] text-sm truncate ...">
                               {element.text}
                             </p>
@@ -185,6 +191,9 @@ export default function LeftSideBar({
                               {moment(element.createdAt).format("L")}
                             </p>
                           </div>
+                          {element?.isRead === false && (
+                        <div className="h-4 w-4 bg-[#7083FF] rounded-full flex justify-center items-center absolute top-6 right-4" />
+                         )}
                         </div>
                       </div>
                     );

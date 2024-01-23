@@ -31,3 +31,7 @@ export const sendMessageApi = (data: any) => {
 export const searchUserApi = (username: string) => {
   return globalaxiosInstance.get(`/user/search/${username}`);
 };
+
+export const clearChatApi = (data: any) => {
+  return globalaxiosInstance.post(`/message/clear-chat`, data);
+};
