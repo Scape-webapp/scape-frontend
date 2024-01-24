@@ -137,7 +137,7 @@ const ChatBox = ({
                   width={45}
                 />
                 <p className="text-xl font-medium text-white">
-                  {activeChat.user_name}
+                      {activeChat.user_name}
                 </p>
                 <div className="bg-[#2CAC39] h-3 w-3 rounded-full" />
               </div>
@@ -235,8 +235,8 @@ const ChatBox = ({
                       <div
                         className={`p-3 max-w-sm rounded-t-lg ${
                           msg.receiver === activeChat.id
-                            ? "bg-[#36404A] rounded-br-lg"
-                            : "bg-[#7083FF] rounded-bl-lg"
+                            ? "bg-[#36404A] rounded-bl-lg"
+                            : "bg-[#7083FF] rounded-br-lg"
                         }`}
                       >
                         <p className="text-white text-base">{msg.text}</p>

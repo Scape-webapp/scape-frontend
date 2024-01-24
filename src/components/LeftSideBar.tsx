@@ -1,10 +1,10 @@
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Profile from "./Profile";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { ChatListApi } from "@/services/api.service";
+import { ChatListApi, searchUserApi } from "@/services/api.service";
 import { useEffect, useState } from "react";
 import moment from "moment";
 import uniqWith from "lodash/uniqWith";
@@ -26,6 +26,7 @@ export default function LeftSideBar({
   activeChat: object;
   setActiveChat: Function;
 }) {
+  const [userSearch, setuserSearch] = useState("");
   const user = useSelector((state: RootState) => state.user.user);
   enum activeBar {
     CHAT = "chat",
@@ -51,9 +52,25 @@ export default function LeftSideBar({
       console.log("error in chat list api : ", error);
     }
   };
+  const [searchResult, setSearchResult] = useState<any>(null);
+  const [isSearching, setIsSearching] = useState(false);
+  const getUser = async () => {
+    try {
+      const searchUser: any = await searchUserApi(userSearch); 
+      setSearchResult(searchUser.data);
+          
+    } catch (e) {}
+  };
+
+  const handleChange = (e: any) => {
+  const searchQuery = e.target.value;
+  setuserSearch(searchQuery);
+  setIsSearching(searchQuery.trim() !== '');
+  };
 
   useEffect(() => {
     getChatList();
+    
   }, []);
 
   return (
@@ -63,61 +80,128 @@ export default function LeftSideBar({
           <p className="text-2xl text-white font-semibold pt-8 pl-8"> Chats </p>
           <div className="flex flex-col p-6 gap-4 w-full">
             <div className="bg-[#36404A] py-2 px-5 rounded-md flex items-center gap-2 w-full">
+               {isSearching && (
+               <FontAwesomeIcon
+                  icon={faArrowLeft}
+                   color="white"
+                  className="cursor-pointer"
+                   onClick={() => {
+                  setuserSearch(" ");
+                  setIsSearching(false);
+                  setSearchResult(null); 
+                  getChatList(); 
+                    }}
+                 />
+               )}
               <input
+                onChange={handleChange}
+                onKeyUp={getUser}
                 type="text"
                 placeholder="Search"
                 className="text-white bg-transparent w-full focus:outline-none placeholder:text-white"
               />
-              <FontAwesomeIcon icon={faSearch} color="white" />
+              <FontAwesomeIcon
+              className="cursor-pointer"
+                icon={faSearch}
+                color="white"
+                onClick={getUser}
+              />
             </div>
-
-            <div className="flex flex-col mt-2 gap-4">
-              {list.map((element: any) => {
-                return (
+            <div className="flex flex-col mt-2 gap-4 h-full overflow-y-scroll">              
+              {searchResult?._id!==user._id && searchResult ? (
+                <>
                   <div
-                    className="bg-[#36404A] flex flex-row py-2 px-3 relative"
-                    key={element._id}
+                    className="bg-[#36404A] flex flex-row py-2 px-3 cursor-pointer "
+                    key={searchResult?._id}
                   >
-                    <div className="flex flex-row">
+                    <div className="flex">
                       <Image
                         src="/images/profile-dummy.svg"
                         height={45}
                         width={45}
                         alt="dummy"
                       />
-                      <div
+                     <div
                         className="flex flex-col ms-4"
                         onClick={() => {
-                          const chat = {
-                            id: element.user._id,
-                            user_name: element.user.user_name,
-                          };
-                          element?.isRead === false
-                            ? (element.isRead = true)
-                            : null;
-                          setList([...list]);
-                          listRef.current = [...list];
-                          setActiveChat(chat);
-                          activeChatRef.current = chat;
+                          setActiveChat({
+                            id: searchResult?._id,
+                            user_name: searchResult?.user_name,
+                          });
                         }}
-                      >
+                       >
                         <p className="text-lg text-white">
-                          {element.user.user_name}
+                          {searchResult?.user_name}
                         </p>
-                        <p className="text-[#455A64] text-sm">{element.text}</p>
-                      </div>
-                      <div>
+                       </div> 
+                       <div>
                         <p className="text-[#455A64] text-sm mt-2 ">
-                          {moment(element.createdAt).format("LT")}
+                          {moment(searchResult.createdAt).format("L")}
                         </p>
                       </div>
-                      {element?.isRead === false && (
-                        <div className="h-4 w-4 bg-[#7083FF] rounded-full flex justify-center items-center absolute top-6 right-4" />
-                      )}
                     </div>
                   </div>
-                );
-              })}
+                </>
+              ) : searchResult?._id===user._id  ? (
+              <>
+              <p className="text-white text-center ">No result found</p>
+              </>):
+              (
+                <>
+                  {list.map((element: any) => {
+                    return (
+                      <div
+                        className="bg-[#36404A] flex flex-row py-2 px-3 relative cursor-pointer "
+                        key={element._id}
+                      >
+                        <div className="flex">
+                          <Image
+                            src="/images/profile-dummy.svg"
+                            height={45}
+                            width={45}
+                            alt="dummy"
+                          />
+
+                          <div
+                            className="flex flex-col ms-4"
+                            onClick={() => {
+                              const chat = {
+                                id: element.user._id,
+                                user_name: element.user.user_name,
+                              };
+                              element?.isRead === false
+                                ? (element.isRead = true)
+                                : null;
+                              setList([...list]);
+                              listRef.current = [...list];
+                              setActiveChat(chat);
+                              activeChatRef.current = chat;
+                            }}
+                          >
+                            <p className="text-lg text-white">
+                              {element.user.user_name}
+                            </p>
+
+                            <p className="text-[#455A64] w-[150px] text-sm truncate ...">
+                              {element.text}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-[#455A64] text-sm mt-2 ">
+                              {moment(element.createdAt).format("L")}
+                            </p>
+                          </div>
+                          {element?.isRead === false && (
+                        <div className="h-4 w-4 bg-[#7083FF] rounded-full flex justify-center items-center absolute top-6 right-4" />
+                         )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </>
+              )
+              }
+              
             </div>
           </div>
         </>
