@@ -56,21 +56,19 @@ export default function LeftSideBar({
   const [isSearching, setIsSearching] = useState(false);
   const getUser = async () => {
     try {
-      const searchUser: any = await searchUserApi(userSearch); 
+      const searchUser: any = await searchUserApi(userSearch);
       setSearchResult(searchUser.data);
-          
     } catch (e) {}
   };
 
   const handleChange = (e: any) => {
-  const searchQuery = e.target.value;
-  setuserSearch(searchQuery);
-  setIsSearching(searchQuery.trim() !== '');
+    const searchQuery = e.target.value;
+    setuserSearch(searchQuery);
+    setIsSearching(searchQuery.trim() !== "");
   };
 
   useEffect(() => {
     getChatList();
-    
   }, []);
 
   return (
@@ -80,19 +78,19 @@ export default function LeftSideBar({
           <p className="text-2xl text-white font-semibold pt-8 pl-8"> Chats </p>
           <div className="flex flex-col p-6 gap-4 w-full">
             <div className="bg-[#36404A] py-2 px-5 rounded-md flex items-center gap-2 w-full">
-               {isSearching && (
-               <FontAwesomeIcon
+              {isSearching && (
+                <FontAwesomeIcon
                   icon={faArrowLeft}
-                   color="white"
+                  color="white"
                   className="cursor-pointer"
-                   onClick={() => {
-                  setuserSearch(" ");
-                  setIsSearching(false);
-                  setSearchResult(null); 
-                  getChatList(); 
-                    }}
-                 />
-               )}
+                  onClick={() => {
+                    setuserSearch(" ");
+                    setIsSearching(false);
+                    setSearchResult(null);
+                    getChatList();
+                  }}
+                />
+              )}
               <input
                 onChange={handleChange}
                 onKeyUp={getUser}
@@ -101,14 +99,14 @@ export default function LeftSideBar({
                 className="text-white bg-transparent w-full focus:outline-none placeholder:text-white"
               />
               <FontAwesomeIcon
-              className="cursor-pointer"
+                className="cursor-pointer"
                 icon={faSearch}
                 color="white"
                 onClick={getUser}
               />
             </div>
-            <div className="flex flex-col mt-2 gap-4 h-full overflow-y-scroll">              
-              {searchResult?._id!==user._id && searchResult ? (
+            <div className=" ">
+              {searchResult?._id !== user._id && searchResult ? (
                 <>
                   <div
                     className="bg-[#36404A] flex flex-row py-2 px-3 cursor-pointer "
@@ -121,7 +119,7 @@ export default function LeftSideBar({
                         width={45}
                         alt="dummy"
                       />
-                     <div
+                      <div
                         className="flex flex-col ms-4"
                         onClick={() => {
                           setActiveChat({
@@ -129,12 +127,12 @@ export default function LeftSideBar({
                             user_name: searchResult?.user_name,
                           });
                         }}
-                       >
+                      >
                         <p className="text-lg text-white">
                           {searchResult?.user_name}
                         </p>
-                       </div> 
-                       <div>
+                      </div>
+                      <div>
                         <p className="text-[#455A64] text-sm mt-2 ">
                           {moment(searchResult.createdAt).format("L")}
                         </p>
@@ -142,12 +140,12 @@ export default function LeftSideBar({
                     </div>
                   </div>
                 </>
-              ) : searchResult?._id===user._id  ? (
-              <>
-              <p className="text-white text-center ">No result found</p>
-              </>):
-              (
+              ) : searchResult?._id === user._id ? (
                 <>
+                  <p className="text-white text-center ">No result found</p>
+                </>
+              ) : (
+                <div className="flex flex-col mt-2 gap-4 h-full md:h-[65vh] overflow-y-scroll">
                   {list.map((element: any) => {
                     return (
                       <div
@@ -192,16 +190,14 @@ export default function LeftSideBar({
                             </p>
                           </div>
                           {element?.isRead === false && (
-                        <div className="h-4 w-4 bg-[#7083FF] rounded-full flex justify-center items-center absolute top-6 right-4" />
-                         )}
+                            <div className="h-4 w-4 bg-[#7083FF] rounded-full flex justify-center items-center absolute top-6 right-4" />
+                          )}
                         </div>
                       </div>
                     );
                   })}
-                </>
-              )
-              }
-              
+                </div>
+              )}
             </div>
           </div>
         </>
