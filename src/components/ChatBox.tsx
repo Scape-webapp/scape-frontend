@@ -9,6 +9,7 @@ import { RootState } from "@/redux/store";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { chatApi, clearChatApi } from "@/services/api.service";
+import NonChatPage from "./NonChatPage";
 
 const ChatBox = ({
   socket,
@@ -124,7 +125,7 @@ const ChatBox = ({
   return (
     <>
       {activeChat.id === "" ? (
-        <h2>Open Chat</h2>
+        <NonChatPage/>
       ) : (
         <div className="max-h-screen w-full bg-[#262E35] flex flex-col">
           <div className="h-[10%] border-b border-[#36404A] flex items-center py-2 px-8">
