@@ -1,3 +1,4 @@
+"use client";
 import { faArrowRightLong, faPen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
@@ -10,8 +11,7 @@ import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { logout } from "@/redux/features/user-slice";
-import { login } from "@/redux/features/user-slice";
-
+import { CldImage } from 'next-cloudinary';
 type UserDetails = {
   user_name: string;
   description: string;
@@ -19,18 +19,20 @@ type UserDetails = {
   createdAt: string;
   name: string;
   _id: string;
+  profile_image:string;
 };
 
 function Profile() {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const [isEdit, setIsEdit] = useState("");
-  const [details, setDetails] = useState<UserDetails>();  
- const user = useSelector((state: RootState) => state.user.user);
+  
+  const [details, setDetails] = useState<UserDetails>();
+  const user = useSelector((state: RootState) => state.user.user);
 
   const profileData = async () => {
     try {
-      const response = await getProfileDetails(user._id );
+      const response = await getProfileDetails(user._id);
       setDetails(response.data);
     } catch (error) {
       console.log(error);
@@ -46,7 +48,7 @@ function Profile() {
     router.push("/login");
   }
   async function handleEditSubmit() {
-    console.log("Profile details updated successfully!");
+    
     setIsEdit(() => {
       profileData();
     });
@@ -68,19 +70,26 @@ function Profile() {
             />
           </p>
           <div className="px-8 mt-10 pb-5 border-b border-[#36404A] ">
-            <Image
+            {/* <Image
               className="m-auto"
               src="/images/profile-dummy.svg"
               height={80}
               width={80}
               alt="dummy"
-            />
+            /> */}
+            <CldImage
+                    onClick={() => open()}
+                    className="m-auto cursor-pointer rounded-full"
+                    src={details?.profile_image}
+                    height={80}
+                    width={80}
+                   alt="dummy"
+                  />
+          
             <p className="text-white text-2xl text-center pt-5">
               @{details?.user_name}
             </p>
-            <p className="text-white text-lg text-center">
-              {details?.name}
-            </p>
+            <p className="text-white text-lg text-center">{details?.name}</p>
             <p className="text-white text-lg text-center pt-3">
               {details?.description}
             </p>
@@ -105,7 +114,9 @@ function Profile() {
           </div>
         </>
       )}
-      {isEdit === "editProfile" && <EditProfile setIsEdit={setIsEdit} onEditSubmit={handleEditSubmit}/>}
+      {isEdit === "editProfile" && (
+        <EditProfile setIsEdit={setIsEdit} onEditSubmit={handleEditSubmit} />
+      )}
     </div>
   );
 }

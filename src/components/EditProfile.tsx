@@ -7,6 +7,9 @@ import { patchProfileDetails } from "@/services/api.service";
 import { getProfileDetails } from "@/services/api.service";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
+import { CldUploadWidget } from "next-cloudinary";
+import { CldImage } from 'next-cloudinary';
+import { faArrowRightLong, faPen } from "@fortawesome/free-solid-svg-icons";
 
 function EditProfile({ setIsEdit,onEditSubmit }: { setIsEdit: any,onEditSubmit: () => void; }) {
   const [userName, setUserName] = useState({
@@ -16,7 +19,10 @@ function EditProfile({ setIsEdit,onEditSubmit }: { setIsEdit: any,onEditSubmit: 
     name: "",
     email: "",
     description: "",
+    profile_image:"",
   });
+const [imgPublicId,setImgPulicId]=useState("");
+const [clickImg,setClickImg]=useState(false);
 const user:any = useSelector((state: RootState) => state.user.user);
   const profileData = async () => {
     const resp: any = await getProfileDetails(user._id);
@@ -25,6 +31,7 @@ const user:any = useSelector((state: RootState) => state.user.user);
       name: resp.data.name,
       email: resp.data.email,
       description: resp.data.description,
+      profile_image:resp.data.profile_image,
     });
   };
 
@@ -39,6 +46,7 @@ const user:any = useSelector((state: RootState) => state.user.user);
         ...editDetails,
         ...userName,
         id: user._id,
+        profile_image:!imgPublicId? editDetails.profile_image :imgPublicId,
       });
       setIsEdit("");    
       onEditSubmit();  
@@ -68,13 +76,51 @@ const user:any = useSelector((state: RootState) => state.user.user);
       </p>
       <form onSubmit={handleSubmit}>
         <div className="px-8 pt-5">
-          <Image
+          {/* <Image
             className="m-auto"
             src="/images/profile-dummy.svg"
             height={80}
             width={80}
             alt="dummy"
-          />
+          /> */}
+           <FontAwesomeIcon
+              onClick={() => {
+                setClickImg(true);
+              }}
+              className="cursor-pointer"
+              icon={faPen}
+              size="xs"
+            />
+            {clickImg?(<>
+            <CldUploadWidget
+              uploadPreset="Profile_picture"
+              onSuccess={(result:any, { widget }) => {
+                setImgPulicId(result?.info.public_id);
+                widget.close();
+              }}
+            >
+              {({ open }) => {
+                return (                  
+                  <CldImage
+                    onClick={() => open()}
+                    className="m-auto cursor-pointer rounded-full"
+                    src={imgPublicId}
+                    height={80}
+                    width={80}
+                   alt="dummy"
+                  />
+                );
+              }}
+            </CldUploadWidget></>):(<>
+            <CldImage
+                    
+                    className="m-auto cursor-pointer rounded-full"
+                    src={editDetails.profile_image}
+                    height={80}
+                    width={80}
+                   alt="dummy"
+                  /></>)}
+            
           {/* will update this filed with redux state */}
           <p className="text-white text-lg pb-2">Username</p>
           <div className="bg-[#40474e] py-2 px-5  rounded-[8px] flex items-center gap-2 w-full">
