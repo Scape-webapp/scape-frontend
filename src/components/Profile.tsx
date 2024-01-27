@@ -25,7 +25,7 @@ type UserDetails = {
 function Profile() {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
-  const [isEdit, setIsEdit] = useState("");
+  const [isEdit, setIsEdit] = useState<any>();
   
   const [details, setDetails] = useState<UserDetails>();
   const user = useSelector((state: RootState) => state.user.user);
