@@ -10,6 +10,8 @@ import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { chatApi, clearChatApi } from "@/services/api.service";
 import NonChatPage from "./NonChatPage";
+import { CldImage } from 'next-cloudinary';
+
 
 const ChatBox = ({
   socket,
@@ -77,6 +79,7 @@ const ChatBox = ({
 
   useEffect(() => {
     if (activeChat.id) getMsgs();
+    console.log(user)
   }, [activeChat.id]);
 
   useEffect(() => {
@@ -125,20 +128,25 @@ const ChatBox = ({
   return (
     <>
       {activeChat.id === "" ? (
-        <NonChatPage/>
+        <NonChatPage />
       ) : (
         <div className="max-h-screen w-full bg-[#262E35] flex flex-col">
           <div className="h-[10%] border-b border-[#36404A] flex items-center py-2 px-8">
             <div className="flex justify-between items-center w-full">
               <div className="flex items-center gap-4">
-                <Image
-                  src="/images/profile-dummy.svg"
-                  alt="profile"
+                <CldImage
+                  className="m-auto rounded-full h-[45px]"
+                  src={
+                    activeChat.profile_image
+                      ? activeChat.profile_image
+                      : "mrokrrlw2ssnr3tf3vy2"
+                  }
                   height={45}
                   width={45}
+                  alt="profile"
                 />
                 <p className="text-xl font-medium text-white">
-                      {activeChat.user_name}
+                  {activeChat.user_name}
                 </p>
                 <div className="bg-[#2CAC39] h-3 w-3 rounded-full" />
               </div>
@@ -224,12 +232,23 @@ const ChatBox = ({
                     <div className="flex gap-2">
                       {msg.receiver === user._id &&
                       msg.sender !== chatMessages[i + 1]?.sender ? (
-                        <Image
-                          src="/images/profile-dummy.svg"
-                          alt="profile"
-                          height={30}
-                          width={30}
-                        />
+                        // <Image
+                        //   src="/images/profile-dummy.svg"
+                        //   alt="profile"
+                        //   height={30}
+                        //   width={30}
+                        // />
+                        <CldImage
+                  className="m-auto rounded-full h-[30px]"
+                  src={
+                    activeChat.profile_image
+                      ? activeChat.profile_image
+                      : "mrokrrlw2ssnr3tf3vy2"
+                  }
+                  height={30}
+                  width={30}
+                  alt="profile"
+                />
                       ) : (
                         <div className="h-8 w-8"></div>
                       )}
@@ -244,12 +263,23 @@ const ChatBox = ({
                       </div>
                       {msg.receiver === activeChat.id &&
                       msg.receiver[0] !== chatMessages[i + 1]?.receiver[0] ? (
-                        <Image
-                          src="/images/profile-dummy.svg"
-                          alt="profile"
-                          height={30}
-                          width={30}
-                        />
+                        // <Image
+                        //   src="/images/profile-dummy.svg"
+                        //   alt="profile"
+                        //   height={30}
+                        //   width={30}
+                        // />
+                         <CldImage
+                  className="m-auto rounded-full h-[30px]"
+                  src={
+                    user.profile_image
+                      ? user.profile_image
+                      : "mrokrrlw2ssnr3tf3vy2"
+                  }
+                  height={30}
+                  width={30}
+                  alt="profile"
+                />
                       ) : (
                         <div className="h-8 w-8"></div>
                       )}

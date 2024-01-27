@@ -79,7 +79,7 @@ function Profile() {
             /> */}
             <CldImage
                     onClick={() => open()}
-                    className="m-auto cursor-pointer rounded-full"
+                    className="m-auto cursor-pointer rounded-full h-[80px]"
                     src={details?.profile_image}
                     height={80}
                     width={80}

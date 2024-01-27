@@ -76,51 +76,44 @@ const user:any = useSelector((state: RootState) => state.user.user);
       </p>
       <form onSubmit={handleSubmit}>
         <div className="px-8 pt-5">
-          {/* <Image
-            className="m-auto"
-            src="/images/profile-dummy.svg"
-            height={80}
-            width={80}
-            alt="dummy"
-          /> */}
-           <FontAwesomeIcon
-              onClick={() => {
-                setClickImg(true);
-              }}
-              className="cursor-pointer"
-              icon={faPen}
-              size="xs"
-            />
-            {clickImg?(<>
-            <CldUploadWidget
-              uploadPreset="Profile_picture"
-              onSuccess={(result:any, { widget }) => {
-                setImgPulicId(result?.info.public_id);
-                widget.close();
-              }}
-            >
-              {({ open }) => {
-                return (                  
-                  <CldImage
-                    onClick={() => open()}
-                    className="m-auto cursor-pointer rounded-full"
-                    src={imgPublicId}
-                    height={80}
-                    width={80}
-                   alt="dummy"
-                  />
-                );
-              }}
-            </CldUploadWidget></>):(<>
-            <CldImage
-                    
-                    className="m-auto cursor-pointer rounded-full"
-                    src={editDetails.profile_image}
-                    height={80}
-                    width={80}
-                   alt="dummy"
-                  /></>)}
-            
+          {clickImg ? (
+            <>
+              <CldUploadWidget
+                uploadPreset="Profile_picture"
+                onSuccess={(result: any, { widget }) => {
+                  setImgPulicId(result?.info.public_id);
+                  // widget.close();
+                }}
+              >
+                {({ open }) => {
+                  return (
+                    <CldImage
+                      onClick={() => open()}
+                      className="m-auto cursor-pointer rounded-full h-[80px]"
+                      src={imgPublicId}
+                      height={80}
+                      width={80}
+                      alt="dummy"
+                    />
+                  );
+                }}
+              </CldUploadWidget>
+            </>
+          ) : (
+            <>
+              <CldImage
+                onClick={() => {
+                  setClickImg(true);
+                }}
+                className="m-auto cursor-pointer rounded-full"
+                src={editDetails.profile_image}
+                height={80}
+                width={80}
+                alt="dummy"
+              />
+            </>
+          )}
+
           {/* will update this filed with redux state */}
           <p className="text-white text-lg pb-2">Username</p>
           <div className="bg-[#40474e] py-2 px-5  rounded-[8px] flex items-center gap-2 w-full">

@@ -7,6 +7,7 @@ type User = {
   updatedAt: string;
   user_name: string;
   _id: string;
+  profile_image:string;
 };
 
 type UserState = {
@@ -23,6 +24,7 @@ const initialState: UserState = {
     updatedAt: "",
     user_name: "",
     _id: "",
+    profile_image:"",
   },
   accessToken: "",
   refreshToken: "",
@@ -45,6 +47,7 @@ export const user = createSlice({
         updatedAt: "",
         user_name: "",
         _id: "",
+        profile_image:"",
       };
       state.accessToken = "";
       state.refreshToken = "";
