@@ -70,17 +70,9 @@ function Profile() {
             />
           </p>
           <div className="px-8 mt-10 pb-5 border-b border-[#36404A] ">
-            {/* <Image
-              className="m-auto"
-              src="/images/profile-dummy.svg"
-              height={80}
-              width={80}
-              alt="dummy"
-            /> */}
-            <CldImage
-                    onClick={() => open()}
+                        <CldImage                    
                     className="m-auto cursor-pointer rounded-full h-[80px]"
-                    src={details?.profile_image}
+                    src={details?.profile_image?details?.profile_image:'mrokrrlw2ssnr3tf3vy2'}
                     height={80}
                     width={80}
                    alt="dummy"
@@ -95,10 +87,12 @@ function Profile() {
             </p>
           </div>
           <div className="px-8 py-5">
+            {details?.email?(<>
             <div className="pb-3">
               <p className="text-white text-lg">Email</p>
               <p className="text-white text-sm ">{details?.email}</p>
-            </div>
+            </div></>):(<></>)}
+            
             <div className="pb-3">
               <p className="text-white text-lg">Joined At</p>
               <p className="text-white text-sm ">

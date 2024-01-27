@@ -46,7 +46,7 @@ const user:any = useSelector((state: RootState) => state.user.user);
         ...editDetails,
         ...userName,
         id: user._id,
-        profile_image:!imgPublicId? editDetails.profile_image :imgPublicId,
+        profile_image:imgPublicId? imgPublicId: editDetails.profile_image ,
       });
       setIsEdit("");    
       onEditSubmit();  
@@ -76,13 +76,10 @@ const user:any = useSelector((state: RootState) => state.user.user);
       </p>
       <form onSubmit={handleSubmit}>
         <div className="px-8 pt-5">
-          {clickImg ? (
-            <>
-              <CldUploadWidget
+         <CldUploadWidget
                 uploadPreset="Profile_picture"
                 onSuccess={(result: any, { widget }) => {
-                  setImgPulicId(result?.info.public_id);
-                  // widget.close();
+                  setImgPulicId(result?.info.public_id);                  
                 }}
               >
                 {({ open }) => {
@@ -90,7 +87,7 @@ const user:any = useSelector((state: RootState) => state.user.user);
                     <CldImage
                       onClick={() => open()}
                       className="m-auto cursor-pointer rounded-full h-[80px]"
-                      src={imgPublicId}
+                      src={imgPublicId?imgPublicId:(editDetails.profile_image?editDetails.profile_image:'mrokrrlw2ssnr3tf3vy2')}
                       height={80}
                       width={80}
                       alt="dummy"
@@ -98,21 +95,6 @@ const user:any = useSelector((state: RootState) => state.user.user);
                   );
                 }}
               </CldUploadWidget>
-            </>
-          ) : (
-            <>
-              <CldImage
-                onClick={() => {
-                  setClickImg(true);
-                }}
-                className="m-auto cursor-pointer rounded-full"
-                src={editDetails.profile_image}
-                height={80}
-                width={80}
-                alt="dummy"
-              />
-            </>
-          )}
 
           {/* will update this filed with redux state */}
           <p className="text-white text-lg pb-2">Username</p>

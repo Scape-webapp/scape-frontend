@@ -131,6 +131,7 @@ export default function LeftSideBar({
                           setActiveChat({
                             id: searchResult?._id,
                             user_name: searchResult?.user_name,
+                            profile_image: searchResult?.profile_image,
                           });
                         }}
                       >

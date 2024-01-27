@@ -79,7 +79,7 @@ const ChatBox = ({
 
   useEffect(() => {
     if (activeChat.id) getMsgs();
-    console.log(user)
+    console.log(user.profile_image)
   }, [activeChat.id]);
 
   useEffect(() => {
