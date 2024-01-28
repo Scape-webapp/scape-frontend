@@ -1,12 +1,16 @@
 "use client";
 
+import ChatBox from "@/components/ChatBox";
 import LeftSideBar from "@/components/LeftSideBar";
 import SideMenu from "@/components/SideMenu";
+import { RootState } from "@/redux/store";
 import { faFaceSmile } from "@fortawesome/free-regular-svg-icons";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import socketIOClient, { Socket, io } from "socket.io-client";
 
 export default function DashBoard() {
   enum activeBar {
@@ -16,43 +20,66 @@ export default function DashBoard() {
     SETTING = "setting",
   }
   const [activeTab, setActiveTab] = useState<activeBar>(activeBar.CHAT);
+  const user = useSelector((state: RootState) => state.user.user);
+  const [activeChat, setActiveChat] = useState({
+    id: "",
+    user_name: "",
+  });
+  const activeChatRef = useRef(activeChat);
+  const [list, setList] = useState<any>([]);
+  const listRef = useRef(list);
+
+  const [socket, setsocket] = useState<any>(undefined);
+
+  const joinChat = async () => {
+    const soc = io("http://localhost:5000", {
+      reconnectionDelay: 1000,
+      reconnection: true,
+      // reconnectionAttemps: 10,
+      transports: ["websocket"],
+      agent: false,
+      upgrade: false,
+      rejectUnauthorized: false,
+    });
+
+    setsocket(soc);
+
+    soc.emit("add-user", {
+      id: user._id,
+    });
+  };
+
+  useEffect(() => {
+    joinChat();
+    return () => {
+      if (socket) {
+        socket.removeAllListeners();
+        socket.disconnect();
+      }
+    };
+  }, []);
+
   return (
     <div className="">
       <div className="w-full flex">
         <SideMenu setActiveTab={setActiveTab} activeTab={activeTab} />
-        <LeftSideBar activeTab={activeTab}  />
-
-        <div className="w-full bg-[#262E35] flex flex-col">
-          <div className="h-[10%] border-b border-[#36404A] flex items-center py-2 px-8">
-            <div className="flex justify-between items-center w-full">
-              <div className="flex items-center gap-4">
-                <Image
-                  src="/images/profile-dummy.svg"
-                  alt="profile"
-                  height={45}
-                  width={45}
-                />
-                <p className="text-xl font-medium text-white">Alice</p>
-                <div className="bg-[#2CAC39] h-3 w-3 rounded-full" />
-              </div>
-              <FontAwesomeIcon icon={faEllipsisV} size="xl" color="#787E83" />
-            </div>
-          </div>
-
-          <div className="h-[80%] border-b border-[#36404A]"></div>
-
-          <div className="h-[10%] flex items-center px-6 w-full gap-8">
-            <FontAwesomeIcon icon={faFaceSmile} size="lg" color="#7083FF" />
-            <div className="flex p-1.5 justify-between items-center bg-[#36404A] rounded-xl w-3/4">
-              <input
-                type="text"
-                className="px-2 py-1 w-full text-white focus:outline-none bg-transparent placeholder:text-[#A0A0A0]"
-                placeholder="Type a Message"
-              />
-              <Image src="/logos/send.svg" alt="send" height={40} width={40} />
-            </div>
-          </div>
-        </div>
+        <LeftSideBar
+          list={list}
+          setList={setList}
+          listRef={listRef}
+          activeChatRef={activeChatRef}
+          activeTab={activeTab}
+          activeChat={activeChat}
+          setActiveChat={setActiveChat}
+        />
+        <ChatBox
+          socket={socket}
+          activeChat={activeChat}
+          activeChatRef={activeChatRef}
+          list={list}
+          setList={setList}
+          listRef={listRef}
+        />
       </div>
     </div>
   );
