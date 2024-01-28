@@ -8,6 +8,7 @@ import { ChatListApi, searchUserApi } from "@/services/api.service";
 import { useEffect, useState } from "react";
 import moment from "moment";
 import uniqWith from "lodash/uniqWith";
+import { CldImage } from 'next-cloudinary';
 
 export default function LeftSideBar({
   list,
@@ -113,8 +114,13 @@ export default function LeftSideBar({
                     key={searchResult?._id}
                   >
                     <div className="flex">
-                      <Image
-                        src="/images/profile-dummy.svg"
+                      <CldImage
+                        className="m-auto rounded-full h-[45px]"
+                        src={
+                          searchResult.profile_image
+                            ? searchResult.profile_image
+                            : "mrokrrlw2ssnr3tf3vy2"
+                        }
                         height={45}
                         width={45}
                         alt="dummy"
@@ -125,6 +131,7 @@ export default function LeftSideBar({
                           setActiveChat({
                             id: searchResult?._id,
                             user_name: searchResult?.user_name,
+                            profile_image: searchResult?.profile_image,
                           });
                         }}
                       >
@@ -153,9 +160,14 @@ export default function LeftSideBar({
                         key={element._id}
                       >
                         <div className="flex">
-                          <Image
-                            src="/images/profile-dummy.svg"
-                            height={45}
+                          <CldImage
+                            className="m-auto rounded-full h-[45px]"
+                            src={
+                              element.user.profile_image
+                                ? element.user.profile_image
+                                : "mrokrrlw2ssnr3tf3vy2"
+                            }     
+                             height={45}                       
                             width={45}
                             alt="dummy"
                           />
@@ -166,6 +178,7 @@ export default function LeftSideBar({
                               const chat = {
                                 id: element.user._id,
                                 user_name: element.user.user_name,
+                                profile_image:element.user.profile_image,
                               };
                               element?.isRead === false
                                 ? (element.isRead = true)
