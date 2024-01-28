@@ -47,13 +47,17 @@ export const user = createSlice({
         updatedAt: "",
         user_name: "",
         _id: "",
-        profile_image:"",
+        profile_image: "",
       };
       state.accessToken = "";
       state.refreshToken = "";
     },
+    setAccessToken: (state, action) => {
+      const accessToken = action.payload;
+      state.accessToken = accessToken;
+    },
   },
 });
 
-export const { login, logout } = user.actions;
+export const { login, logout,setAccessToken } = user.actions;
 export default user.reducer;
