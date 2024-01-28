@@ -85,7 +85,7 @@ export default function LeftSideBar({
                   color="white"
                   className="cursor-pointer"
                   onClick={() => {
-                    setuserSearch(" ");
+                    setuserSearch("");
                     setIsSearching(false);
                     setSearchResult(null);
                     getChatList();
@@ -94,8 +94,9 @@ export default function LeftSideBar({
               )}
               <input
                 onChange={handleChange}
-                onKeyUp={getUser}
+                onKeyDown={getUser}
                 type="text"
+                value={userSearch}
                 placeholder="Search"
                 className="text-white bg-transparent w-full focus:outline-none placeholder:text-white"
               />
@@ -147,7 +148,7 @@ export default function LeftSideBar({
                     </div>
                   </div>
                 </>
-              ) : searchResult?._id === user._id ? (
+              ) :  ((searchResult!==null && searchResult.length===0 ) && userSearch!==null) ||searchResult?._id === user._id ? (
                 <>
                   <p className="text-white text-center ">No result found</p>
                 </>
