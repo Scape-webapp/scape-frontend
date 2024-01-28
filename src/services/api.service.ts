@@ -1,11 +1,11 @@
 import { globalaxiosInstance, protectedaxiosInstance } from "./axiosSetup";
 
 export const getProfileDetails = (id: any) => {
-  return globalaxiosInstance.get(`/user/${id}`);
+  return protectedaxiosInstance.get(`/user/${id}`);
 };
 
 export const patchProfileDetails = (filter: any) => {
-  return globalaxiosInstance.patch(`/user`, filter);
+  return protectedaxiosInstance.patch(`/user`, filter);
 };
 
 export const registerApi = (data: any) => {
@@ -17,21 +17,21 @@ export const loginApi = (data: any) => {
 };
 
 export const ChatListApi = (id: string) => {
-  return globalaxiosInstance.get(`/message/chat-list/${id}`);
+  return protectedaxiosInstance.get(`/message/chat-list/${id}`);
 };
 
 export const chatApi = (data: any) => {
-  return globalaxiosInstance.post(`/message/chat`, data);
+  return protectedaxiosInstance.post(`/message/chat`, data);
 };
 
 export const sendMessageApi = (data: any) => {
-  return globalaxiosInstance.post(`/message`, data);
+  return protectedaxiosInstance.post(`/message`, data);
 };
 
 export const searchUserApi = (username: string) => {
-  return globalaxiosInstance.get(`/user/search/${username}`);
+  return protectedaxiosInstance.get(`/user/search/${username}`);
 };
 
 export const clearChatApi = (data: any) => {
-  return globalaxiosInstance.post(`/message/clear-chat`, data);
+  return protectedaxiosInstance.post(`/message/clear-chat`, data);
 };
