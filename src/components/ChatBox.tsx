@@ -1,5 +1,9 @@
 "use client";
-import { faEllipsisV, faFaceSmile } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEllipsisV,
+  faFaceSmile,
+  faImage,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -11,6 +15,7 @@ import Picker from "@emoji-mart/react";
 import { chatApi, clearChatApi } from "@/services/api.service";
 import NonChatPage from "./NonChatPage";
 import { CldImage } from 'next-cloudinary';
+import { CldUploadButton } from "next-cloudinary";
 
 
 const ChatBox = ({
@@ -32,6 +37,7 @@ const ChatBox = ({
   const [message, setMessage] = useState("");
   const [pickerVisible, setPickerVisible] = useState(false);
   const [dropDownVisible, setDropDownVisible] = useState(false);
+  const [imgPublicId,setImgPulicId]=useState("");
   const [selectedEmojis, setSelectedEmojis] = useState<string[]>([]);
   const chatBox = useRef<any>(null);
   const user = useSelector((state: RootState) => state.user.user);
@@ -42,6 +48,7 @@ const ChatBox = ({
       sender: user._id,
     });
     setChatMessages(msgs.data);
+    console.log(msgs.data);
   };
 
   const handleClearChat = async () => {
@@ -53,11 +60,15 @@ const ChatBox = ({
   };
 
   const sendMessage = async (e: any) => {
-    e.preventDefault();
+ if(e && e.preventDefault ){
+e.preventDefault();
+ }
+    
     let msgToSend = {
       receiver: activeChat.id,
       sender: user._id,
-      text: message,
+      text:message,
+      image:imgPublicId      
     };
     await socket.emit("send-msg", msgToSend);
     setChatMessages((prevMessages: any) => [
@@ -68,8 +79,10 @@ const ChatBox = ({
       },
     ]);
     setMessage("");
+    setImgPulicId('')
     setPickerVisible(false);
   };
+
 
   useEffect(() => {
     if (chatBox && chatBox.current) {
@@ -78,8 +91,7 @@ const ChatBox = ({
   }, [chatMessages]);
 
   useEffect(() => {
-    if (activeChat.id) getMsgs();
-    console.log(user.profile_image)
+    if (activeChat.id) getMsgs();    
   }, [activeChat.id]);
 
   useEffect(() => {
@@ -239,16 +251,16 @@ const ChatBox = ({
                         //   width={30}
                         // />
                         <CldImage
-                  className="m-auto rounded-full h-[30px]"
-                  src={
-                    activeChat.profile_image
-                      ? activeChat.profile_image
-                      : "mrokrrlw2ssnr3tf3vy2"
-                  }
-                  height={30}
-                  width={30}
-                  alt="profile"
-                />
+                          className="m-auto rounded-full h-[30px]"
+                          src={
+                            activeChat.profile_image
+                              ? activeChat.profile_image
+                              : "mrokrrlw2ssnr3tf3vy2"
+                          }
+                          height={30}
+                          width={30}
+                          alt="profile"
+                        />
                       ) : (
                         <div className="h-8 w-8"></div>
                       )}
@@ -259,7 +271,21 @@ const ChatBox = ({
                             : "bg-[#7083FF] rounded-br-lg"
                         }`}
                       >
-                        <p className="text-white text-base">{msg.text}</p>
+                        {msg.image ? (
+                          <>
+                            <CldImage
+                              className="m-auto cursor-pointer object-cover  hover:scale-110 transition translate"
+                              src={msg.image}
+                              height={100}
+                              width={200}
+                              alt="dummy"
+                                                            
+                            />
+                          </>
+                        ) : (
+                          <p className="text-white text-base">{msg.text}</p>
+                        )}
+                        {/* <p className="text-white text-base">{msg.text}</p> */}
                       </div>
                       {msg.receiver === activeChat.id &&
                       msg.receiver[0] !== chatMessages[i + 1]?.receiver[0] ? (
@@ -269,17 +295,17 @@ const ChatBox = ({
                         //   height={30}
                         //   width={30}
                         // />
-                         <CldImage
-                  className="m-auto rounded-full h-[30px]"
-                  src={
-                    user.profile_image
-                      ? user.profile_image
-                      : "mrokrrlw2ssnr3tf3vy2"
-                  }
-                  height={30}
-                  width={30}
-                  alt="profile"
-                />
+                        <CldImage
+                          className="m-auto rounded-full h-[30px]"
+                          src={
+                            user.profile_image
+                              ? user.profile_image
+                              : "mrokrrlw2ssnr3tf3vy2"
+                          }
+                          height={30}
+                          width={30}
+                          alt="profile"
+                        />
                       ) : (
                         <div className="h-8 w-8"></div>
                       )}
@@ -291,6 +317,16 @@ const ChatBox = ({
           </div>
 
           <div className="h-[10%] flex items-center px-6 w-full gap-8">
+            <CldUploadButton
+              uploadPreset="Profile_picture"
+              onSuccess={(result: any, { widget }) => {
+                console.log("image ki", result?.info.public_id);
+                setImgPulicId(result?.info.public_id);
+              }}
+              onUpload={sendMessage}
+            >
+              <FontAwesomeIcon size="2x" color="#7083FF" icon={faImage} />
+            </CldUploadButton>
             <div className="relative">
               <FontAwesomeIcon
                 className="cursor-pointer"
