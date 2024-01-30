@@ -22,7 +22,7 @@ function EditProfile({ setIsEdit,onEditSubmit }: { setIsEdit: any,onEditSubmit: 
     profile_image:"",
   });
 const [imgPublicId,setImgPulicId]=useState("");
-const [clickImg,setClickImg]=useState(false);
+
 const user:any = useSelector((state: RootState) => state.user.user);
   const profileData = async () => {
     const resp: any = await getProfileDetails(user._id);
@@ -79,6 +79,7 @@ const user:any = useSelector((state: RootState) => state.user.user);
          <CldUploadWidget
                 uploadPreset="Profile_picture"
                 onSuccess={(result: any, { widget }) => {
+                  
                   setImgPulicId(result?.info.public_id);                  
                 }}
               >
