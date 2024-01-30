@@ -4,15 +4,12 @@ import ChatBox from "@/components/ChatBox";
 import LeftSideBar from "@/components/LeftSideBar";
 import SideMenu from "@/components/SideMenu";
 import { RootState } from "@/redux/store";
-import { faFaceSmile } from "@fortawesome/free-regular-svg-icons";
-import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Image from "next/image";
+import { auth } from "@/utils/auth";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import socketIOClient, { Socket, io } from "socket.io-client";
+import { io } from "socket.io-client";
 
-export default function DashBoard() {
+const DashBoard = () => {
   enum activeBar {
     CHAT = "chat",
     GROUPCHAT = "groupChat",
@@ -83,4 +80,6 @@ export default function DashBoard() {
       </div>
     </div>
   );
-}
+};
+
+export default auth(DashBoard);

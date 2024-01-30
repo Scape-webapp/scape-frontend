@@ -46,7 +46,7 @@ export default function Login() {
         router.push("/dashboard");
       }
     } catch (error: any) {
-      toast.error("Something went wrong!");
+      toast.error(error.response.data.message || "Something went wrong!");
     }
   }
 
