@@ -35,3 +35,7 @@ export const searchUserApi = (username: string) => {
 export const clearChatApi = (data: any) => {
   return protectedaxiosInstance.post(`/message/clear-chat`, data);
 };
+
+export const NewGroupApi = (data: any) => {
+  return globalaxiosInstance.post(`/group/newgroup`, data);
+};
