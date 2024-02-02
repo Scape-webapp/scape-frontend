@@ -8,7 +8,8 @@ import { ChatListApi, searchUserApi } from "@/services/api.service";
 import { useEffect, useState } from "react";
 import moment from "moment";
 import uniqWith from "lodash/uniqWith";
-import { CldImage } from 'next-cloudinary';
+import { CldImage } from "next-cloudinary";
+import AddUser from "./AddUser";
 import GroupChat from "./GroupChat";
 
 export default function LeftSideBar({
@@ -149,7 +150,10 @@ export default function LeftSideBar({
                     </div>
                   </div>
                 </>
-              ) :  ((searchResult!==null && searchResult.length===0 ) && userSearch!==null) ||searchResult?._id === user._id ? (
+              ) : (searchResult !== null &&
+                  searchResult.length === 0 &&
+                  userSearch !== null) ||
+                searchResult?._id === user._id ? (
                 <>
                   <p className="text-white text-center ">No result found</p>
                 </>
@@ -168,8 +172,8 @@ export default function LeftSideBar({
                               element.user.profile_image
                                 ? element.user.profile_image
                                 : "mrokrrlw2ssnr3tf3vy2"
-                            }     
-                             height={45}                       
+                            }
+                            height={45}
                             width={45}
                             alt="dummy"
                           />
@@ -180,7 +184,7 @@ export default function LeftSideBar({
                               const chat = {
                                 id: element.user._id,
                                 user_name: element.user.user_name,
-                                profile_image:element.user.profile_image,
+                                profile_image: element.user.profile_image,
                               };
                               element?.isRead === false
                                 ? (element.isRead = true)
