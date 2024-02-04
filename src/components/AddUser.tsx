@@ -1,11 +1,10 @@
 import {
   faArrowLeft,
+  faArrowRight,
   faPlus,
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Image from "next/image";
-import Profile from "./Profile";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { ChatListApi, searchUserApi } from "@/services/api.service";
@@ -14,22 +13,25 @@ import moment from "moment";
 import uniqWith from "lodash/uniqWith";
 import { CldImage } from "next-cloudinary";
 
+enum ActiveScreen {
+  GROUPCHAT = "groupChat",
+  ADDUSER = "addUser",
+  GROUPPROFILE = "groupProfile",
+}
+
 export default function AddUser({
   list,
   setList,
   listRef,
-  activeChatRef,
-  activeTab,
-  activeChat,
+
   setActiveChat,
+  setActiveScreen,
 }: {
   list: any;
   setList: any;
   listRef: any;
-  activeChatRef: any;
-  activeTab: any;
-  activeChat: object;
   setActiveChat: Function;
+  setActiveScreen: Function;
 }) {
   const [userSearch, setuserSearch] = useState("");
   const user = useSelector((state: RootState) => state.user.user);
@@ -85,7 +87,7 @@ export default function AddUser({
             color="#787E83"
             className="cursor-pointer mr-4"
             onClick={() => {
-              // back compnent logic
+              setActiveScreen(ActiveScreen.ADDUSER);
             }}
           />
           Add User’s
@@ -179,7 +181,7 @@ export default function AddUser({
                 <p className="text-white text-center ">No result found</p>
               </>
             ) : (
-              <div className="flex flex-col mt-2 gap-4 h-full md:h-[65vh] overflow-y-scroll">
+              <div className="flex flex-col mt-2 gap-4 h-full md:h-[56vh] overflow-y-scroll">
                 {list.map((element: any) => {
                   return (
                     <div
@@ -239,6 +241,20 @@ export default function AddUser({
               </div>
             )}
           </div>
+        </div>
+        <div className="m-auto text-center">
+          <button
+            className="bg-[#7083FF]  rounded-[10px] px-14 py-2 font-bold cursor-pointer shadow-md hover:bg-[#5462ba] hover:text-white"
+            onClick={() => {
+              setActiveScreen(ActiveScreen.GROUPPROFILE);
+            }}
+          >
+            <FontAwesomeIcon
+              className="cursor-pointer"
+              icon={faArrowRight}
+              color="white"
+            />
+          </button>
         </div>
       </>
     </div>

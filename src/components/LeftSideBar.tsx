@@ -1,6 +1,5 @@
 import { faArrowLeft, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Image from "next/image";
 import Profile from "./Profile";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -9,7 +8,6 @@ import { useEffect, useState } from "react";
 import moment from "moment";
 import uniqWith from "lodash/uniqWith";
 import { CldImage } from "next-cloudinary";
-import AddUser from "./AddUser";
 import GroupChat from "./GroupChat";
 
 export default function LeftSideBar({
@@ -18,7 +16,7 @@ export default function LeftSideBar({
   listRef,
   activeChatRef,
   activeTab,
-  activeChat,
+
   setActiveChat,
 }: {
   list: any;
@@ -26,7 +24,6 @@ export default function LeftSideBar({
   listRef: any;
   activeChatRef: any;
   activeTab: any;
-  activeChat: object;
   setActiveChat: Function;
 }) {
   const [userSearch, setuserSearch] = useState("");
@@ -222,7 +219,14 @@ export default function LeftSideBar({
         </>
       )}
       {activeTab === activeBar.PROFILE && <Profile />}
-      {activeTab === activeBar.GROUPCHAT && <GroupChat />}
+      {activeTab === activeBar.GROUPCHAT && (
+        <GroupChat
+          list={list}
+          setList={setList}
+          listRef={listRef}
+          setActiveChat={setActiveChat}
+        />
+      )}
     </div>
   );
 }
