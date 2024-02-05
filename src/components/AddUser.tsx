@@ -23,7 +23,6 @@ export default function AddUser({
   list,
   setList,
   listRef,
-
   setActiveChat,
   setActiveScreen,
 }: {
@@ -35,12 +34,9 @@ export default function AddUser({
 }) {
   const [userSearch, setuserSearch] = useState("");
   const user = useSelector((state: RootState) => state.user.user);
-  enum activeBar {
-    CHAT = "chat",
-    GROUPCHAT = "groupChat",
-    PROFILE = "profile",
-    SETTING = "setting",
-  }
+  const [searchResult, setSearchResult] = useState<any>(null);
+  const [isSearching, setIsSearching] = useState(false);
+  const [userArray, setUserArray] = useState<any>([]);
 
   const getChatList = async () => {
     try {
@@ -59,8 +55,7 @@ export default function AddUser({
       console.log("error in chat list api : ", error);
     }
   };
-  const [searchResult, setSearchResult] = useState<any>(null);
-  const [isSearching, setIsSearching] = useState(false);
+
   const getUser = async () => {
     try {
       const searchUser: any = await searchUserApi(userSearch);
@@ -78,16 +73,21 @@ export default function AddUser({
     getChatList();
   }, []);
 
+  useEffect(() => {
+    console.log({ userArray });
+  }, [userArray]);
+
   return (
     <div className="bg-[#303841] h-screen max-w-[380px] min-w-[380px]">
       <>
         <p className="text-2xl text-white font-semibold pt-8 pl-8">
           <FontAwesomeIcon
             icon={faArrowLeft}
-            color="#787E83"
+            size="lg"
+            style={{ color: "#ffffff" }}
             className="cursor-pointer mr-4"
             onClick={() => {
-              setActiveScreen(ActiveScreen.ADDUSER);
+              setActiveScreen(ActiveScreen.GROUPCHAT);
             }}
           />
           Add User’s
@@ -95,11 +95,10 @@ export default function AddUser({
 
         <div className="flex flex-col px-6 pt-4 w-full">
           <div className="bg-[#36404A] py-2 px-5 rounded-md flex items-center gap-2 w-full h-20">
-            <FontAwesomeIcon
-              icon={faPlus}
-              color="#787E83"
-              className="cursor-pointer"
-            />
+            {userArray.map((element: any) => {
+              return <span className="text-white">{element.user_name}</span>;
+            })}
+            {/* {userArray.length === 0 ? <span className="text-muted"></span>} */}
           </div>
         </div>
         <div className="flex flex-col p-6 gap-4 w-full">
@@ -203,20 +202,18 @@ export default function AddUser({
 
                         <div
                           className="flex flex-col ms-4"
-                          // onClick={() => {
-                          //   const chat = {
-                          //     id: element.user._id,
-                          //     user_name: element.user.user_name,
-                          //     profile_image: element.user.profile_image,
-                          //   };
-                          //   element?.isRead === false
-                          //     ? (element.isRead = true)
-                          //     : null;
-                          //   setList([...list]);
-                          //   listRef.current = [...list];
-                          //   setActiveChat(chat);
-                          //   activeChatRef.current = chat;
-                          // }}
+                          onClick={() => {
+                            // add logic there
+                            const userList = [
+                              ...userArray,
+                              {
+                                _id: element._id,
+                                user_name: element.user.user_name,
+                                profile: element.user.profile_image,
+                              },
+                            ]; // new array need to update
+                            setUserArray(userList);
+                          }}
                         >
                           <p className="text-lg text-white">
                             {element.user.user_name}

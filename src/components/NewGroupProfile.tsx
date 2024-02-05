@@ -129,8 +129,8 @@ export default function NewGroupProfile({
             <button className="bg-[#7083FF]  rounded-[20px] px-10 py-2 font-bold cursor-pointer shadow-md hover:bg-[#343A40] hover:text-white">
               <FontAwesomeIcon
                 size="lg"
-                icon={faCheck}
                 style={{ color: "#ffffff" }}
+                icon={faCheck}
                 className="cursor-pointer"
               />
             </button>
