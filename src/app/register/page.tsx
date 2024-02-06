@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,6 +9,8 @@ import { registerApi } from "@/services/api.service";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 export default function Register() {
   const router = useRouter();
@@ -19,6 +21,7 @@ export default function Register() {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const token = useSelector((state: RootState) => state.user.accessToken);
 
   const registerSchema = Yup.object().shape({
     userName: Yup.string()
@@ -54,6 +57,12 @@ export default function Register() {
       else toast.error("Something went wrong!");
     }
   }
+
+  useEffect(() => {
+    if (token) {
+      router.push("/dashboard");
+    }
+  }, [token]);
 
   return (
     <div className="h-screen bg-[#262E35] flex bg-cover bg-no-repeat bg-[url(/images/login-bg-shapes.svg)] bg-left lg:bg-center">

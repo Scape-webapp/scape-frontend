@@ -11,7 +11,7 @@ import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { logout } from "@/redux/features/user-slice";
-import { CldImage } from 'next-cloudinary';
+import { CldImage } from "next-cloudinary";
 type UserDetails = {
   user_name: string;
   description: string;
@@ -19,14 +19,14 @@ type UserDetails = {
   createdAt: string;
   name: string;
   _id: string;
-  profile_image:string;
+  profile_image: string;
 };
 
 function Profile() {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const [isEdit, setIsEdit] = useState<any>();
-  
+
   const [details, setDetails] = useState<UserDetails>();
   const user = useSelector((state: RootState) => state.user.user);
 
@@ -45,10 +45,8 @@ function Profile() {
 
   async function handleLogout() {
     dispatch(logout());
-    router.push("/login");
   }
   async function handleEditSubmit() {
-    
     setIsEdit(() => {
       profileData();
     });
@@ -70,14 +68,18 @@ function Profile() {
             />
           </p>
           <div className="px-8 mt-10 pb-5 border-b border-[#36404A] ">
-                        <CldImage                    
-                    className="m-auto cursor-pointer rounded-full h-[80px]"
-                    src={details?.profile_image?details?.profile_image:'mrokrrlw2ssnr3tf3vy2'}
-                    height={80}
-                    width={80}
-                   alt="dummy"
-                  />
-          
+            <CldImage
+              className="m-auto cursor-pointer rounded-full h-[80px]"
+              src={
+                details?.profile_image
+                  ? details?.profile_image
+                  : "mrokrrlw2ssnr3tf3vy2"
+              }
+              height={80}
+              width={80}
+              alt="dummy"
+            />
+
             <p className="text-white text-2xl text-center pt-5">
               @{details?.user_name}
             </p>
@@ -87,12 +89,17 @@ function Profile() {
             </p>
           </div>
           <div className="px-8 py-5">
-            {details?.email?(<>
-            <div className="pb-3">
-              <p className="text-white text-lg">Email</p>
-              <p className="text-white text-sm ">{details?.email}</p>
-            </div></>):(<></>)}
-            
+            {details?.email ? (
+              <>
+                <div className="pb-3">
+                  <p className="text-white text-lg">Email</p>
+                  <p className="text-white text-sm ">{details?.email}</p>
+                </div>
+              </>
+            ) : (
+              <></>
+            )}
+
             <div className="pb-3">
               <p className="text-white text-lg">Joined At</p>
               <p className="text-white text-sm ">

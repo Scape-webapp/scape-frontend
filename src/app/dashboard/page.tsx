@@ -4,12 +4,12 @@ import ChatBox from "@/components/ChatBox";
 import LeftSideBar from "@/components/LeftSideBar";
 import SideMenu from "@/components/SideMenu";
 import { RootState, store } from "@/redux/store";
-import { auth } from "@/utils/auth";
+import { AuthComponent } from "@/utils/auth";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import socketIOClient, { io } from "socket.io-client";
 
-const DashBoard = () => {
+export default function DashBoard() {
   enum activeBar {
     CHAT = "chat",
     GROUPCHAT = "groupChat",
@@ -61,29 +61,29 @@ const DashBoard = () => {
   }, []);
 
   return (
-    <div className="">
-      <div className="w-full flex">
-        <SideMenu setActiveTab={setActiveTab} activeTab={activeTab} />
-        <LeftSideBar
-          list={list}
-          setList={setList}
-          listRef={listRef}
-          activeChatRef={activeChatRef}
-          activeTab={activeTab}
-          activeChat={activeChat}
-          setActiveChat={setActiveChat}
-        />
-        <ChatBox
-          socket={socket}
-          activeChat={activeChat}
-          activeChatRef={activeChatRef}
-          list={list}
-          setList={setList}
-          listRef={listRef}
-        />
+    <AuthComponent>
+      <div className="">
+        <div className="w-full flex">
+          <SideMenu setActiveTab={setActiveTab} activeTab={activeTab} />
+          <LeftSideBar
+            list={list}
+            setList={setList}
+            listRef={listRef}
+            activeChatRef={activeChatRef}
+            activeTab={activeTab}
+            activeChat={activeChat}
+            setActiveChat={setActiveChat}
+          />
+          <ChatBox
+            socket={socket}
+            activeChat={activeChat}
+            activeChatRef={activeChatRef}
+            list={list}
+            setList={setList}
+            listRef={listRef}
+          />
+        </div>
       </div>
-    </div>
+    </AuthComponent>
   );
-};
-
-export default auth(DashBoard);
+}
