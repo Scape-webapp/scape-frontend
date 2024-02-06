@@ -3,11 +3,11 @@
 import ChatBox from "@/components/ChatBox";
 import LeftSideBar from "@/components/LeftSideBar";
 import SideMenu from "@/components/SideMenu";
-import { RootState } from "@/redux/store";
+import { RootState, store } from "@/redux/store";
 import { AuthComponent } from "@/utils/auth";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { io } from "socket.io-client";
+import socketIOClient, { io } from "socket.io-client";
 
 export default function DashBoard() {
   enum activeBar {
@@ -29,7 +29,7 @@ export default function DashBoard() {
   const [socket, setsocket] = useState<any>(undefined);
 
   const joinChat = async () => {
-    const soc = io("http://localhost:5000", {
+    const soc = socketIOClient("http://localhost:5000", {
       reconnectionDelay: 1000,
       reconnection: true,
       // reconnectionAttemps: 10,
@@ -37,6 +37,10 @@ export default function DashBoard() {
       agent: false,
       upgrade: false,
       rejectUnauthorized: false,
+      withCredentials: true,
+      auth: {
+        token: store.getState().user.accessToken,
+      },
     });
 
     setsocket(soc);

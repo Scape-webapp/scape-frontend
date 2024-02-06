@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import moment from "moment";
 import uniqWith from "lodash/uniqWith";
 import { CldImage } from 'next-cloudinary';
+import GroupChat from "./GroupChat";
 
 export default function LeftSideBar({
   list,
@@ -217,6 +218,7 @@ export default function LeftSideBar({
         </>
       )}
       {activeTab === activeBar.PROFILE && <Profile />}
+      {activeTab === activeBar.GROUPCHAT && <GroupChat />}
     </div>
   );
 }
