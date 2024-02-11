@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import moment from "moment";
 import uniqWith from "lodash/uniqWith";
 import { CldImage } from "next-cloudinary";
+import "./AddUser.css";
 
 enum ActiveScreen {
   GROUPCHAT = "groupChat",
@@ -94,7 +95,7 @@ export default function AddUser({
         </p>
 
         <div className="flex flex-col px-6 pt-4 w-full ">
-          <div className="bg-[#36404A] py-2 px-5 rounded-md flex items-center gap-2 w-full h-20 no-scroll-bar overflow-y-scroll overflow-x-hidden">
+          <div className="bg-[#36404A] py-2 px-5 rounded-md flex items-center gap-2 w-full h-20 overflow-scroll no-scrollbar">
             {userArray.map((element: any) => {
               if (element)
                 return (

@@ -11,8 +11,8 @@ import { CldImage } from "next-cloudinary";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Tooltip } from "react-tooltip";
-import AddUser from "./AddUser";
 import NewGroupProfile from "./NewGroupProfile";
+import AddUser from "./AddUser/AddUser";
 
 enum ActiveScreen {
   GROUPCHAT = "groupChat",
