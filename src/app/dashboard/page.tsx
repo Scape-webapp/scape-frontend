@@ -71,7 +71,6 @@ export default function DashBoard() {
             listRef={listRef}
             activeChatRef={activeChatRef}
             activeTab={activeTab}
-            activeChat={activeChat}
             setActiveChat={setActiveChat}
           />
           <ChatBox

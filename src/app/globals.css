@@ -30,3 +30,8 @@ html {
 ::-webkit-scrollbar {
   width: 12px;
 }
+
+.no-scroll-bar ::-webkit-scrollbar {
+  display: none !important;
+  width: 0px !important;
+}

@@ -1,8 +1,8 @@
 import {
   faArrowLeft,
   faArrowRight,
-  faPlus,
   faSearch,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSelector } from "react-redux";
@@ -93,12 +93,43 @@ export default function AddUser({
           Add User’s
         </p>
 
-        <div className="flex flex-col px-6 pt-4 w-full">
-          <div className="bg-[#36404A] py-2 px-5 rounded-md flex items-center gap-2 w-full h-20">
+        <div className="flex flex-col px-6 pt-4 w-full ">
+          <div className="bg-[#36404A] py-2 px-5 rounded-md flex items-center gap-2 w-full h-20 no-scroll-bar overflow-y-scroll overflow-x-hidden">
             {userArray.map((element: any) => {
-              return <span className="text-white">{element.user_name}</span>;
+              if (element)
+                return (
+                  <div className="flex justify-between text-white border-[3px] border-[#455A64] rounded-lg px-4 py-1  min-w-fit">
+                    <CldImage
+                      className="mr-2 rounded-full h-[30px]"
+                      src={
+                        element.profile_image
+                          ? element.profile_image
+                          : "mrokrrlw2ssnr3tf3vy2"
+                      }
+                      height={30}
+                      width={30}
+                      alt="profile"
+                    />
+                    <span className="my-1">{element.user_name}</span>
+                    <FontAwesomeIcon
+                      icon={faXmark}
+                      style={{ color: "#787E83" }}
+                      className="cursor-pointer ml-2 my-2"
+                      onClick={() => {
+                        const userList = userArray.filter(
+                          (ele: any) => element._id !== ele._id
+                        );
+                        setUserArray(userList);
+                      }}
+                    />
+                  </div>
+                );
             })}
-            {/* {userArray.length === 0 ? <span className="text-muted"></span>} */}
+            {userArray.length === 0 ? (
+              <span className="text-[#668290] ">Select user's to add</span>
+            ) : (
+              ""
+            )}
           </div>
         </div>
         <div className="flex flex-col p-6 gap-4 w-full">
@@ -203,13 +234,12 @@ export default function AddUser({
                         <div
                           className="flex flex-col ms-4"
                           onClick={() => {
-                            // add logic there
                             const userList = [
                               ...userArray,
                               {
                                 _id: element._id,
                                 user_name: element.user.user_name,
-                                profile: element.user.profile_image,
+                                profile_image: element.user.profile_image,
                               },
                             ]; // new array need to update
                             setUserArray(userList);

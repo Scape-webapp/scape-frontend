@@ -16,7 +16,6 @@ export default function LeftSideBar({
   listRef,
   activeChatRef,
   activeTab,
-
   setActiveChat,
 }: {
   list: any;
