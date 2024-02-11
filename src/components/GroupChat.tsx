@@ -1,5 +1,5 @@
 import { RootState } from "@/redux/store";
-import { searchUserApi } from "@/services/api.service";
+import { GroupListApi, searchUserApi } from "@/services/api.service";
 import {
   faArrowLeft,
   faSearch,
@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Tooltip } from "react-tooltip";
 import NewGroupProfile from "./NewGroupProfile";
+import uniqWith from "lodash/uniqWith";
 import AddUser from "./AddUser/AddUser";
 
 enum ActiveScreen {
@@ -31,49 +32,8 @@ export default function GroupChat({
   listRef: any;
   setActiveChat: Function;
 }) {
-  const groupList = [
-    {
-      _id: "1242526",
-      user: {
-        user_name: "Group 1",
-      },
-      text: "hey from yash",
-      createdAt: new Date(),
-    },
-    {
-      _id: "1242522",
-      user: {
-        user_name: "Group 1",
-      },
-      text: "hey from yash",
-      createdAt: new Date(),
-    },
-    {
-      _id: "1242523",
-      user: {
-        user_name: "Group 2",
-      },
-      text: "hey from yash",
-      createdAt: new Date(),
-    },
-    {
-      _id: "1242524",
-      user: {
-        user_name: "Group 3",
-      },
-      text: "hey from yash",
-      createdAt: new Date(),
-    },
-    {
-      _id: "1242525",
-      user: {
-        user_name: "Group 4",
-      },
-      text: "hey from yash",
-      createdAt: new Date(),
-    },
-  ];
   const [userSearch, setuserSearch] = useState("");
+  const [userList, setUserList] = useState([]);
   const [activeScreen, setActiveScreen] = useState(ActiveScreen.GROUPCHAT);
   const user = useSelector((state: RootState) => state.user.user);
 
@@ -86,6 +46,20 @@ export default function GroupChat({
     } catch (e) {}
   };
 
+  const getGroupChatList = async () => {
+    try {
+      const list = await GroupListApi(user._id);
+      let grpList = list.data;
+      grpList = uniqWith(grpList, function (arrVal: any, othVal: any) {
+        return arrVal._id === othVal._id;
+      });
+      setUserList(grpList);
+      listRef.current = grpList;
+    } catch (error) {
+      // add fail toast later
+      console.log("error in chat list api : ", error);
+    }
+  };
   const handleChange = (e: any) => {
     const searchQuery = e.target.value;
     setuserSearch(searchQuery);
@@ -93,6 +67,7 @@ export default function GroupChat({
   };
 
   useEffect(() => {
+    getGroupChatList();
     //   getChatList();
   }, []);
 
@@ -185,7 +160,7 @@ export default function GroupChat({
                 </>
               ) : (
                 <div className="flex flex-col mt-2 gap-4 h-full md:h-[65vh] overflow-y-scroll">
-                  {groupList.map((element: any) => {
+                  {userList.map((element: any) => {
                     return (
                       <div
                         className="bg-[#36404A] flex flex-row py-2 px-3 relative cursor-pointer "
@@ -201,12 +176,10 @@ export default function GroupChat({
                           />
 
                           <div className="flex flex-col ms-4">
-                            <p className="text-lg text-white">
-                              {element.user.user_name}
-                            </p>
+                            <p className="text-lg text-white">{element.name}</p>
 
                             <p className="text-[#455A64] w-[150px] text-sm truncate ...">
-                              {element.text}
+                              {element.msg}
                             </p>
                           </div>
                           <div>
