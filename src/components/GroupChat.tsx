@@ -1,5 +1,5 @@
 import { RootState } from "@/redux/store";
-import { GroupListApi, searchUserApi } from "@/services/api.service";
+import { GroupListApi, searchGroupApi, searchUserApi } from "@/services/api.service";
 import {
   faArrowLeft,
   faSearch,
@@ -40,9 +40,9 @@ export default function GroupChat({
 
   const [searchResult, setSearchResult] = useState<any>(null);
   const [isSearching, setIsSearching] = useState(false);
-  const getUser = async () => {
+  const getGrp = async () => {
     try {
-      const searchUser: any = await searchUserApi(userSearch);
+      const searchUser: any = await searchGroupApi(userSearch);
       setSearchResult(searchUser.data);
     } catch (e) {}
   };
@@ -51,12 +51,11 @@ export default function GroupChat({
       try {
         const list = await GroupListApi(user._id);
         let grpList=list.data;
-              grpList = uniqWith(
-                grpList,
-                function (arrVal: any, othVal: any) {
-                  return arrVal._id === othVal._id;
-                }
-              );
+          grpList.sort((a:any, b:any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+          grpList = grpList.filter((value:any, index:any, self:any) => 
+                 index === self.findIndex((t:any) => t._id === value._id)
+           );
         setUserList(grpList);  
         listRef.current = grpList;        
                     
@@ -113,7 +112,7 @@ export default function GroupChat({
               )}
               <input
                 onChange={handleChange}
-                onKeyDown={getUser}
+                onKeyDown={getGrp}
                 type="text"
                 value={userSearch}
                 placeholder="Search"
@@ -123,7 +122,7 @@ export default function GroupChat({
                 className="cursor-pointer"
                 icon={faSearch}
                 color="white"
-                onClick={getUser}
+                onClick={getGrp}
               />
             </div>
             <div className=" ">
@@ -147,14 +146,10 @@ export default function GroupChat({
                       />
                       <div className="flex flex-col ms-4">
                         <p className="text-lg text-white">
-                          {searchResult?.user_name}
+                          {searchResult?.name}
                         </p>
                       </div>
-                      <div>
-                        <p className="text-[#455A64] text-sm mt-2 ">
-                          {moment(searchResult.createdAt).format("L")}
-                        </p>
-                      </div>
+                      
                     </div>
                   </div>
                 </>
@@ -188,7 +183,7 @@ export default function GroupChat({
                             </p>
 
                             <p className="text-[#455A64] w-[150px] text-sm truncate ...">
-                              {element.msg}
+                              {element.text}
                             </p>
                           </div>
                           <div>
