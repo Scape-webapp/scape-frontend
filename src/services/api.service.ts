@@ -43,7 +43,3 @@ export const NewGroupApi = (data: any) => {
 export const GroupListApi = (id: string) => {
   return protectedaxiosInstance.get(`/group/group-list/${id}`);
 };
-
-export const searchGroupApi = (grpname: string) => {
-  return protectedaxiosInstance.get(`/group/search-group/${grpname}`);
-};
