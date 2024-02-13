@@ -14,9 +14,8 @@ import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { chatApi, clearChatApi } from "@/services/api.service";
 import NonChatPage from "./NonChatPage";
-import { CldImage } from 'next-cloudinary';
+import { CldImage } from "next-cloudinary";
 import { CldUploadButton } from "next-cloudinary";
-
 
 const ChatBox = ({
   socket,
@@ -37,7 +36,7 @@ const ChatBox = ({
   const [message, setMessage] = useState("");
   const [pickerVisible, setPickerVisible] = useState(false);
   const [dropDownVisible, setDropDownVisible] = useState(false);
-  const [imgPublicId,setImgPulicId]=useState("");
+  const [imgPublicId, setImgPulicId] = useState("");
   const [selectedEmojis, setSelectedEmojis] = useState<string[]>([]);
   const chatBox = useRef<any>(null);
   const user = useSelector((state: RootState) => state.user.user);
@@ -60,15 +59,15 @@ const ChatBox = ({
   };
 
   const sendMessage = async (e: any) => {
- if(e && e.preventDefault ){
-e.preventDefault();
- }
-    
+    if (e && e.preventDefault) {
+      e.preventDefault();
+    }
+
     let msgToSend = {
       receiver: activeChat.id,
       sender: user._id,
-      text:message,
-      image:imgPublicId      
+      text: message,
+      image: imgPublicId,
     };
     await socket.emit("send-msg", msgToSend);
     setChatMessages((prevMessages: any) => [
@@ -79,10 +78,33 @@ e.preventDefault();
       },
     ]);
     setMessage("");
-    setImgPulicId('')
+    setImgPulicId("");
     setPickerVisible(false);
   };
 
+  const sendGroupMessage = async (e: any) => {
+    if (e && e.preventDefault) {
+      e.preventDefault();
+    }
+
+    let msgToSend = {
+      groupId: activeChat.id,
+      sender: user._id,
+      text: message,
+      image: imgPublicId,
+    };
+    await socket.emit("send-grp-msg", msgToSend);
+    setChatMessages((prevMessages: any) => [
+      ...prevMessages,
+      {
+        ...msgToSend,
+        createdAt: moment().toISOString(),
+      },
+    ]);
+    setMessage("");
+    setImgPulicId("");
+    setPickerVisible(false);
+  };
 
   useEffect(() => {
     if (chatBox && chatBox.current) {
@@ -91,7 +113,7 @@ e.preventDefault();
   }, [chatMessages]);
 
   useEffect(() => {
-    if (activeChat.id) getMsgs();    
+    if (activeChat.id) getMsgs();
   }, [activeChat.id]);
 
   useEffect(() => {
@@ -279,7 +301,6 @@ e.preventDefault();
                               height={100}
                               width={200}
                               alt="dummy"
-                                                            
                             />
                           </>
                         ) : (
