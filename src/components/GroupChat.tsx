@@ -179,11 +179,11 @@ export default function GroupChat({
 
                           <div className="flex flex-col ms-4">
                             <p className="text-lg text-white">
-                              {element.name}
+                               {element.name}
                             </p>
 
                             <p className="text-[#455A64] w-[150px] text-sm truncate ...">
-                              {element.text}
+                              {user._id? 'You' : element.userName}: {element.text}
                             </p>
                           </div>
                           <div>
