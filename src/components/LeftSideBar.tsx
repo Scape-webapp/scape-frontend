@@ -17,6 +17,7 @@ export default function LeftSideBar({
   activeChatRef,
   activeTab,
   setActiveChat,
+  socket,
 }: {
   list: any;
   setList: any;
@@ -24,9 +25,13 @@ export default function LeftSideBar({
   activeChatRef: any;
   activeTab: any;
   setActiveChat: Function;
+  socket: any;
 }) {
   const [userSearch, setuserSearch] = useState("");
   const user = useSelector((state: RootState) => state.user.user);
+  const [searchResult, setSearchResult] = useState<any>(null);
+  const [isSearching, setIsSearching] = useState(false);
+
   enum activeBar {
     CHAT = "chat",
     GROUPCHAT = "groupChat",
@@ -51,8 +56,7 @@ export default function LeftSideBar({
       console.log("error in chat list api : ", error);
     }
   };
-  const [searchResult, setSearchResult] = useState<any>(null);
-  const [isSearching, setIsSearching] = useState(false);
+
   const getUser = async () => {
     try {
       const searchUser: any = await searchUserApi(userSearch);
@@ -224,6 +228,7 @@ export default function LeftSideBar({
           setList={setList}
           listRef={listRef}
           setActiveChat={setActiveChat}
+          socket={socket}
         />
       )}
     </div>

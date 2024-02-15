@@ -36,10 +36,10 @@ export const clearChatApi = (data: any) => {
   return protectedaxiosInstance.post(`/message/clear-chat`, data);
 };
 
-export const NewGroupApi = (data: any) => {
-  return globalaxiosInstance.post(`/group/newgroup`, data);
-};
-
 export const GroupListApi = (id: string) => {
   return protectedaxiosInstance.get(`/group/group-list/${id}`);
+};
+
+export const NewGroupApi = (data: any) => {
+  return globalaxiosInstance.post(`/group/newgroup`, data);
 };

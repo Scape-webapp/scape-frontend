@@ -26,14 +26,17 @@ export default function GroupChat({
   setList,
   listRef,
   setActiveChat,
+  socket,
 }: {
   list: any;
   setList: any;
   listRef: any;
+  socket: any;
   setActiveChat: Function;
 }) {
   const [userSearch, setuserSearch] = useState("");
   const [userList, setUserList] = useState([]);
+  const [newGrpUserList, setNewGrpUserList] = useState([]);
   const [activeScreen, setActiveScreen] = useState(ActiveScreen.GROUPCHAT);
   const user = useSelector((state: RootState) => state.user.user);
 
@@ -70,6 +73,39 @@ export default function GroupChat({
     getGroupChatList();
     //   getChatList();
   }, []);
+
+  useEffect(() => {
+    console.log({ newGrpUserList });
+    if (socket) {
+      console.log({ socket });
+      socket.on("added-to-group", (data: any) => {
+        // setUserList(grpList);
+        // listRef.current = grpList;
+      });
+      // socket.on("msg-receive", (data: any) => {
+      // if (data?.sender === activeChatRef.current.id) {
+      //   setChatMessages((prev: any) => [...prev, data]);
+      // } else {
+      //   const list = listRef.current;
+      //   const userIndex = (list || []).findIndex(
+      //     (user: any) => user._id === data?.sender
+      //   );
+      //   list[userIndex] = {
+      //     ...list[userIndex],
+      //     text: data.text,
+      //     isRead: false,
+      //   };
+      //   const chatList = [...list].sort((a, b) => {
+      //     const isReadA: any = a.isRead === false;
+      //     const isReadB: any = b.isRead === false;
+      //     return isReadB - isReadA;
+      //   });
+      //   setList([...chatList]);
+      //   listRef.current = [...chatList];
+      //     }
+      //   });
+    }
+  }, [socket]);
 
   return (
     <>
@@ -207,10 +243,15 @@ export default function GroupChat({
           listRef={listRef}
           setActiveChat={setActiveChat}
           setActiveScreen={setActiveScreen}
+          setNewGrpUserList={setNewGrpUserList}
         />
       )}
       {activeScreen === ActiveScreen.GROUPPROFILE && (
-        <NewGroupProfile setActiveScreen={setActiveScreen} />
+        <NewGroupProfile
+          setActiveScreen={setActiveScreen}
+          newGrpUserList={newGrpUserList}
+          socket={socket}
+        />
       )}
     </>
   );

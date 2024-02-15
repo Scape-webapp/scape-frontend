@@ -11,6 +11,9 @@ import { CldImage } from "next-cloudinary";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import React from "react";
+import { NewGroupApi } from "@/services/api.service";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 enum ActiveScreen {
   GROUPCHAT = "groupChat",
@@ -20,11 +23,16 @@ enum ActiveScreen {
 
 export default function NewGroupProfile({
   setActiveScreen,
+  newGrpUserList,
+  socket,
 }: {
   setActiveScreen: Function;
+  newGrpUserList: any;
+  socket: any;
 }) {
   const [imgPublicId, setImgPulicId] = useState("");
   const [selectedEmojis, setSelectedEmojis] = useState<string[]>([]);
+  const user = useSelector((state: RootState) => state.user.user);
   const [groupDetails, setgroupDetails] = useState({
     name: "",
     description: "",
@@ -46,6 +54,23 @@ export default function NewGroupProfile({
   };
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+  };
+
+  const handleCreateGroup = async () => {
+    try {
+      const body = {
+        name: groupDetails.name,
+        profile_image: groupDetails.profile_image,
+        description: groupDetails.description,
+        users: [...newGrpUserList, user._id],
+        admins: [user._id],
+      };
+      await socket.emit("group-created", body);
+      setActiveScreen(ActiveScreen.GROUPCHAT);
+    } catch (error) {
+      // add fail toast later
+      console.log("error in create new group socket emit : ", error);
+    }
   };
 
   return (
@@ -77,7 +102,7 @@ export default function NewGroupProfile({
                   src={imgPublicId ? imgPublicId : "mrokrrlw2ssnr3tf3vy2"}
                   height={150}
                   width={150}
-                  alt="dummy"
+                  alt="profile"
                 />
               );
             }}
@@ -132,6 +157,7 @@ export default function NewGroupProfile({
                 style={{ color: "#ffffff" }}
                 icon={faCheck}
                 className="cursor-pointer"
+                onClick={() => handleCreateGroup()}
               />
             </button>
           </div>

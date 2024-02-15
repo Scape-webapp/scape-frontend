@@ -26,12 +26,14 @@ export default function AddUser({
   listRef,
   setActiveChat,
   setActiveScreen,
+  setNewGrpUserList,
 }: {
   list: any;
   setList: any;
   listRef: any;
   setActiveChat: Function;
   setActiveScreen: Function;
+  setNewGrpUserList: Function;
 }) {
   const [userSearch, setuserSearch] = useState("");
   const user = useSelector((state: RootState) => state.user.user);
@@ -70,13 +72,21 @@ export default function AddUser({
     setIsSearching(searchQuery.trim() !== "");
   };
 
+  const handleAddUser = () => {
+    if (userArray.length > 0) {
+      const users = userArray.map((element: any) => {
+        return element._id;
+      });
+      setNewGrpUserList(users);
+      setActiveScreen(ActiveScreen.GROUPPROFILE);
+    } else {
+      // set validation error
+    }
+  };
+
   useEffect(() => {
     getChatList();
   }, []);
-
-  useEffect(() => {
-    console.log({ userArray });
-  }, [userArray]);
 
   return (
     <div className="bg-[#303841] h-screen max-w-[380px] min-w-[380px]">
@@ -274,7 +284,7 @@ export default function AddUser({
           <button
             className="bg-[#7083FF]  rounded-[10px] px-14 py-2 font-bold cursor-pointer shadow-md hover:bg-[#5462ba] hover:text-white"
             onClick={() => {
-              setActiveScreen(ActiveScreen.GROUPPROFILE);
+              handleAddUser();
             }}
           >
             <FontAwesomeIcon

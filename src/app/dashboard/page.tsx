@@ -72,6 +72,7 @@ export default function DashBoard() {
             activeChatRef={activeChatRef}
             activeTab={activeTab}
             setActiveChat={setActiveChat}
+            socket={socket}
           />
           <ChatBox
             socket={socket}
