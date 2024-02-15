@@ -215,7 +215,8 @@ export default function GroupChat({
                             <p className="text-lg text-white">{element.name}</p>
 
                             <p className="text-[#455A64] w-[150px] text-sm truncate ...">
-                              {element.msg}
+                              {user._id ? "You" : element.userName}:{" "}
+                              {element.text}
                             </p>
                           </div>
                           <div>
