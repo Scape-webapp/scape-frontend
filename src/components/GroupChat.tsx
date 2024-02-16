@@ -1,5 +1,5 @@
 import { RootState } from "@/redux/store";
-import { GroupListApi, searchUserApi } from "@/services/api.service";
+import { GroupListApi, searchGroupApi } from "@/services/api.service";
 import {
   faArrowLeft,
   faSearch,
@@ -42,9 +42,9 @@ export default function GroupChat({
 
   const [searchResult, setSearchResult] = useState<any>(null);
   const [isSearching, setIsSearching] = useState(false);
-  const getUser = async () => {
+  const getGrp = async () => {
     try {
-      const searchUser: any = await searchUserApi(userSearch);
+      const searchUser: any = await searchGroupApi(userSearch);
       setSearchResult(searchUser.data);
     } catch (e) {}
   };
@@ -53,9 +53,15 @@ export default function GroupChat({
     try {
       const list = await GroupListApi(user._id);
       let grpList = list.data;
-      grpList = uniqWith(grpList, function (arrVal: any, othVal: any) {
-        return arrVal._id === othVal._id;
-      });
+      grpList.sort(
+        (a: any, b: any) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+
+      grpList = grpList.filter(
+        (value: any, index: any, self: any) =>
+          index === self.findIndex((t: any) => t._id === value._id)
+      );
       setUserList(grpList);
       listRef.current = grpList;
     } catch (error) {
@@ -71,39 +77,16 @@ export default function GroupChat({
 
   useEffect(() => {
     getGroupChatList();
-    //   getChatList();
   }, []);
 
   useEffect(() => {
-    console.log({ newGrpUserList });
     if (socket) {
-      console.log({ socket });
       socket.on("added-to-group", (data: any) => {
-        // setUserList(grpList);
-        // listRef.current = grpList;
+        const updateList: any = userList;
+        updateList.push(data);
+        setUserList(updateList);
+        listRef.current = updateList;
       });
-      // socket.on("msg-receive", (data: any) => {
-      // if (data?.sender === activeChatRef.current.id) {
-      //   setChatMessages((prev: any) => [...prev, data]);
-      // } else {
-      //   const list = listRef.current;
-      //   const userIndex = (list || []).findIndex(
-      //     (user: any) => user._id === data?.sender
-      //   );
-      //   list[userIndex] = {
-      //     ...list[userIndex],
-      //     text: data.text,
-      //     isRead: false,
-      //   };
-      //   const chatList = [...list].sort((a, b) => {
-      //     const isReadA: any = a.isRead === false;
-      //     const isReadB: any = b.isRead === false;
-      //     return isReadB - isReadA;
-      //   });
-      //   setList([...chatList]);
-      //   listRef.current = [...chatList];
-      //     }
-      //   });
     }
   }, [socket]);
 
@@ -142,7 +125,7 @@ export default function GroupChat({
               )}
               <input
                 onChange={handleChange}
-                onKeyDown={getUser}
+                onKeyDown={getGrp}
                 type="text"
                 value={userSearch}
                 placeholder="Search"
@@ -152,7 +135,7 @@ export default function GroupChat({
                 className="cursor-pointer"
                 icon={faSearch}
                 color="white"
-                onClick={getUser}
+                onClick={getGrp}
               />
             </div>
             <div className=" ">
