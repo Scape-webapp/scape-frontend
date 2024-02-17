@@ -135,6 +135,7 @@ export default function LeftSideBar({
                             id: searchResult?._id,
                             user_name: searchResult?.user_name,
                             profile_image: searchResult?.profile_image,
+                            group_chat: false,
                           });
                         }}
                       >
@@ -185,6 +186,7 @@ export default function LeftSideBar({
                                 id: element.user._id,
                                 user_name: element.user.user_name,
                                 profile_image: element.user.profile_image,
+                                group_chat: false,
                               };
                               element?.isRead === false
                                 ? (element.isRead = true)
@@ -229,6 +231,7 @@ export default function LeftSideBar({
           listRef={listRef}
           setActiveChat={setActiveChat}
           socket={socket}
+          activeChatRef={activeChatRef}
         />
       )}
     </div>

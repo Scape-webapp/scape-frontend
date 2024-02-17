@@ -27,12 +27,14 @@ export default function GroupChat({
   listRef,
   setActiveChat,
   socket,
+  activeChatRef,
 }: {
   list: any;
   setList: any;
   listRef: any;
   socket: any;
   setActiveChat: Function;
+  activeChatRef: any;
 }) {
   const [userSearch, setuserSearch] = useState("");
   const [userList, setUserList] = useState([]);
@@ -145,7 +147,7 @@ export default function GroupChat({
                     className="bg-[#36404A] flex flex-row py-2 px-3 cursor-pointer "
                     key={searchResult?._id}
                   >
-                    <div className="flex">
+                    <div className="flex ">
                       <CldImage
                         className="m-auto rounded-full h-[45px]"
                         src={
@@ -155,7 +157,7 @@ export default function GroupChat({
                         }
                         height={45}
                         width={45}
-                        alt="dummy"
+                        alt="profile"
                       />
                       <div className="flex flex-col ms-4">
                         <p className="text-lg text-white">
@@ -184,6 +186,21 @@ export default function GroupChat({
                       <div
                         className="bg-[#36404A] flex flex-row py-2 px-3 relative cursor-pointer "
                         key={element._id}
+                        onClick={() => {
+                          const chat = {
+                            id: element._id,
+                            user_name: element.name,
+                            profile_image: element.profile_image,
+                            group_chat: true,
+                          };
+                          element?.isRead === false
+                            ? (element.isRead = true)
+                            : null;
+                          setList([...list]);
+                          listRef.current = [...list];
+                          setActiveChat(chat);
+                          activeChatRef.current = chat;
+                        }}
                       >
                         <div className="flex">
                           <CldImage
@@ -191,7 +208,7 @@ export default function GroupChat({
                             src="mrokrrlw2ssnr3tf3vy2"
                             height={45}
                             width={45}
-                            alt="dummy"
+                            alt="profile"
                           />
 
                           <div className="flex flex-col ms-4">

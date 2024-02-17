@@ -21,6 +21,8 @@ export default function DashBoard() {
   const [activeChat, setActiveChat] = useState({
     id: "",
     user_name: "",
+    profile_image: "",
+    group_chat: false,
   });
   const activeChatRef = useRef(activeChat);
   const [list, setList] = useState<any>([]);
