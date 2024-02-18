@@ -71,6 +71,7 @@ export default function GroupChat({
       console.log("error in chat list api : ", error);
     }
   };
+
   const handleChange = (e: any) => {
     const searchQuery = e.target.value;
     setuserSearch(searchQuery);
@@ -84,10 +85,7 @@ export default function GroupChat({
   useEffect(() => {
     if (socket) {
       socket.on("added-to-group", (data: any) => {
-        const updateList: any = userList;
-        updateList.push(data);
-        setUserList(updateList);
-        listRef.current = updateList;
+        getGroupChatList();
       });
     }
   }, [socket]);
@@ -252,6 +250,7 @@ export default function GroupChat({
           setActiveScreen={setActiveScreen}
           newGrpUserList={newGrpUserList}
           socket={socket}
+          getGroupChatList={getGroupChatList}
         />
       )}
     </>

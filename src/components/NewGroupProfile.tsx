@@ -25,10 +25,12 @@ export default function NewGroupProfile({
   setActiveScreen,
   newGrpUserList,
   socket,
+  getGroupChatList,
 }: {
   setActiveScreen: Function;
   newGrpUserList: any;
   socket: any;
+  getGroupChatList: Function;
 }) {
   const [imgPublicId, setImgPulicId] = useState("");
   const [selectedEmojis, setSelectedEmojis] = useState<string[]>([]);
@@ -65,7 +67,9 @@ export default function NewGroupProfile({
         users: [...newGrpUserList, user._id],
         admins: [user._id],
       };
+
       await socket.emit("group-created", body);
+      getGroupChatList();
       setActiveScreen(ActiveScreen.GROUPCHAT);
     } catch (error) {
       // add fail toast later
