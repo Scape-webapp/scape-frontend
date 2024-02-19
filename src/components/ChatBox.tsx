@@ -136,7 +136,7 @@ const ChatBox = ({
   useEffect(() => {
     if (socket) {
       socket.on("msg-receive", (data: any) => {
-        if (!activeChat.group_chat) {
+        if (data.receiver) {
           if (data?.sender === activeChatRef.current.id) {
             setChatMessages((prev: any) => [...prev, data]);
           } else {
@@ -159,7 +159,6 @@ const ChatBox = ({
             listRef.current = [...chatList];
           }
         } else {
-          //fix this to update received message on ui for group chat
           if (data?.groupId === activeChatRef.current.id) {
             setChatMessages((prev: any) => [...prev, data]);
           } else {
@@ -167,6 +166,7 @@ const ChatBox = ({
             const userIndex = (list || []).findIndex(
               (user: any) => user._id === data?.sender
             );
+
             list[userIndex] = {
               ...list[userIndex],
               text: data.text,
@@ -175,7 +175,6 @@ const ChatBox = ({
             const chatList = [...list].sort((a, b) => {
               const isReadA: any = a.isRead === false;
               const isReadB: any = b.isRead === false;
-
               return isReadB - isReadA;
             });
             setList([...chatList]);
@@ -297,10 +296,10 @@ const ChatBox = ({
                   )}
                   <div
                     className={`flex gap-2 mx-6 my-4 justify-${
-                      msg.receiver === activeChat.id ? "end" : "start"
+                      msg.sender === user._id ? "end" : "start"
                     }`}
                     style={
-                      msg.receiver === activeChat.id
+                      msg.sender === user._id
                         ? { justifyContent: "flex-end" }
                         : { justifyContent: "flex-start" }
                     }
@@ -330,7 +329,7 @@ const ChatBox = ({
                       )}
                       <div
                         className={`p-3 max-w-sm rounded-t-lg ${
-                          msg.receiver === activeChat.id
+                          msg.sender === user._id
                             ? "bg-[#36404A] rounded-bl-lg"
                             : "bg-[#7083FF] rounded-br-lg"
                         }`}
@@ -350,8 +349,8 @@ const ChatBox = ({
                         )}
                         {/* <p className="text-white text-base">{msg.text}</p> */}
                       </div>
-                      {msg.receiver === activeChat.id &&
-                      msg.receiver[0] !== chatMessages[i + 1]?.receiver[0] ? (
+                      {msg.sender === user._id &&
+                      msg.sender[0] !== chatMessages[i + 1]?.sender[0] ? (
                         // <Image
                         //   src="/images/profile-dummy.svg"
                         //   alt="profile"
@@ -383,7 +382,6 @@ const ChatBox = ({
             <CldUploadButton
               uploadPreset="Profile_picture"
               onSuccess={(result: any, { widget }) => {
-                console.log("image ki", result?.info.public_id);
                 setImgPulicId(result?.info.public_id);
               }}
               onUpload={(e) => {
