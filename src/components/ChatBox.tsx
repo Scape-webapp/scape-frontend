@@ -12,11 +12,14 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
-import { chatApi, clearChatApi } from "@/services/api.service";
+import {
+  GroupChatListApi,
+  chatApi,
+  clearChatApi,
+} from "@/services/api.service";
 import NonChatPage from "./NonChatPage";
-import { CldImage } from 'next-cloudinary';
+import { CldImage } from "next-cloudinary";
 import { CldUploadButton } from "next-cloudinary";
-
 
 const ChatBox = ({
   socket,
@@ -37,18 +40,30 @@ const ChatBox = ({
   const [message, setMessage] = useState("");
   const [pickerVisible, setPickerVisible] = useState(false);
   const [dropDownVisible, setDropDownVisible] = useState(false);
-  const [imgPublicId,setImgPulicId]=useState("");
+  const [imgPublicId, setImgPulicId] = useState("");
   const [selectedEmojis, setSelectedEmojis] = useState<string[]>([]);
   const chatBox = useRef<any>(null);
   const user = useSelector((state: RootState) => state.user.user);
 
   const getMsgs = async () => {
-    const msgs = await chatApi({
-      receiver: activeChat.id,
-      sender: user._id,
-    });
-    setChatMessages(msgs.data);
-    console.log(msgs.data);
+    try {
+      const msgs = await chatApi({
+        receiver: activeChat.id,
+        sender: user._id,
+      });
+      setChatMessages(msgs.data);
+    } catch (error) {
+      console.log("Error in get chat messages api : ", error);
+    }
+  };
+
+  const getGroupMsgs = async () => {
+    try {
+      const msgs = await GroupChatListApi(activeChat.id);
+      setChatMessages(msgs.data);
+    } catch (error) {
+      console.log("Error in get group messages api : ", error);
+    }
   };
 
   const handleClearChat = async () => {
@@ -60,15 +75,15 @@ const ChatBox = ({
   };
 
   const sendMessage = async (e: any) => {
- if(e && e.preventDefault ){
-e.preventDefault();
- }
-    
+    if (e && e.preventDefault) {
+      e.preventDefault();
+    }
+
     let msgToSend = {
       receiver: activeChat.id,
       sender: user._id,
-      text:message,
-      image:imgPublicId      
+      text: message,
+      image: imgPublicId,
     };
     await socket.emit("send-msg", msgToSend);
     setChatMessages((prevMessages: any) => [
@@ -79,10 +94,33 @@ e.preventDefault();
       },
     ]);
     setMessage("");
-    setImgPulicId('')
+    setImgPulicId("");
     setPickerVisible(false);
   };
 
+  const sendGroupMessage = async (e: any) => {
+    if (e && e.preventDefault) {
+      e.preventDefault();
+    }
+
+    let msgToSend = {
+      groupId: activeChat.id,
+      sender: user._id,
+      text: message,
+      image: imgPublicId,
+    };
+    await socket.emit("send-grp-msg", msgToSend);
+    setChatMessages((prevMessages: any) => [
+      ...prevMessages,
+      {
+        ...msgToSend,
+        createdAt: moment().toISOString(),
+      },
+    ]);
+    setMessage("");
+    setImgPulicId("");
+    setPickerVisible(false);
+  };
 
   useEffect(() => {
     if (chatBox && chatBox.current) {
@@ -91,32 +129,57 @@ e.preventDefault();
   }, [chatMessages]);
 
   useEffect(() => {
-    if (activeChat.id) getMsgs();    
+    if (activeChat.id && !activeChat.group_chat) getMsgs();
+    if (activeChat.id && activeChat.group_chat) getGroupMsgs();
   }, [activeChat.id]);
 
   useEffect(() => {
     if (socket) {
       socket.on("msg-receive", (data: any) => {
-        if (data?.sender === activeChatRef.current.id) {
-          setChatMessages((prev: any) => [...prev, data]);
-        } else {
-          const list = listRef.current;
-          const userIndex = (list || []).findIndex(
-            (user: any) => user._id === data?.sender
-          );
-          list[userIndex] = {
-            ...list[userIndex],
-            text: data.text,
-            isRead: false,
-          };
-          const chatList = [...list].sort((a, b) => {
-            const isReadA: any = a.isRead === false;
-            const isReadB: any = b.isRead === false;
+        if (data.receiver) {
+          if (data?.sender === activeChatRef.current.id) {
+            setChatMessages((prev: any) => [...prev, data]);
+          } else {
+            const list = listRef.current;
+            const userIndex = (list || []).findIndex(
+              (user: any) => user._id === data?.sender
+            );
+            list[userIndex] = {
+              ...list[userIndex],
+              text: data.text,
+              isRead: false,
+            };
+            const chatList = [...list].sort((a, b) => {
+              const isReadA: any = a.isRead === false;
+              const isReadB: any = b.isRead === false;
 
-            return isReadB - isReadA;
-          });
-          setList([...chatList]);
-          listRef.current = [...chatList];
+              return isReadB - isReadA;
+            });
+            setList([...chatList]);
+            listRef.current = [...chatList];
+          }
+        } else {
+          if (data?.groupId === activeChatRef.current.id) {
+            setChatMessages((prev: any) => [...prev, data]);
+          } else {
+            const list = listRef.current;
+            const userIndex = (list || []).findIndex(
+              (user: any) => user._id === data?.sender
+            );
+
+            list[userIndex] = {
+              ...list[userIndex],
+              text: data.text,
+              isRead: false,
+            };
+            const chatList = [...list].sort((a, b) => {
+              const isReadA: any = a.isRead === false;
+              const isReadB: any = b.isRead === false;
+              return isReadB - isReadA;
+            });
+            setList([...chatList]);
+            listRef.current = [...chatList];
+          }
         }
       });
     }
@@ -233,10 +296,10 @@ e.preventDefault();
                   )}
                   <div
                     className={`flex gap-2 mx-6 my-4 justify-${
-                      msg.receiver === activeChat.id ? "end" : "start"
+                      msg.sender === user._id ? "end" : "start"
                     }`}
                     style={
-                      msg.receiver === activeChat.id
+                      msg.sender === user._id
                         ? { justifyContent: "flex-end" }
                         : { justifyContent: "flex-start" }
                     }
@@ -266,7 +329,7 @@ e.preventDefault();
                       )}
                       <div
                         className={`p-3 max-w-sm rounded-t-lg ${
-                          msg.receiver === activeChat.id
+                          msg.sender === user._id
                             ? "bg-[#36404A] rounded-bl-lg"
                             : "bg-[#7083FF] rounded-br-lg"
                         }`}
@@ -279,7 +342,6 @@ e.preventDefault();
                               height={100}
                               width={200}
                               alt="dummy"
-                                                            
                             />
                           </>
                         ) : (
@@ -287,8 +349,8 @@ e.preventDefault();
                         )}
                         {/* <p className="text-white text-base">{msg.text}</p> */}
                       </div>
-                      {msg.receiver === activeChat.id &&
-                      msg.receiver[0] !== chatMessages[i + 1]?.receiver[0] ? (
+                      {msg.sender === user._id &&
+                      msg.sender[0] !== chatMessages[i + 1]?.sender[0] ? (
                         // <Image
                         //   src="/images/profile-dummy.svg"
                         //   alt="profile"
@@ -320,10 +382,12 @@ e.preventDefault();
             <CldUploadButton
               uploadPreset="Profile_picture"
               onSuccess={(result: any, { widget }) => {
-                console.log("image ki", result?.info.public_id);
                 setImgPulicId(result?.info.public_id);
               }}
-              onUpload={sendMessage}
+              onUpload={(e) => {
+                if (!activeChat.group_chat) sendMessage(e);
+                if (activeChat.group_chat) sendGroupMessage(e);
+              }}
             >
               <FontAwesomeIcon size="2x" color="#7083FF" icon={faImage} />
             </CldUploadButton>
@@ -365,7 +429,10 @@ e.preventDefault();
               <button
                 type="submit"
                 className="cursor-pointer"
-                onClick={(e) => sendMessage(e)}
+                onClick={(e) => {
+                  if (!activeChat.group_chat) sendMessage(e);
+                  if (activeChat.group_chat) sendGroupMessage(e);
+                }}
               >
                 <Image
                   src="/logos/send.svg"

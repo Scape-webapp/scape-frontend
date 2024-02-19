@@ -8,10 +8,16 @@ import { getProfileDetails } from "@/services/api.service";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
 import { CldUploadWidget } from "next-cloudinary";
-import { CldImage } from 'next-cloudinary';
+import { CldImage } from "next-cloudinary";
 import { faArrowRightLong, faPen } from "@fortawesome/free-solid-svg-icons";
 
-function EditProfile({ setIsEdit,onEditSubmit }: { setIsEdit: any,onEditSubmit: () => void; }) {
+function EditProfile({
+  setIsEdit,
+  onEditSubmit,
+}: {
+  setIsEdit: any;
+  onEditSubmit: () => void;
+}) {
   const [userName, setUserName] = useState({
     user_name: "",
   });
@@ -19,11 +25,11 @@ function EditProfile({ setIsEdit,onEditSubmit }: { setIsEdit: any,onEditSubmit: 
     name: "",
     email: "",
     description: "",
-    profile_image:"",
+    profile_image: "",
   });
-const [imgPublicId,setImgPulicId]=useState("");
+  const [imgPublicId, setImgPulicId] = useState("");
 
-const user:any = useSelector((state: RootState) => state.user.user);
+  const user: any = useSelector((state: RootState) => state.user.user);
   const profileData = async () => {
     const resp: any = await getProfileDetails(user._id);
     setUserName({ user_name: resp.data.user_name });
@@ -31,7 +37,7 @@ const user:any = useSelector((state: RootState) => state.user.user);
       name: resp.data.name,
       email: resp.data.email,
       description: resp.data.description,
-      profile_image:resp.data.profile_image,
+      profile_image: resp.data.profile_image,
     });
   };
 
@@ -46,10 +52,10 @@ const user:any = useSelector((state: RootState) => state.user.user);
         ...editDetails,
         ...userName,
         id: user._id,
-        profile_image:imgPublicId? imgPublicId: editDetails.profile_image ,
+        profile_image: imgPublicId ? imgPublicId : editDetails.profile_image,
       });
-      setIsEdit("");    
-      onEditSubmit();  
+      setIsEdit("");
+      onEditSubmit();
       console.log("Profile details updated successfully!");
     } catch (error) {
       console.error("Error updating profile details:", error);
@@ -76,26 +82,31 @@ const user:any = useSelector((state: RootState) => state.user.user);
       </p>
       <form onSubmit={handleSubmit}>
         <div className="px-8 pt-5">
-         <CldUploadWidget
-                uploadPreset="Profile_picture"
-                onSuccess={(result: any, { widget }) => {
-                  
-                  setImgPulicId(result?.info.public_id);                  
-                }}
-              >
-                {({ open }) => {
-                  return (
-                    <CldImage
-                      onClick={() => open()}
-                      className="m-auto cursor-pointer rounded-full h-[80px]"
-                      src={imgPublicId?imgPublicId:(editDetails.profile_image?editDetails.profile_image:'mrokrrlw2ssnr3tf3vy2')}
-                      height={80}
-                      width={80}
-                      alt="dummy"
-                    />
-                  );
-                }}
-              </CldUploadWidget>
+          <CldUploadWidget
+            uploadPreset="Profile_picture"
+            onSuccess={(result: any, { widget }) => {
+              setImgPulicId(result?.info.public_id);
+            }}
+          >
+            {({ open }) => {
+              return (
+                <CldImage
+                  onClick={() => open()}
+                  className="m-auto cursor-pointer rounded-full h-[80px]"
+                  src={
+                    imgPublicId
+                      ? imgPublicId
+                      : editDetails.profile_image
+                      ? editDetails.profile_image
+                      : "mrokrrlw2ssnr3tf3vy2"
+                  }
+                  height={80}
+                  width={80}
+                  alt="dummy"
+                />
+              );
+            }}
+          </CldUploadWidget>
 
           {/* will update this filed with redux state */}
           <p className="text-white text-lg pb-2">Username</p>

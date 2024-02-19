@@ -1,6 +1,5 @@
 import { faArrowLeft, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Image from "next/image";
 import Profile from "./Profile";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -8,7 +7,7 @@ import { ChatListApi, searchUserApi } from "@/services/api.service";
 import { useEffect, useState } from "react";
 import moment from "moment";
 import uniqWith from "lodash/uniqWith";
-import { CldImage } from 'next-cloudinary';
+import { CldImage } from "next-cloudinary";
 import GroupChat from "./GroupChat";
 
 export default function LeftSideBar({
@@ -17,19 +16,22 @@ export default function LeftSideBar({
   listRef,
   activeChatRef,
   activeTab,
-  activeChat,
   setActiveChat,
+  socket,
 }: {
   list: any;
   setList: any;
   listRef: any;
   activeChatRef: any;
   activeTab: any;
-  activeChat: object;
   setActiveChat: Function;
+  socket: any;
 }) {
   const [userSearch, setuserSearch] = useState("");
   const user = useSelector((state: RootState) => state.user.user);
+  const [searchResult, setSearchResult] = useState<any>(null);
+  const [isSearching, setIsSearching] = useState(false);
+
   enum activeBar {
     CHAT = "chat",
     GROUPCHAT = "groupChat",
@@ -54,8 +56,7 @@ export default function LeftSideBar({
       console.log("error in chat list api : ", error);
     }
   };
-  const [searchResult, setSearchResult] = useState<any>(null);
-  const [isSearching, setIsSearching] = useState(false);
+
   const getUser = async () => {
     try {
       const searchUser: any = await searchUserApi(userSearch);
@@ -134,6 +135,7 @@ export default function LeftSideBar({
                             id: searchResult?._id,
                             user_name: searchResult?.user_name,
                             profile_image: searchResult?.profile_image,
+                            group_chat: false,
                           });
                         }}
                       >
@@ -149,7 +151,10 @@ export default function LeftSideBar({
                     </div>
                   </div>
                 </>
-              ) :  ((searchResult!==null && searchResult.length===0 ) && userSearch!==null) ||searchResult?._id === user._id ? (
+              ) : (searchResult !== null &&
+                  searchResult.length === 0 &&
+                  userSearch !== null) ||
+                searchResult?._id === user._id ? (
                 <>
                   <p className="text-white text-center ">No result found</p>
                 </>
@@ -168,8 +173,8 @@ export default function LeftSideBar({
                               element.user.profile_image
                                 ? element.user.profile_image
                                 : "mrokrrlw2ssnr3tf3vy2"
-                            }     
-                             height={45}                       
+                            }
+                            height={45}
                             width={45}
                             alt="dummy"
                           />
@@ -180,7 +185,8 @@ export default function LeftSideBar({
                               const chat = {
                                 id: element.user._id,
                                 user_name: element.user.user_name,
-                                profile_image:element.user.profile_image,
+                                profile_image: element.user.profile_image,
+                                group_chat: false,
                               };
                               element?.isRead === false
                                 ? (element.isRead = true)
@@ -218,7 +224,16 @@ export default function LeftSideBar({
         </>
       )}
       {activeTab === activeBar.PROFILE && <Profile />}
-      {activeTab === activeBar.GROUPCHAT && <GroupChat />}
+      {activeTab === activeBar.GROUPCHAT && (
+        <GroupChat
+          list={list}
+          setList={setList}
+          listRef={listRef}
+          setActiveChat={setActiveChat}
+          socket={socket}
+          activeChatRef={activeChatRef}
+        />
+      )}
     </div>
   );
 }
