@@ -1,6 +1,7 @@
-import { setAccessToken } from "@/redux/features/user-slice";
+import { logout, setAccessToken } from "@/redux/features/user-slice";
 import { store } from "@/redux/store";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export const protectedaxiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -24,8 +25,9 @@ protectedaxiosInstance.interceptors.request.use((request) =>
 
 protectedaxiosInstance.interceptors.response.use(
   (response) => responseHandler(response),
-  function (error) {
+  async function (error) {
     const originalRequest: any = error.config;
+
     if (
       error.response.status === 401 &&
       originalRequest.url ===
@@ -36,8 +38,7 @@ protectedaxiosInstance.interceptors.response.use(
     if (error.response.status === 403 && !originalRequest._retry) {
       originalRequest._retry = true;
       const refreshToken = store.getState().user.refreshToken;
-
-      return globalaxiosInstance
+      return await globalaxiosInstance
         .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/refresh`, {
           user_name: store.getState().user.user.user_name,
           token: refreshToken,
@@ -48,6 +49,13 @@ protectedaxiosInstance.interceptors.response.use(
             protectedaxiosInstance.defaults.headers.common["authorization"] =
               "Bearer " + store.getState().user.accessToken;
             return protectedaxiosInstance(originalRequest);
+          }
+        })
+        .catch((error) => {
+          if (error.response.status === 400) {
+            toast.error("Login Session Expired!");
+            // logout user
+            store.dispatch(logout());
           }
         });
     }
