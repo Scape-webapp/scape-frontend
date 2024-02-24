@@ -303,7 +303,7 @@ const ChatBox = ({
                     <div></div>
                   )}
                   <div
-                    className={`flex gap-2 mx-6 my-4 justify-${
+                    className={`flex gap-2 mx-6 break-words my-4 justify-${
                       msg.sender === user._id ? "end" : "start"
                     }`}
                     style={
