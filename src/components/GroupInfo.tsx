@@ -7,13 +7,15 @@ import { CldUploadWidget } from "next-cloudinary";
 import { useEffect,useState } from "react";
 import { GroupInfoApi } from "@/services/api.service";
 
-const GroupInfo=({activeGrpChat,activeChat,
+const GroupInfo=({activeGrpChat,
 groupInfoVisible,
 setgroupInfoVisible}:{activeGrpChat:any,
-groupInfoVisible:any,activeChat:any
+groupInfoVisible:any,
 setgroupInfoVisible:Function})=>{
+    const [imgPublicId, setImgPulicId] = useState("");
     const [grpdetails, setGrpdetails] = useState<any>([]);
     const [grpMembers, setGrpMembers] = useState([]);
+
     const getGroupInfoList = async () => {
     try {
       const info = await GroupInfoApi(activeGrpChat);
