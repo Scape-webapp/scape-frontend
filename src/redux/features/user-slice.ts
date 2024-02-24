@@ -7,7 +7,7 @@ type User = {
   updatedAt: string;
   user_name: string;
   _id: string;
-  profile_image:string;
+  profile_image: string;
 };
 
 type UserState = {
@@ -24,7 +24,7 @@ const initialState: UserState = {
     updatedAt: "",
     user_name: "",
     _id: "",
-    profile_image:"",
+    profile_image: "",
   },
   accessToken: "",
   refreshToken: "",
@@ -54,10 +54,11 @@ export const user = createSlice({
     },
     setAccessToken: (state, action) => {
       const accessToken = action.payload;
+      console.log("set this as new access token : ", accessToken);
       state.accessToken = accessToken;
     },
   },
 });
 
-export const { login, logout,setAccessToken } = user.actions;
+export const { login, logout, setAccessToken } = user.actions;
 export default user.reducer;
