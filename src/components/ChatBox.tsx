@@ -20,6 +20,7 @@ import {
 import NonChatPage from "./NonChatPage";
 import { CldImage } from "next-cloudinary";
 import { CldUploadButton } from "next-cloudinary";
+import GroupInfo from "./GroupInfo";
 
 const ChatBox = ({
   socket,
@@ -39,6 +40,8 @@ const ChatBox = ({
   const [chatMessages, setChatMessages] = useState<any>([]);
   const [message, setMessage] = useState("");
   const [pickerVisible, setPickerVisible] = useState(false);
+    const [groupInfoVisible, setgroupInfoVisible] = useState(false);
+
   const [dropDownVisible, setDropDownVisible] = useState(false);
   const [imgPublicId, setImgPulicId] = useState("");
   const [selectedEmojis, setSelectedEmojis] = useState<string[]>([]);
@@ -207,7 +210,10 @@ const ChatBox = ({
       ) : (
         <div className="max-h-screen w-full bg-[#262E35] flex flex-col">
           <div className="h-[10%] border-b border-[#36404A] flex items-center py-2 px-8">
-            <div className="flex justify-between items-center w-full">
+            <div className="flex justify-between items-center w-full cursor-pointer" 
+            onClick={() => {
+                    setgroupInfoVisible(!groupInfoVisible);
+                  }}>
               <div className="flex items-center gap-4">
                 <CldImage
                   className="m-auto rounded-full h-[45px]"
@@ -443,8 +449,11 @@ const ChatBox = ({
               </button>
             </form>
           </div>
+         
         </div>
       )}
+      {groupInfoVisible &&(
+     <GroupInfo  activeChat={activeChat} activeGrpChat={activeChat.id} groupInfoVisible={groupInfoVisible} setgroupInfoVisible={setgroupInfoVisible}/>)}
     </>
   );
 };

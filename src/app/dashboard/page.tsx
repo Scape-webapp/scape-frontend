@@ -1,6 +1,7 @@
 "use client";
 
 import ChatBox from "@/components/ChatBox";
+import GroupInfo from "@/components/GroupInfo";
 import LeftSideBar from "@/components/LeftSideBar";
 import SideMenu from "@/components/SideMenu";
 import { RootState, store } from "@/redux/store";
@@ -84,6 +85,7 @@ export default function DashBoard() {
             setList={setList}
             listRef={listRef}
           />
+          
         </div>
       </div>
     </AuthComponent>
