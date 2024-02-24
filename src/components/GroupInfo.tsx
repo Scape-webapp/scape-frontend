@@ -7,10 +7,10 @@ import { CldUploadWidget } from "next-cloudinary";
 import { useEffect,useState } from "react";
 import { GroupInfoApi } from "@/services/api.service";
 
-const GroupInfo=({activeGrpChat,
+const GroupInfo=({activeGrpChat,activeChat,
 groupInfoVisible,
 setgroupInfoVisible}:{activeGrpChat:any,
-groupInfoVisible:any,
+groupInfoVisible:any ,activeChat,:any
 setgroupInfoVisible:Function})=>{
     const [imgPublicId, setImgPulicId] = useState("");
     const [grpdetails, setGrpdetails] = useState<any>([]);
