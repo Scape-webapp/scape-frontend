@@ -40,7 +40,7 @@ const ChatBox = ({
   const [chatMessages, setChatMessages] = useState<any>([]);
   const [message, setMessage] = useState("");
   const [pickerVisible, setPickerVisible] = useState(false);
-    const [groupInfoVisible, setgroupInfoVisible] = useState(false);
+  const [groupInfoVisible, setgroupInfoVisible] = useState(false);
 
   const [dropDownVisible, setDropDownVisible] = useState(false);
   const [imgPublicId, setImgPulicId] = useState("");
@@ -210,10 +210,12 @@ const ChatBox = ({
       ) : (
         <div className="max-h-screen w-full bg-[#262E35] flex flex-col">
           <div className="h-[10%] border-b border-[#36404A] flex items-center py-2 px-8">
-            <div className="flex justify-between items-center w-full cursor-pointer" 
-            onClick={() => {
-                    setgroupInfoVisible(!groupInfoVisible);
-                  }}>
+            <div
+              className="flex justify-between items-center w-full cursor-pointer"
+              onClick={() => {
+                setgroupInfoVisible(!groupInfoVisible);
+              }}
+            >
               <div className="flex items-center gap-4">
                 <CldImage
                   className="m-auto rounded-full h-[45px]"
@@ -421,7 +423,7 @@ const ChatBox = ({
 
             {/* <FontAwesomeIcon icon={faFaceSmile} size="2x" color="#7083FF" /> */}
             <form
-              className="flex p-1.5 justify-between items-center bg-[#36404A] rounded-xl w-3/4"
+              className="flex p-1.5 justify-between items-center bg-[#36404A] rounded-xl w-full"
               // onSubmit={(e) => sendMessage(e)}
             >
               <input
@@ -449,11 +451,16 @@ const ChatBox = ({
               </button>
             </form>
           </div>
-         
         </div>
       )}
-      {groupInfoVisible &&(
-     <GroupInfo  activeChat={activeChat} activeGrpChat={activeChat.id} groupInfoVisible={groupInfoVisible} setgroupInfoVisible={setgroupInfoVisible}/>)}
+      {groupInfoVisible && (
+        <GroupInfo
+          activeChat={activeChat}
+          activeGrpChat={activeChat.id}
+          groupInfoVisible={groupInfoVisible}
+          setgroupInfoVisible={setgroupInfoVisible}
+        />
+      )}
     </>
   );
 };
