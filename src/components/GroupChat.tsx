@@ -28,6 +28,7 @@ export default function GroupChat({
   setActiveChat,
   socket,
   activeChatRef,
+  setgroupInfoVisible,
 }: {
   list: any;
   setList: any;
@@ -35,6 +36,7 @@ export default function GroupChat({
   socket: any;
   setActiveChat: Function;
   activeChatRef: any;
+  setgroupInfoVisible:Function;
 }) {
   const [userSearch, setuserSearch] = useState("");
   const [userList, setUserList] = useState([]);
@@ -198,6 +200,7 @@ export default function GroupChat({
                           setList([...list]);
                           listRef.current = [...list];
                           setActiveChat(chat);
+                          setgroupInfoVisible(false);
                           activeChatRef.current = chat;
                         }}
                       >

@@ -6,11 +6,12 @@ import { CldImage } from "next-cloudinary";
 import { CldUploadWidget } from "next-cloudinary";
 import { useEffect,useState } from "react";
 import { GroupInfoApi } from "@/services/api.service";
+import { getProfileDetails } from "@/services/api.service";
 
 const GroupInfo=({activeGrpChat,activeChat,
 groupInfoVisible,
 setgroupInfoVisible}:{activeGrpChat:any,
-groupInfoVisible:any ,activeChat,:any
+groupInfoVisible:any ,activeChat:any,
 setgroupInfoVisible:Function})=>{
     const [imgPublicId, setImgPulicId] = useState("");
     const [grpdetails, setGrpdetails] = useState<any>([]);
@@ -28,8 +29,18 @@ setgroupInfoVisible:Function})=>{
       console.log("error in chat list api : ", error);
     }
   };
+    const profileData = async () => {
+    try {
+      const response = await getProfileDetails(activeGrpChat);
+      setGrpdetails(response.data);
+      console.log(">>>>>,,,,",response.data)
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
-    getGroupInfoList ();
+    activeChat.group_chat?getGroupInfoList ():profileData();   
+     
   }, []);
     return (     
       <div className="bg-[#303841] h-screen max-w-[380px] min-w-[380px] overflow-scroll">
@@ -43,11 +54,11 @@ setgroupInfoVisible:Function})=>{
                     setgroupInfoVisible(!groupInfoVisible);
                   }}
             />
-            Group Info
+            {activeChat.group_chat?'Group Info':'Friend Info'}
           </p>
         </div>
         <div className="pt-8">
-          <CldUploadWidget
+          {activeChat.group_chat?(<CldUploadWidget
             uploadPreset="Profile_picture"
             onSuccess={(result: any, { widget }) => {
               setImgPulicId(result?.info.public_id);
@@ -69,13 +80,24 @@ setgroupInfoVisible:Function})=>{
                 />
               );
             }}
-          </CldUploadWidget>
+          </CldUploadWidget>):( <CldImage
+              className="m-auto cursor-pointer rounded-full h-[150px]"
+              src={
+                grpdetails?.profile_image
+                      ? grpdetails?.profile_image
+                      : "mrokrrlw2ssnr3tf3vy2"
+              }
+              height={150}
+              width={150}
+              alt="dummy"
+            />)}                  
         </div>
         <div className="pt-8 border-b border-[#36404A] pb-4 mx-8">
-          <p className="text-center text-2xl text-white">{grpdetails?.name}</p>
-          <p className="text-center text-sm pt-2 text-[#ddd]">
+          <p className="text-center text-2xl text-white">{activeChat.group_chat?grpdetails?.name:grpdetails?.user_name}</p>
+          
+          {activeChat.group_chat && (<p className="text-center text-sm pt-2 text-[#ddd]">
             Group: {grpMembers?.length} members
-          </p>
+          </p>)}
         </div>
         {grpdetails?.description && (
           <div className="pt-4">
@@ -85,7 +107,12 @@ setgroupInfoVisible:Function})=>{
             </p>
           </div>
         )}
-        <p className="px-8 pt-4 text-xl text-white">Group Members</p>
+        {activeChat.group_chat && (
+          <div className="flex items-center pt-4 ">
+        <p className="px-8  text-xl text-white">Group Members</p>
+                              <p className="text-sm  cursor-pointer border-2  px-2 rounded-md border-[#337ab7] m-0  text-[#337ab7]">+ Add</p>
+ </div>
+ )}
 
         {grpMembers.map((element: any) => {
           return (
@@ -106,11 +133,11 @@ setgroupInfoVisible:Function})=>{
                     width={45}
                     alt="profile"
                   />
-                  <div className="flex justify-center align-center ms-4">
+                  <div className="flex gap-10 items-center justify-between ms-4">
                     <p className="text-lg text-white">{element.user_name}</p>
 
                     {grpdetails.admins[0] === element._id && (
-                      <p className="text-lg text-white"> admin</p>
+                      <p className="text-sm border-2  px-2 rounded-md border-[#337ab7] m-0  text-[#337ab7]"> admin</p>
                     )}
                   </div>
                 </div>

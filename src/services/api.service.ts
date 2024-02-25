@@ -55,3 +55,4 @@ export const GroupChatListApi = (id: string) => {
 export const GroupInfoApi = (id: string) => {
   return protectedaxiosInstance.get(`/group/group-info/${id}`);
 };
+
