@@ -28,6 +28,7 @@ export default function GroupChat({
   setActiveChat,
   socket,
   activeChatRef,
+  setgroupInfoVisible,
 }: {
   list: any;
   setList: any;
@@ -35,6 +36,7 @@ export default function GroupChat({
   socket: any;
   setActiveChat: Function;
   activeChatRef: any;
+  setgroupInfoVisible:Function;
 }) {
   const [userSearch, setuserSearch] = useState("");
   const [userList, setUserList] = useState([]);
@@ -55,6 +57,7 @@ export default function GroupChat({
     try {
       const list = await GroupListApi(user._id);
       let grpList = list.data;
+      console.log(grpList)
       grpList.sort(
         (a: any, b: any) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -197,13 +200,18 @@ export default function GroupChat({
                           setList([...list]);
                           listRef.current = [...list];
                           setActiveChat(chat);
+                          setgroupInfoVisible(false);
                           activeChatRef.current = chat;
                         }}
                       >
                         <div className="flex">
                           <CldImage
                             className="m-auto rounded-full h-[45px]"
-                            src="mrokrrlw2ssnr3tf3vy2"
+                            src={
+                              element.profile_image
+                                ? element.profile_image
+                                : "mrokrrlw2ssnr3tf3vy2"
+                            }
                             height={45}
                             width={45}
                             alt="profile"

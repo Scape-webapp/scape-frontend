@@ -18,6 +18,7 @@ export default function LeftSideBar({
   activeTab,
   setActiveChat,
   socket,
+  setgroupInfoVisible
 }: {
   list: any;
   setList: any;
@@ -26,6 +27,7 @@ export default function LeftSideBar({
   activeTab: any;
   setActiveChat: Function;
   socket: any;
+  setgroupInfoVisible:any
 }) {
   const [userSearch, setuserSearch] = useState("");
   const user = useSelector((state: RootState) => state.user.user);
@@ -137,6 +139,7 @@ export default function LeftSideBar({
                             profile_image: searchResult?.profile_image,
                             group_chat: false,
                           });
+                          
                         }}
                       >
                         <p className="text-lg text-white">
@@ -192,6 +195,7 @@ export default function LeftSideBar({
                                 ? (element.isRead = true)
                                 : null;
                               setList([...list]);
+                              setgroupInfoVisible(false);
                               listRef.current = [...list];
                               setActiveChat(chat);
                               activeChatRef.current = chat;
@@ -232,6 +236,7 @@ export default function LeftSideBar({
           setActiveChat={setActiveChat}
           socket={socket}
           activeChatRef={activeChatRef}
+          setgroupInfoVisible={setgroupInfoVisible}
         />
       )}
     </div>

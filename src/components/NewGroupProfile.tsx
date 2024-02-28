@@ -62,12 +62,13 @@ export default function NewGroupProfile({
     try {
       const body = {
         name: groupDetails.name,
-        profile_image: groupDetails.profile_image,
+        // profile_image: groupDetails.profile_image,
+        profile_image:imgPublicId,
         description: groupDetails.description,
         users: [...newGrpUserList, user._id],
         admins: [user._id],
       };
-
+console.log(body)
       await socket.emit("group-created", body);
       getGroupChatList();
       setActiveScreen(ActiveScreen.GROUPCHAT);

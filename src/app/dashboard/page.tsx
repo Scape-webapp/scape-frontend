@@ -1,6 +1,7 @@
 "use client";
 
 import ChatBox from "@/components/ChatBox";
+import GroupInfo from "@/components/GroupInfo";
 import LeftSideBar from "@/components/LeftSideBar";
 import SideMenu from "@/components/SideMenu";
 import { RootState, store } from "@/redux/store";
@@ -18,6 +19,7 @@ export default function DashBoard() {
   }
   const [activeTab, setActiveTab] = useState<activeBar>(activeBar.CHAT);
   const user = useSelector((state: RootState) => state.user.user);
+  const [groupInfoVisible, setgroupInfoVisible] = useState(false);
   const [activeChat, setActiveChat] = useState({
     id: "",
     user_name: "",
@@ -74,7 +76,8 @@ export default function DashBoard() {
             activeChatRef={activeChatRef}
             activeTab={activeTab}
             setActiveChat={setActiveChat}
-            socket={socket}
+            setgroupInfoVisible={setgroupInfoVisible}
+            socket={socket}            
           />
           <ChatBox
             socket={socket}
@@ -83,7 +86,10 @@ export default function DashBoard() {
             list={list}
             setList={setList}
             listRef={listRef}
+            groupInfoVisible={groupInfoVisible} 
+            setgroupInfoVisible={setgroupInfoVisible}
           />
+          
         </div>
       </div>
     </AuthComponent>

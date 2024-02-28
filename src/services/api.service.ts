@@ -51,3 +51,8 @@ export const searchGroupApi = (grpname: string) => {
 export const GroupChatListApi = (id: string) => {
   return protectedaxiosInstance.get(`/group/group-messages/${id}`);
 };
+
+export const GroupInfoApi = (id: string) => {
+  return protectedaxiosInstance.get(`/group/group-info/${id}`);
+};
+
