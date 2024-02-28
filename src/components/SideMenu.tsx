@@ -1,15 +1,12 @@
+import { setActiveTab } from "@/redux/features/activeTab-slice";
+import { AppDispatch, RootState } from "@/redux/store";
 import { faComments } from "@fortawesome/free-regular-svg-icons";
 import { faGear, faUser, faUserGroup } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
+import { useDispatch, useSelector } from "react-redux";
 
-export default function Sidebar({
-  setActiveTab,
-  activeTab,
-}: {
-  setActiveTab: Function;
-  activeTab: any;
-}) {
+export default function Sidebar() {
   enum activeBar {
     CHAT = "chat",
     GROUPCHAT = "groupChat",
@@ -17,8 +14,11 @@ export default function Sidebar({
     SETTING = "setting",
   }
 
+  const activeTab = useSelector((state: RootState) => state.activeTab.tabValue);
+  const dispatch = useDispatch<AppDispatch>();
+
   const changeTab = (tab: activeBar) => {
-    setActiveTab(tab);
+    dispatch(setActiveTab(tab));
   };
 
   return (
