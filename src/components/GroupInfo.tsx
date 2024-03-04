@@ -8,10 +8,11 @@ import { useEffect,useState } from "react";
 import { GroupInfoApi } from "@/services/api.service";
 import { getProfileDetails } from "@/services/api.service";
 
-const GroupInfo=({activeGrpChat,activeChat,
+const GroupInfo=({activeGrpChat,activeChat,list,setList,listRef,socket,
 groupInfoVisible,
-setgroupInfoVisible}:{activeGrpChat:any,
-groupInfoVisible:any ,activeChat:any,
+setgroupInfoVisible}:{activeGrpChat:any,list:any,setList:any,listRef:any,socket:any,
+  activeChat:any,
+groupInfoVisible:any ,
 setgroupInfoVisible:Function})=>{
     const [imgPublicId, setImgPulicId] = useState("");
     const [grpdetails, setGrpdetails] = useState<any>([]);
@@ -23,6 +24,9 @@ setgroupInfoVisible:Function})=>{
       let grpInfo:any = info.data;
       setGrpdetails(grpInfo[0]);
       setGrpMembers(grpInfo[0].grpmember)
+      console.log(">>>>>>>>>>>>>>>",grpInfo)
+      socket.emit("update-grpprofile",grpInfo)
+      
       console.log(grpInfo);
     } catch (error) {
       // add fail toast later
@@ -33,15 +37,21 @@ setgroupInfoVisible:Function})=>{
     try {
       const response = await getProfileDetails(activeGrpChat);
       setGrpdetails(response.data);
-      console.log(">>>>>,,,,",response.data)
+           
     } catch (error) {
       console.log(error);
     }
   };
+   useEffect(() => {
+    if (socket) {
+      socket.on("added-grpprofile", (data: any) => {
+      });
+    }
+  }, [socket]);
   useEffect(() => {
-    activeChat.group_chat?getGroupInfoList ():profileData();   
-     
+    activeChat.group_chat?getGroupInfoList ():profileData();        
   }, []);
+
     return (     
       <div className="bg-[#303841] h-screen max-w-[380px] min-w-[380px] overflow-scroll">
         <div className="flex items-center justify-between pt-8 px-8">
@@ -70,6 +80,7 @@ setgroupInfoVisible:Function})=>{
                   onClick={() => open()}
                   className="m-auto cursor-pointer rounded-full h-[150px]"
                   src={
+                    imgPublicId?imgPublicId:
                     grpdetails?.profile_image
                       ? grpdetails?.profile_image
                       : "mrokrrlw2ssnr3tf3vy2"

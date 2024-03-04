@@ -214,11 +214,13 @@ const ChatBox = ({
       ) : (
         <div className="max-h-screen w-full bg-[#262E35] flex flex-col">
           <div className="h-[10%] border-b border-[#36404A] flex items-center py-2 px-8">
-            <div className="flex justify-between items-center w-full cursor-pointer" 
-            onClick={() => {
-                    setgroupInfoVisible(!groupInfoVisible);
-                    setDropDownVisible(false);
-                  }}>
+            <div
+              className="flex justify-between items-center w-full cursor-pointer"
+              onClick={() => {
+                setgroupInfoVisible(!groupInfoVisible);
+                setDropDownVisible(false);
+              }}
+            >
               <div className="flex items-center gap-4">
                 <CldImage
                   className="m-auto rounded-full h-[45px]"
@@ -236,31 +238,30 @@ const ChatBox = ({
                 </p>
                 <div className="bg-[#2CAC39] h-3 w-3 rounded-full" />
               </div>
-              
             </div>
             <div className="dropdown relative cursor-pointer">
-                <FontAwesomeIcon
-                  icon={faEllipsisV}
-                  size="xl"
-                  color="#787E83"
-                  onClick={() => {
-                    setDropDownVisible(!dropDownVisible);
-                  }}
-                />
-                {dropDownVisible && (
-                  <ul className="dropdown-menu absolute right-0 text-gray-700 pt-1 w-32">
-                    <li
-                      className="rounded bg-gray-200 hover:bg-gray-400 hover:text-white py-2 px-4 block whitespace-no-wrap"
-                      onClick={() => {
-                        handleClearChat();
-                        setDropDownVisible(false);
-                      }}
-                    >
-                      Clear Chat
-                    </li>
-                  </ul>
-                )}
-              </div>
+              <FontAwesomeIcon
+                icon={faEllipsisV}
+                size="xl"
+                color="#787E83"
+                onClick={() => {
+                  setDropDownVisible(!dropDownVisible);
+                }}
+              />
+              {dropDownVisible && (
+                <ul className="dropdown-menu absolute right-0 text-gray-700 pt-1 w-32">
+                  <li
+                    className="rounded bg-gray-200 hover:bg-gray-400 hover:text-white py-2 px-4 block whitespace-no-wrap"
+                    onClick={() => {
+                      handleClearChat();
+                      setDropDownVisible(false);
+                    }}
+                  >
+                    Clear Chat
+                  </li>
+                </ul>
+              )}
+            </div>
           </div>
 
           <div className="h-[80%] border-b overflow-x-auto border-[#36404A] p-6">
@@ -459,7 +460,12 @@ const ChatBox = ({
         </div>
       )}
       {groupInfoVisible &&(
-     <GroupInfo  activeChat={activeChat} activeGrpChat={activeChat.id} groupInfoVisible={groupInfoVisible} setgroupInfoVisible={setgroupInfoVisible}/>)}
+     <GroupInfo  list={list}
+          setList={setList}
+          listRef={listRef}
+         socket={socket}
+            activeChat={activeChat} activeGrpChat={activeChat.id} groupInfoVisible={groupInfoVisible} setgroupInfoVisible={setgroupInfoVisible}/>)}
+    
     </>
   );
 };
