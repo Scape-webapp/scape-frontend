@@ -25,26 +25,32 @@ import GroupInfo from "./GroupInfo";
 const ChatBox = ({
   socket,
   activeChat,
+  setActiveChat,
   activeChatRef,
-  list,
   setList,
   listRef,
   groupInfoVisible,
-  setgroupInfoVisible
+  setgroupInfoVisible,
+  userList,
+  setUserList,
+  getGroupChatList,
 }: {
   socket: any;
   activeChat: any;
+  setActiveChat: Function;
   activeChatRef: any;
-  list: any;
-  setgroupInfoVisible:Function;
+  setgroupInfoVisible: Function;
   setList: any;
-  groupInfoVisible:any;
   listRef: any;
+  groupInfoVisible: any;
+  userList: any;
+  setUserList: Function;
+  getGroupChatList: Function;
 }) => {
   const [chatMessages, setChatMessages] = useState<any>([]);
   const [message, setMessage] = useState("");
   const [pickerVisible, setPickerVisible] = useState(false);
-    // const [groupInfoVisible, setgroupInfoVisible] = useState(false);
+  // const [groupInfoVisible, setgroupInfoVisible] = useState(false);
 
   const [dropDownVisible, setDropDownVisible] = useState(false);
   const [imgPublicId, setImgPulicId] = useState("");
@@ -456,16 +462,21 @@ const ChatBox = ({
               </button>
             </form>
           </div>
-         
         </div>
       )}
-      {groupInfoVisible &&(
-     <GroupInfo  list={list}
-          setList={setList}
-          listRef={listRef}
-         socket={socket}
-            activeChat={activeChat} activeGrpChat={activeChat.id} groupInfoVisible={groupInfoVisible} setgroupInfoVisible={setgroupInfoVisible}/>)}
-    
+      {groupInfoVisible && (
+        <GroupInfo
+          socket={socket}
+          activeChat={activeChat}
+          setActiveChat={setActiveChat}
+          activeGrpChat={activeChat.id}
+          groupInfoVisible={groupInfoVisible}
+          setgroupInfoVisible={setgroupInfoVisible}
+          getGroupChatList={getGroupChatList}
+          userList={userList}
+          setUserList={setUserList}
+        />
+      )}
     </>
   );
 };
