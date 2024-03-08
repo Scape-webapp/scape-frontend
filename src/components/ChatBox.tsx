@@ -16,11 +16,13 @@ import {
   GroupChatListApi,
   chatApi,
   clearChatApi,
+  clearGrpChatForUser,
 } from "@/services/api.service";
 import NonChatPage from "./NonChatPage";
 import { CldImage } from "next-cloudinary";
 import { CldUploadButton } from "next-cloudinary";
 import GroupInfo from "./GroupInfo";
+import { toast } from "react-toastify";
 
 const ChatBox = ({
   socket,
@@ -30,21 +32,21 @@ const ChatBox = ({
   setList,
   listRef,
   groupInfoVisible,
-  setgroupInfoVisible
+  setgroupInfoVisible,
 }: {
   socket: any;
   activeChat: any;
   activeChatRef: any;
   list: any;
-  setgroupInfoVisible:Function;
+  setgroupInfoVisible: Function;
   setList: any;
-  groupInfoVisible:any;
+  groupInfoVisible: any;
   listRef: any;
 }) => {
   const [chatMessages, setChatMessages] = useState<any>([]);
   const [message, setMessage] = useState("");
   const [pickerVisible, setPickerVisible] = useState(false);
-    // const [groupInfoVisible, setgroupInfoVisible] = useState(false);
+  // const [groupInfoVisible, setgroupInfoVisible] = useState(false);
 
   const [dropDownVisible, setDropDownVisible] = useState(false);
   const [imgPublicId, setImgPulicId] = useState("");
@@ -79,6 +81,17 @@ const ChatBox = ({
       sender: user._id,
     });
     await getMsgs();
+  };
+
+  const clearGroupChat = async () => {
+    try {
+      await clearGrpChatForUser({
+        groupId: activeChat.id,
+      });
+      await getGroupMsgs();
+    } catch (error: any) {
+      toast.error(error.response.data.message || "Something went wrong!");
+    }
   };
 
   const sendMessage = async (e: any) => {
@@ -214,11 +227,13 @@ const ChatBox = ({
       ) : (
         <div className="max-h-screen w-full bg-[#262E35] flex flex-col">
           <div className="h-[10%] border-b border-[#36404A] flex items-center py-2 px-8">
-            <div className="flex justify-between items-center w-full cursor-pointer" 
-            onClick={() => {
-                    setgroupInfoVisible(!groupInfoVisible);
-                    setDropDownVisible(false);
-                  }}>
+            <div
+              className="flex justify-between items-center w-full cursor-pointer"
+              onClick={() => {
+                setgroupInfoVisible(!groupInfoVisible);
+                setDropDownVisible(false);
+              }}
+            >
               <div className="flex items-center gap-4">
                 <CldImage
                   className="m-auto rounded-full h-[45px]"
@@ -236,31 +251,34 @@ const ChatBox = ({
                 </p>
                 <div className="bg-[#2CAC39] h-3 w-3 rounded-full" />
               </div>
-              
             </div>
             <div className="dropdown relative cursor-pointer">
-                <FontAwesomeIcon
-                  icon={faEllipsisV}
-                  size="xl"
-                  color="#787E83"
-                  onClick={() => {
-                    setDropDownVisible(!dropDownVisible);
-                  }}
-                />
-                {dropDownVisible && (
-                  <ul className="dropdown-menu absolute right-0 text-gray-700 pt-1 w-32">
-                    <li
-                      className="rounded bg-gray-200 hover:bg-gray-400 hover:text-white py-2 px-4 block whitespace-no-wrap"
-                      onClick={() => {
+              <FontAwesomeIcon
+                icon={faEllipsisV}
+                size="xl"
+                color="#787E83"
+                onClick={() => {
+                  setDropDownVisible(!dropDownVisible);
+                }}
+              />
+              {dropDownVisible && (
+                <ul className="dropdown-menu absolute right-0 text-gray-700 pt-1 w-32">
+                  <li
+                    className="rounded bg-gray-200 hover:bg-gray-400 hover:text-white py-2 px-4 block whitespace-no-wrap"
+                    onClick={() => {
+                      if (activeChat.id && !activeChat.group_chat) {
                         handleClearChat();
-                        setDropDownVisible(false);
-                      }}
-                    >
-                      Clear Chat
-                    </li>
-                  </ul>
-                )}
-              </div>
+                      } else if (activeChat.id && activeChat.group_chat) {
+                        clearGroupChat();
+                      }
+                      setDropDownVisible(false);
+                    }}
+                  >
+                    Clear Chat
+                  </li>
+                </ul>
+              )}
+            </div>
           </div>
 
           <div className="h-[80%] border-b overflow-x-auto border-[#36404A] p-6">
@@ -455,11 +473,16 @@ const ChatBox = ({
               </button>
             </form>
           </div>
-         
         </div>
       )}
-      {groupInfoVisible &&(
-     <GroupInfo  activeChat={activeChat} activeGrpChat={activeChat.id} groupInfoVisible={groupInfoVisible} setgroupInfoVisible={setgroupInfoVisible}/>)}
+      {groupInfoVisible && (
+        <GroupInfo
+          activeChat={activeChat}
+          activeGrpChat={activeChat.id}
+          groupInfoVisible={groupInfoVisible}
+          setgroupInfoVisible={setgroupInfoVisible}
+        />
+      )}
     </>
   );
 };
