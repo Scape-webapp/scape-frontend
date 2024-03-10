@@ -17,7 +17,8 @@ export default function DashBoard() {
     PROFILE = "profile",
     SETTING = "setting",
   }
-  const [activeTab, setActiveTab] = useState<activeBar>(activeBar.CHAT);
+  // const [activeTab, setActiveTab] = useState<activeBar>(activeBar.CHAT);
+  const activeTab = useSelector((state: RootState) => state.activeTab.tabValue);
   const user = useSelector((state: RootState) => state.user.user);
   const [groupInfoVisible, setgroupInfoVisible] = useState(false);
   const [activeChat, setActiveChat] = useState({
@@ -68,16 +69,15 @@ export default function DashBoard() {
     <AuthComponent>
       <div className="">
         <div className="w-full flex">
-          <SideMenu setActiveTab={setActiveTab} activeTab={activeTab} />
+          <SideMenu />
           <LeftSideBar
             list={list}
             setList={setList}
             listRef={listRef}
             activeChatRef={activeChatRef}
-            activeTab={activeTab}
             setActiveChat={setActiveChat}
             setgroupInfoVisible={setgroupInfoVisible}
-            socket={socket}            
+            socket={socket}
           />
           <ChatBox
             socket={socket}
@@ -86,10 +86,9 @@ export default function DashBoard() {
             list={list}
             setList={setList}
             listRef={listRef}
-            groupInfoVisible={groupInfoVisible} 
+            groupInfoVisible={groupInfoVisible}
             setgroupInfoVisible={setgroupInfoVisible}
           />
-          
         </div>
       </div>
     </AuthComponent>
