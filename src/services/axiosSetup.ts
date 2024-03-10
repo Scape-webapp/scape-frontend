@@ -41,6 +41,7 @@ protectedaxiosInstance.interceptors.response.use(
       return await globalaxiosInstance
         .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/refresh`, {
           user_name: store.getState().user.user.user_name,
+          userId: store.getState().user.user._id,
           token: refreshToken,
         })
         .then((res) => {
