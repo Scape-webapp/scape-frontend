@@ -27,21 +27,27 @@ import { toast } from "react-toastify";
 const ChatBox = ({
   socket,
   activeChat,
+  setActiveChat,
   activeChatRef,
-  list,
   setList,
   listRef,
   groupInfoVisible,
   setgroupInfoVisible,
+  userList,
+  setUserList,
+  getGroupChatList,
 }: {
   socket: any;
   activeChat: any;
+  setActiveChat: Function;
   activeChatRef: any;
-  list: any;
   setgroupInfoVisible: Function;
   setList: any;
   groupInfoVisible: any;
   listRef: any;
+  userList: any;
+  setUserList: Function;
+  getGroupChatList: Function;
 }) => {
   const [chatMessages, setChatMessages] = useState<any>([]);
   const [message, setMessage] = useState("");
@@ -477,10 +483,15 @@ const ChatBox = ({
       )}
       {groupInfoVisible && (
         <GroupInfo
+          socket={socket}
           activeChat={activeChat}
+          setActiveChat={setActiveChat}
           activeGrpChat={activeChat.id}
           groupInfoVisible={groupInfoVisible}
           setgroupInfoVisible={setgroupInfoVisible}
+          getGroupChatList={getGroupChatList}
+          userList={userList}
+          setUserList={setUserList}
         />
       )}
     </>

@@ -1,10 +1,11 @@
 "use client";
 
 import ChatBox from "@/components/ChatBox";
-import GroupInfo from "@/components/GroupInfo";
+
 import LeftSideBar from "@/components/LeftSideBar";
 import SideMenu from "@/components/SideMenu";
 import { RootState, store } from "@/redux/store";
+import { GroupListApi } from "@/services/api.service";
 import { AuthComponent } from "@/utils/auth";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
@@ -30,7 +31,7 @@ export default function DashBoard() {
   const activeChatRef = useRef(activeChat);
   const [list, setList] = useState<any>([]);
   const listRef = useRef(list);
-
+  const [userList, setUserList] = useState([]);
   const [socket, setsocket] = useState<any>(undefined);
 
   const joinChat = async () => {
@@ -53,6 +54,26 @@ export default function DashBoard() {
     soc.emit("add-user", {
       id: user._id,
     });
+  };
+
+  const getGroupChatList = async () => {
+    try {
+      const list = await GroupListApi(user._id);
+      let grpList = list.data;
+      grpList.sort(
+        (a: any, b: any) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+
+      grpList = grpList.filter(
+        (value: any, index: any, self: any) =>
+          index === self.findIndex((t: any) => t._id === value._id)
+      );
+      setUserList(grpList);
+    } catch (error) {
+      // add fail toast later
+      console.log("error in chat list api : ", error);
+    }
   };
 
   useEffect(() => {
@@ -78,16 +99,22 @@ export default function DashBoard() {
             setActiveChat={setActiveChat}
             setgroupInfoVisible={setgroupInfoVisible}
             socket={socket}
+            userList={userList}
+            setUserList={setUserList}
+            getGroupChatList={getGroupChatList}
           />
           <ChatBox
             socket={socket}
             activeChat={activeChat}
+            setActiveChat={setActiveChat}
             activeChatRef={activeChatRef}
-            list={list}
             setList={setList}
             listRef={listRef}
             groupInfoVisible={groupInfoVisible}
             setgroupInfoVisible={setgroupInfoVisible}
+            userList={userList}
+            setUserList={setUserList}
+            getGroupChatList={getGroupChatList}
           />
         </div>
       </div>

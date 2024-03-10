@@ -18,6 +18,9 @@ export default function LeftSideBar({
   setActiveChat,
   socket,
   setgroupInfoVisible,
+  userList,
+  setUserList,
+  getGroupChatList,
 }: {
   list: any;
   setList: any;
@@ -26,6 +29,9 @@ export default function LeftSideBar({
   setActiveChat: Function;
   socket: any;
   setgroupInfoVisible: any;
+  userList: any;
+  setUserList: Function;
+  getGroupChatList: Function;
 }) {
   const [userSearch, setuserSearch] = useState("");
   const user = useSelector((state: RootState) => state.user.user);
@@ -236,6 +242,9 @@ export default function LeftSideBar({
           socket={socket}
           activeChatRef={activeChatRef}
           setgroupInfoVisible={setgroupInfoVisible}
+          getGroupChatList={getGroupChatList}
+          userList={userList}
+          setUserList={setUserList}
         />
       )}
     </div>

@@ -29,6 +29,9 @@ export default function GroupChat({
   socket,
   activeChatRef,
   setgroupInfoVisible,
+  getGroupChatList,
+  userList,
+  setUserList,
 }: {
   list: any;
   setList: any;
@@ -36,10 +39,12 @@ export default function GroupChat({
   socket: any;
   setActiveChat: Function;
   activeChatRef: any;
-  setgroupInfoVisible:Function;
+  setgroupInfoVisible: Function;
+  getGroupChatList: Function;
+  userList: any;
+  setUserList: Function;
 }) {
   const [userSearch, setuserSearch] = useState("");
-  const [userList, setUserList] = useState([]);
   const [newGrpUserList, setNewGrpUserList] = useState([]);
   const [activeScreen, setActiveScreen] = useState(ActiveScreen.GROUPCHAT);
   const user = useSelector((state: RootState) => state.user.user);
@@ -51,28 +56,6 @@ export default function GroupChat({
       const searchUser: any = await searchGroupApi(userSearch);
       setSearchResult(searchUser.data);
     } catch (e) {}
-  };
-
-  const getGroupChatList = async () => {
-    try {
-      const list = await GroupListApi(user._id);
-      let grpList = list.data;
-      console.log(grpList)
-      grpList.sort(
-        (a: any, b: any) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      );
-
-      grpList = grpList.filter(
-        (value: any, index: any, self: any) =>
-          index === self.findIndex((t: any) => t._id === value._id)
-      );
-      setUserList(grpList);
-      listRef.current = grpList;
-    } catch (error) {
-      // add fail toast later
-      console.log("error in chat list api : ", error);
-    }
   };
 
   const handleChange = (e: any) => {
