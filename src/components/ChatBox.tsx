@@ -331,7 +331,7 @@ const ChatBox = ({
                     <div></div>
                   )}
                   <div
-                    className={`flex gap-2 mx-6 my-4 justify-${
+                    className={`flex gap-2 mx-6 break-words my-4 justify-${
                       msg.sender === user._id ? "end" : "start"
                     }`}
                     style={
@@ -451,7 +451,7 @@ const ChatBox = ({
 
             {/* <FontAwesomeIcon icon={faFaceSmile} size="2x" color="#7083FF" /> */}
             <form
-              className="flex p-1.5 justify-between items-center bg-[#36404A] rounded-xl w-3/4"
+              className="flex p-1.5 justify-between items-center bg-[#36404A] rounded-xl w-full"
               // onSubmit={(e) => sendMessage(e)}
             >
               <input
