@@ -182,9 +182,10 @@ const GroupInfo = ({
       {activeChat.group_chat && (
         <div className="flex items-center pt-4 ">
           <p className="px-8  text-xl text-white">Group Members</p>
-          <p className="text-sm  cursor-pointer border-2  px-2 rounded-md border-[#337ab7] m-0  text-[#337ab7]">
+          {/* second phase */}
+          {/* <p className="text-sm  cursor-pointer border-2  px-2 rounded-md border-[#337ab7] m-0  text-[#337ab7]">
             + Add
-          </p>
+          </p> */}
         </div>
       )}
 
