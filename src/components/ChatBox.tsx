@@ -16,11 +16,13 @@ import {
   GroupChatListApi,
   chatApi,
   clearChatApi,
+  clearGrpChatForUser,
 } from "@/services/api.service";
 import NonChatPage from "./NonChatPage";
 import { CldImage } from "next-cloudinary";
 import { CldUploadButton } from "next-cloudinary";
 import GroupInfo from "./GroupInfo";
+import { toast } from "react-toastify";
 
 const ChatBox = ({
   socket,
@@ -41,8 +43,8 @@ const ChatBox = ({
   activeChatRef: any;
   setgroupInfoVisible: Function;
   setList: any;
-  listRef: any;
   groupInfoVisible: any;
+  listRef: any;
   userList: any;
   setUserList: Function;
   getGroupChatList: Function;
@@ -85,6 +87,17 @@ const ChatBox = ({
       sender: user._id,
     });
     await getMsgs();
+  };
+
+  const clearGroupChat = async () => {
+    try {
+      await clearGrpChatForUser({
+        groupId: activeChat.id,
+      });
+      await getGroupMsgs();
+    } catch (error: any) {
+      toast.error(error.response.data.message || "Something went wrong!");
+    }
   };
 
   const sendMessage = async (e: any) => {
@@ -259,7 +272,11 @@ const ChatBox = ({
                   <li
                     className="rounded bg-gray-200 hover:bg-gray-400 hover:text-white py-2 px-4 block whitespace-no-wrap"
                     onClick={() => {
-                      handleClearChat();
+                      if (activeChat.id && !activeChat.group_chat) {
+                        handleClearChat();
+                      } else if (activeChat.id && activeChat.group_chat) {
+                        clearGroupChat();
+                      }
                       setDropDownVisible(false);
                     }}
                   >

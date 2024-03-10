@@ -55,3 +55,7 @@ export const GroupChatListApi = (id: string) => {
 export const GroupInfoApi = (id: string) => {
   return protectedaxiosInstance.get(`/group/group-info/${id}`);
 };
+
+export const clearGrpChatForUser = (data: any) => {
+  return protectedaxiosInstance.post(`/group/clear-group-chat`, data);
+};

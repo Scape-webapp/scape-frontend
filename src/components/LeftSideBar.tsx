@@ -15,7 +15,6 @@ export default function LeftSideBar({
   setList,
   listRef,
   activeChatRef,
-  activeTab,
   setActiveChat,
   socket,
   setgroupInfoVisible,
@@ -27,7 +26,6 @@ export default function LeftSideBar({
   setList: any;
   listRef: any;
   activeChatRef: any;
-  activeTab: any;
   setActiveChat: Function;
   socket: any;
   setgroupInfoVisible: any;
@@ -46,6 +44,8 @@ export default function LeftSideBar({
     PROFILE = "profile",
     SETTING = "setting",
   }
+
+  const activeTab = useSelector((state: RootState) => state.activeTab.tabValue);
 
   const getChatList = async () => {
     try {
