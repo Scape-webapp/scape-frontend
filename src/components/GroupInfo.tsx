@@ -33,8 +33,6 @@ const GroupInfo = ({
       let grpInfo: any = info.data;
       setGrpdetails(grpInfo[0]);
       setGrpMembers(grpInfo[0].grpmember);
-
-      console.log(grpInfo);
     } catch (error) {
       // add fail toast later
       console.log("error in chat list api : ", error);
@@ -117,9 +115,14 @@ const GroupInfo = ({
           />
           {activeChat.group_chat ? "Group Info" : "Friend Info"}
         </p>
+        <button
+          onClick={getUpdateInfoList}
+          className="bg-[#7083FF]  rounded-[10px] px-4 py-2 font-bold cursor-pointer shadow-md hover:bg-[#5462ba] text-white mr-4"
+        >
+          Update
+        </button>
       </div>
       <div className="pt-8">
-        <button onClick={getUpdateInfoList}>Update</button>
         {activeChat.group_chat ? (
           <CldUploadWidget
             uploadPreset="Profile_picture"
