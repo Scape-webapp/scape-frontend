@@ -489,10 +489,8 @@ const ChatBox = ({
           activeGrpChat={activeChat.id}
           groupInfoVisible={groupInfoVisible}
           setgroupInfoVisible={setgroupInfoVisible}
-          getGroupChatList={getGroupChatList}
           userList={userList}
-          setUserList={setUserList}
-        />
+       />
       )}
     </>
   );
