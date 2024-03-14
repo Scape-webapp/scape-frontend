@@ -35,7 +35,7 @@ export default function DashBoard() {
   const [socket, setsocket] = useState<any>(undefined);
 
   const joinChat = async () => {
-    const soc = socketIOClient("http://localhost:5000", {
+    const soc = socketIOClient(process.env.NEXT_PUBLIC_SOCKET_URL as string, {
       reconnectionDelay: 1000,
       reconnection: true,
       // reconnectionAttemps: 10,
