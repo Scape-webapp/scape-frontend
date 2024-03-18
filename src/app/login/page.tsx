@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { login } from "@/redux/features/user-slice";
+import Loader from "@/components/Common/Loader/Loader";
 
 export default function Login() {
   const dispatch = useDispatch<AppDispatch>();
@@ -21,6 +22,7 @@ export default function Login() {
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setloading] = useState(false);
   const token = useSelector((state: RootState) => state.user.accessToken);
 
   const loginSchema = Yup.object().shape({
@@ -38,6 +40,7 @@ export default function Login() {
 
   async function handleSubmit() {
     try {
+      setloading(true);
       const body = {
         user_name: formValues.userName,
         password: formValues.password,
@@ -49,6 +52,8 @@ export default function Login() {
       }
     } catch (error: any) {
       toast.error(error.response.data.message || "Something went wrong!");
+    } finally {
+      setloading(false);
     }
   }
 
@@ -153,7 +158,13 @@ export default function Login() {
                       type="submit"
                       className="text-[#ffffff] bg-[#7083FF] py-1 rounded my-3 md:my-6"
                     >
-                      Login
+                      {!loading ? (
+                        "Login"
+                      ) : (
+                        <div className="flex items-center justify-center w-full my-1.5">
+                          <Loader />
+                        </div>
+                      )}
                     </button>
                   </div>
                 </Form>
