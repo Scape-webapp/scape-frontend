@@ -11,9 +11,10 @@ import { CldImage } from "next-cloudinary";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import React from "react";
-import { NewGroupApi } from "@/services/api.service";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { toast } from "react-toastify";
+
 
 enum ActiveScreen {
   GROUPCHAT = "groupChat",
@@ -68,12 +69,14 @@ export default function NewGroupProfile({
         users: [...newGrpUserList, user._id],
         admins: [user._id],
       };
-console.log(body)
       await socket.emit("group-created", body);
       getGroupChatList();
-      setActiveScreen(ActiveScreen.GROUPCHAT);
-    } catch (error) {
+      toast.success("Group created successfully!");
+      setActiveScreen(ActiveScreen.GROUPCHAT);     
+        
+    } catch (error:any) {
       // add fail toast later
+      toast.error("Something went wrong!");
       console.log("error in create new group socket emit : ", error);
     }
   };
