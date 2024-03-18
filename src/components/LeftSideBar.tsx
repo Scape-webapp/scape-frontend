@@ -83,7 +83,7 @@ export default function LeftSideBar({
       setSearchResult(searchUser.data);
     } catch (e) {
     } finally {
-      setuserLoading(true);
+      setuserLoading(false);
     }
   };
 
