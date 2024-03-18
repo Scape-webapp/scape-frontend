@@ -54,7 +54,6 @@ export const user = createSlice({
     },
     setAccessToken: (state, action) => {
       const accessToken = action.payload;
-      console.log("set this as new access token : ", accessToken);
       state.accessToken = accessToken;
     },
   },
