@@ -4,7 +4,7 @@ import Profile from "./Profile";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { ChatListApi, searchUserApi } from "@/services/api.service";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import moment from "moment";
 import uniqWith from "lodash/uniqWith";
 import { CldImage } from "next-cloudinary";
