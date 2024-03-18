@@ -162,7 +162,7 @@ const ChatBox = ({
   useEffect(() => {
     if (socket) {
       socket.on("msg-receive", (data: any) => {
-        if (data.receiver) {
+        if (data.receiver !== undefined) {
           if (data?.sender === activeChatRef.current.id) {
             setChatMessages((prev: any) => [...prev, data]);
           } else {
