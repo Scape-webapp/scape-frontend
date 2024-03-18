@@ -330,25 +330,26 @@ const ChatBox = ({
                   ) : (
                     <div></div>
                   )}
+
                   <div
                     className={`flex gap-2 mx-6 break-words my-4 justify-${
                       msg.sender === user._id ? "end" : "start"
-                    }`}
+                    } `}
                     style={
                       msg.sender === user._id
                         ? { justifyContent: "flex-end" }
                         : { justifyContent: "flex-start" }
                     }
                   >
-                    <div className="flex gap-2">
+                    <div
+                      className={`flex gap-2 ${
+                        activeChat.group_chat && msg.sender !== user._id
+                          ? "flex-row-reverse"
+                          : ""
+                      }`}
+                    >
                       {msg.receiver === user._id &&
                       msg.sender !== chatMessages[i + 1]?.sender ? (
-                        // <Image
-                        //   src="/images/profile-dummy.svg"
-                        //   alt="profile"
-                        //   height={30}
-                        //   width={30}
-                        // />
                         <CldImage
                           className="m-auto rounded-full h-[30px]"
                           src={
@@ -385,19 +386,16 @@ const ChatBox = ({
                         )}
                         {/* <p className="text-white text-base">{msg.text}</p> */}
                       </div>
-                      {msg.sender === user._id &&
-                      msg.sender[0] !== chatMessages[i + 1]?.sender[0] ? (
-                        // <Image
-                        //   src="/images/profile-dummy.svg"
-                        //   alt="profile"
-                        //   height={30}
-                        //   width={30}
-                        // />
+                      {(msg.sender === user._id &&
+                        msg.sender[0] !== chatMessages[i + 1]?.sender[0]) ||
+                      activeChat.group_chat ? (
                         <CldImage
                           className="m-auto rounded-full h-[30px]"
                           src={
-                            user.profile_image
+                            msg.sender === user._id && !activeChat.group_chat
                               ? user.profile_image
+                              : msg.user?.profile_image
+                              ? msg.user.profile_image
                               : "mrokrrlw2ssnr3tf3vy2"
                           }
                           height={30}
@@ -490,7 +488,7 @@ const ChatBox = ({
           groupInfoVisible={groupInfoVisible}
           setgroupInfoVisible={setgroupInfoVisible}
           userList={userList}
-       />
+        />
       )}
     </>
   );
