@@ -458,14 +458,16 @@ const ChatBox = ({
                 placeholder="Type a Message"
                 required
                 value={message}
-                onChange={(e) => setMessage(e.target.value)}
+                onChange={(e) => setMessage(e.target.value.trim())}
               />
               <button
                 type="submit"
                 className="cursor-pointer"
                 onClick={(e) => {
-                  if (!activeChat.group_chat) sendMessage(e);
-                  if (activeChat.group_chat) sendGroupMessage(e);
+                  if (!activeChat.group_chat && message.trim() !== "")
+                    sendMessage(e);
+                  else activeChat.group_chat && message.trim() !== "";
+                  sendGroupMessage(e);
                 }}
               >
                 <Image
