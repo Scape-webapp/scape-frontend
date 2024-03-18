@@ -189,6 +189,10 @@ export default function LeftSideBar({
                       </div>
                     )
                 )
+              ) : userLoading ? (
+                <div className="flex items-center justify-center w-full my-1.5">
+                  <Loader />
+                </div>
               ) : searchResult !== null &&
                 searchResult.length === 0 &&
                 userSearch !== null &&
