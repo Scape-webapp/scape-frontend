@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import Loader from "@/components/Common/Loader/Loader";
 
 export default function Register() {
   const router = useRouter();
@@ -21,6 +22,7 @@ export default function Register() {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setloading] = useState(false);
   const token = useSelector((state: RootState) => state.user.accessToken);
 
   const registerSchema = Yup.object().shape({
@@ -41,6 +43,7 @@ export default function Register() {
 
   async function handleSubmit() {
     try {
+      setloading(true);
       const body = {
         user_name: formValues.userName,
         password: formValues.password,
@@ -55,6 +58,8 @@ export default function Register() {
       if (error?.response?.data?.message === "user_name already taken!")
         toast.error(error.response.data.message);
       else toast.error("Something went wrong!");
+    } finally {
+      setloading(false);
     }
   }
 
@@ -208,7 +213,13 @@ export default function Register() {
                       type="submit"
                       className="text-[#ffffff] bg-[#7083FF] py-1 rounded my-4 md:my-6"
                     >
-                      Register
+                      {!loading ? (
+                        "Login"
+                      ) : (
+                        <div className="flex items-center justify-center w-full my-1.5">
+                          <Loader />
+                        </div>
+                      )}
                     </button>
                   </div>
                 </Form>
