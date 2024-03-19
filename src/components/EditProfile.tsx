@@ -9,7 +9,7 @@ import { AppDispatch, RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
 import { CldUploadWidget } from "next-cloudinary";
 import { CldImage } from "next-cloudinary";
-import { faArrowRightLong, faPen } from "@fortawesome/free-solid-svg-icons";
+import { toast } from "react-toastify";
 
 function EditProfile({
   setIsEdit,
@@ -55,9 +55,10 @@ function EditProfile({
         profile_image: imgPublicId ? imgPublicId : editDetails.profile_image,
       });
       setIsEdit("");
-      onEditSubmit();
-      console.log("Profile details updated successfully!");
-    } catch (error) {
+      toast.success("Profile details updated successfully!");
+      onEditSubmit();       
+    } catch (error:any) {
+      toast.error(error.response.data.message || "Something went wrong!");
       console.error("Error updating profile details:", error);
     }
   };

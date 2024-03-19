@@ -4,11 +4,13 @@ import Profile from "./Profile";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { ChatListApi, searchUserApi } from "@/services/api.service";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import moment from "moment";
 import uniqWith from "lodash/uniqWith";
 import { CldImage } from "next-cloudinary";
 import GroupChat from "./GroupChat";
+import { debounce } from "lodash";
+import Loader from "./Common/Loader/Loader";
 
 export default function LeftSideBar({
   list,
@@ -37,6 +39,7 @@ export default function LeftSideBar({
   const user = useSelector((state: RootState) => state.user.user);
   const [searchResult, setSearchResult] = useState<any>(null);
   const [isSearching, setIsSearching] = useState(false);
+  const [userLoading, setuserLoading] = useState(true);
 
   enum activeBar {
     CHAT = "chat",
@@ -49,6 +52,7 @@ export default function LeftSideBar({
 
   const getChatList = async () => {
     try {
+      setuserLoading(true);
       const list = await ChatListApi(user._id);
       let userList = list.data;
 
@@ -62,14 +66,25 @@ export default function LeftSideBar({
     } catch (error) {
       // add fail toast later
       console.log("error in chat list api : ", error);
+    } finally {
+      setuserLoading(false);
     }
   };
 
   const getUser = async () => {
     try {
+      if (!userSearch) {
+        setIsSearching(false);
+        setSearchResult(null);
+        return;
+      }
+      setuserLoading(true);
       const searchUser: any = await searchUserApi(userSearch);
       setSearchResult(searchUser.data);
-    } catch (e) {}
+    } catch (e) {
+    } finally {
+      setuserLoading(false);
+    }
   };
 
   const handleChange = (e: any) => {
@@ -78,8 +93,20 @@ export default function LeftSideBar({
     setIsSearching(searchQuery.trim() !== "");
   };
 
+  const debouncedResults = useMemo(() => {
+    return debounce(handleChange, 1000);
+  }, []);
+
+  useEffect(() => {
+    getUser();
+  }, [userSearch]);
+
   useEffect(() => {
     getChatList();
+
+    return () => {
+      debouncedResults.cancel();
+    };
   }, []);
 
   return (
@@ -103,10 +130,8 @@ export default function LeftSideBar({
                 />
               )}
               <input
-                onChange={handleChange}
-                onKeyDown={getUser}
+                onChange={debouncedResults}
                 type="text"
-                value={userSearch}
                 placeholder="Search"
                 className="text-white bg-transparent w-full focus:outline-none placeholder:text-white"
               />
@@ -117,52 +142,61 @@ export default function LeftSideBar({
                 onClick={getUser}
               />
             </div>
-            <div className=" ">
-              {searchResult?._id !== user._id && searchResult ? (
-                <>
-                  <div
-                    className="bg-[#36404A] flex flex-row py-2 px-3 cursor-pointer "
-                    key={searchResult?._id}
-                  >
-                    <div className="flex">
-                      <CldImage
-                        className="m-auto rounded-full h-[45px]"
-                        src={
-                          searchResult.profile_image
-                            ? searchResult.profile_image
-                            : "mrokrrlw2ssnr3tf3vy2"
-                        }
-                        height={45}
-                        width={45}
-                        alt="dummy"
-                      />
+            <div className="flex flex-col gap-2">
+              {searchResult?.length > 0 ? (
+                searchResult.map(
+                  (searchedUser: any) =>
+                    user._id !== searchedUser?._id && (
                       <div
-                        className="flex flex-col ms-4"
-                        onClick={() => {
-                          setActiveChat({
-                            id: searchResult?._id,
-                            user_name: searchResult?.user_name,
-                            profile_image: searchResult?.profile_image,
-                            group_chat: false,
-                          });
-                        }}
+                        className="bg-[#36404A] flex flex-row py-2 px-3 cursor-pointer justify-between"
+                        key={searchedUser?._id}
                       >
-                        <p className="text-lg text-white">
-                          {searchResult?.user_name}
-                        </p>
+                        <div className="flex w-full justify-between">
+                          <div className="flex justify-between">
+                            <CldImage
+                              className="rounded-full h-[45px]"
+                              src={
+                                searchedUser.profile_image
+                                  ? searchedUser.profile_image
+                                  : "mrokrrlw2ssnr3tf3vy2"
+                              }
+                              height={45}
+                              width={45}
+                              alt="dummy"
+                            />
+                            <div
+                              className="flex flex-col ms-4"
+                              onClick={() => {
+                                setActiveChat({
+                                  id: searchedUser?._id,
+                                  user_name: searchedUser?.user_name,
+                                  profile_image: searchedUser?.profile_image,
+                                  group_chat: false,
+                                });
+                              }}
+                            >
+                              <p className="text-lg text-white">
+                                {searchedUser?.user_name}
+                              </p>
+                            </div>
+                          </div>
+                          <div>
+                            <p className="text-[#455A64] text-sm mt-1">
+                              {moment(searchedUser.createdAt).format("L")}
+                            </p>
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-[#455A64] text-sm mt-2 ">
-                          {moment(searchResult.createdAt).format("L")}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </>
-              ) : (searchResult !== null &&
-                  searchResult.length === 0 &&
-                  userSearch !== null) ||
-                searchResult?._id === user._id ? (
+                    )
+                )
+              ) : userLoading ? (
+                <div className="flex items-center justify-center w-full my-1.5">
+                  <Loader />
+                </div>
+              ) : searchResult !== null &&
+                searchResult.length === 0 &&
+                userSearch !== null &&
+                !userLoading ? (
                 <>
                   <p className="text-white text-center ">No result found</p>
                 </>

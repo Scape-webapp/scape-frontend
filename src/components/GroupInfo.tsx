@@ -5,6 +5,8 @@ import { CldUploadWidget } from "next-cloudinary";
 import { useEffect, useState } from "react";
 import { GroupInfoApi } from "@/services/api.service";
 import { getProfileDetails } from "@/services/api.service";
+import { toast } from "react-toastify";
+
 
 const GroupInfo = ({
   activeGrpChat,
@@ -26,6 +28,8 @@ const GroupInfo = ({
   const [imgPublicId, setImgPulicId] = useState("");
   const [grpdetails, setGrpdetails] = useState<any>([]);
   const [grpMembers, setGrpMembers] = useState([]);
+  const [isNewImageUploaded, setIsNewImageUploaded] = useState(false); 
+
 
   const getGroupInfoList = async () => {
     try {
@@ -60,8 +64,10 @@ const GroupInfo = ({
           element.profile_image = imgPublicId;
         }
       });
-    } catch (error) {
-      // add fail toast later
+      toast.success("Profile Image updated successfully!");
+      setIsNewImageUploaded(false);
+    } catch (error:any) {
+      toast.error("Something went wrong!");
       console.log("error in chat list api : ", error);
     }
   };
@@ -116,12 +122,14 @@ const GroupInfo = ({
           {activeChat.group_chat ? (
             <div className="flex">
               <p className="py-1">Group Info</p>
-              <button
-                onClick={getUpdateInfoList}
-                className="bg-[#7083FF] rounded-[10px] px-4  cursor-pointer shadow-md hover:bg-[#5462ba] text-white ms-10 text-lg"
-              >
-                Update
-              </button>
+              {activeChat.group_chat && isNewImageUploaded && (
+                <button
+                  onClick={getUpdateInfoList}
+                  className="bg-[#7083FF] rounded-[10px] px-4  cursor-pointer shadow-md hover:bg-[#5462ba] text-white ms-10 text-lg"
+                >
+                  Update
+                </button>
+              )}
             </div>
           ) : (
             "Friend Info"
@@ -134,6 +142,7 @@ const GroupInfo = ({
             uploadPreset="Profile_picture"
             onSuccess={(result: any, { widget }) => {
               setImgPulicId(result?.info.public_id);
+              setIsNewImageUploaded(true);
             }}
           >
             {({ open }) => {
