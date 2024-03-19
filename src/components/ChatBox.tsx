@@ -110,6 +110,7 @@ const ChatBox = ({
       sender: user._id,
       text: message,
       image: imgPublicId,
+      sender_profile_image: user.profile_image,
     };
     await socket.emit("send-msg", msgToSend);
     setChatMessages((prevMessages: any) => [
@@ -134,6 +135,7 @@ const ChatBox = ({
       sender: user._id,
       text: message,
       image: imgPublicId,
+      sender_profile_image: user.profile_image,
     };
     await socket.emit("send-grp-msg", msgToSend);
     setChatMessages((prevMessages: any) => [
@@ -162,7 +164,7 @@ const ChatBox = ({
   useEffect(() => {
     if (socket) {
       socket.on("msg-receive", (data: any) => {
-        if (data.receiver) {
+        if (data.receiver !== undefined) {
           if (data?.sender === activeChatRef.current.id) {
             setChatMessages((prev: any) => [...prev, data]);
           } else {
@@ -392,10 +394,8 @@ const ChatBox = ({
                         <CldImage
                           className="m-auto rounded-full h-[30px]"
                           src={
-                            msg.sender === user._id && !activeChat.group_chat
-                              ? user.profile_image
-                              : msg.user?.profile_image
-                              ? msg.user.profile_image
+                            msg.sender_profile_image
+                              ? msg.sender_profile_image
                               : "mrokrrlw2ssnr3tf3vy2"
                           }
                           height={30}
@@ -458,14 +458,16 @@ const ChatBox = ({
                 placeholder="Type a Message"
                 required
                 value={message}
-                onChange={(e) => setMessage(e.target.value)}
+                onChange={(e) => setMessage(e.target.value.trim())}
               />
               <button
                 type="submit"
                 className="cursor-pointer"
                 onClick={(e) => {
-                  if (!activeChat.group_chat) sendMessage(e);
-                  if (activeChat.group_chat) sendGroupMessage(e);
+                  if (!activeChat.group_chat && message.trim() !== "")
+                    sendMessage(e);
+                  else activeChat.group_chat && message.trim() !== "";
+                  sendGroupMessage(e);
                 }}
               >
                 <Image
