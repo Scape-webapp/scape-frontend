@@ -133,14 +133,14 @@ export default function GroupChat({
                   >
                     <div className="flex ">
                       <CldImage
-                        className="m-auto rounded-full h-[45px]"
+                        className="m-auto rounded-full h-[50px]"
                         src={
                           searchResult.profile_image
                             ? searchResult.profile_image
                             : "mrokrrlw2ssnr3tf3vy2"
                         }
-                        height={45}
-                        width={45}
+                        height={50}
+                        width={50}
                         alt="profile"
                       />
                       <div className="flex flex-col ms-4">
@@ -204,8 +204,17 @@ export default function GroupChat({
                             <p className="text-lg text-white">{element.name}</p>
 
                             <p className="text-[#455A64] w-[150px] text-sm truncate ...">
-                              {user._id ? "You" : element.userName}:{" "}
-                              {element.text}
+                              {element.senderName[element.senderName.length - 1]
+                                ?._id === user._id
+                                ? "You "
+                                : element.senderName[
+                                    element.senderName.length - 1
+                                  ]?.user_name}
+                              :{" "}
+                              {
+                                element.message[element.message.length - 1]
+                                  ?.text
+                              }
                             </p>
                           </div>
                           <div>

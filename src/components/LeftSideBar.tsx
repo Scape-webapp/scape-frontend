@@ -210,14 +210,14 @@ export default function LeftSideBar({
                       >
                         <div className="flex">
                           <CldImage
-                            className="m-auto rounded-full h-[45px]"
+                            className="m-auto rounded-full h-[50px]"
                             src={
                               element.user.profile_image
                                 ? element.user.profile_image
                                 : "mrokrrlw2ssnr3tf3vy2"
                             }
-                            height={45}
-                            width={45}
+                            height={50}
+                            width={50}
                             alt="dummy"
                           />
 
@@ -254,7 +254,7 @@ export default function LeftSideBar({
                             </p>
                           </div>
                           {element?.isRead === false && (
-                            <div className="h-4 w-4 bg-[#7083FF] rounded-full flex justify-center items-center absolute top-6 right-4" />
+                            <div className="h-4 w-4 bg-[#7083FF] rounded-full flex justify-center items-center absolute top-10 right-6" />
                           )}
                         </div>
                       </div>

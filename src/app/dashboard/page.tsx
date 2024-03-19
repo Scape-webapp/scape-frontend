@@ -69,6 +69,7 @@ export default function DashBoard() {
         (value: any, index: any, self: any) =>
           index === self.findIndex((t: any) => t._id === value._id)
       );
+      
       setUserList(grpList);
     } catch (error) {
       // add fail toast later
