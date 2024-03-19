@@ -110,6 +110,7 @@ const ChatBox = ({
       sender: user._id,
       text: message,
       image: imgPublicId,
+      sender_profile_image: user.profile_image,
     };
     await socket.emit("send-msg", msgToSend);
     setChatMessages((prevMessages: any) => [
@@ -134,6 +135,7 @@ const ChatBox = ({
       sender: user._id,
       text: message,
       image: imgPublicId,
+      sender_profile_image: user.profile_image,
     };
     await socket.emit("send-grp-msg", msgToSend);
     setChatMessages((prevMessages: any) => [
@@ -162,7 +164,7 @@ const ChatBox = ({
   useEffect(() => {
     if (socket) {
       socket.on("msg-receive", (data: any) => {
-        if (data.receiver) {
+        if (data.receiver !== undefined) {
           if (data?.sender === activeChatRef.current.id) {
             setChatMessages((prev: any) => [...prev, data]);
           } else {
@@ -330,25 +332,26 @@ const ChatBox = ({
                   ) : (
                     <div></div>
                   )}
+
                   <div
                     className={`flex gap-2 mx-6 break-words my-4 justify-${
                       msg.sender === user._id ? "end" : "start"
-                    }`}
+                    } `}
                     style={
                       msg.sender === user._id
                         ? { justifyContent: "flex-end" }
                         : { justifyContent: "flex-start" }
                     }
                   >
-                    <div className="flex gap-2">
+                    <div
+                      className={`flex gap-2 ${
+                        activeChat.group_chat && msg.sender !== user._id
+                          ? "flex-row-reverse"
+                          : ""
+                      }`}
+                    >
                       {msg.receiver === user._id &&
                       msg.sender !== chatMessages[i + 1]?.sender ? (
-                        // <Image
-                        //   src="/images/profile-dummy.svg"
-                        //   alt="profile"
-                        //   height={30}
-                        //   width={30}
-                        // />
                         <CldImage
                           className="m-auto rounded-full h-[30px]"
                           src={
@@ -385,19 +388,14 @@ const ChatBox = ({
                         )}
                         {/* <p className="text-white text-base">{msg.text}</p> */}
                       </div>
-                      {msg.sender === user._id &&
-                      msg.sender[0] !== chatMessages[i + 1]?.sender[0] ? (
-                        // <Image
-                        //   src="/images/profile-dummy.svg"
-                        //   alt="profile"
-                        //   height={30}
-                        //   width={30}
-                        // />
+                      {(msg.sender === user._id &&
+                        msg.sender[0] !== chatMessages[i + 1]?.sender[0]) ||
+                      activeChat.group_chat ? (
                         <CldImage
                           className="m-auto rounded-full h-[30px]"
                           src={
-                            user.profile_image
-                              ? user.profile_image
+                            msg.sender_profile_image
+                              ? msg.sender_profile_image
                               : "mrokrrlw2ssnr3tf3vy2"
                           }
                           height={30}
@@ -460,14 +458,16 @@ const ChatBox = ({
                 placeholder="Type a Message"
                 required
                 value={message}
-                onChange={(e) => setMessage(e.target.value)}
+                onChange={(e) => setMessage(e.target.value.trim())}
               />
               <button
                 type="submit"
                 className="cursor-pointer"
                 onClick={(e) => {
-                  if (!activeChat.group_chat) sendMessage(e);
-                  if (activeChat.group_chat) sendGroupMessage(e);
+                  if (!activeChat.group_chat && message.trim() !== "")
+                    sendMessage(e);
+                  else activeChat.group_chat && message.trim() !== "";
+                  sendGroupMessage(e);
                 }}
               >
                 <Image
@@ -490,7 +490,7 @@ const ChatBox = ({
           groupInfoVisible={groupInfoVisible}
           setgroupInfoVisible={setgroupInfoVisible}
           userList={userList}
-       />
+        />
       )}
     </>
   );
