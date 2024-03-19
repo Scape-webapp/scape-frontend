@@ -110,6 +110,7 @@ const ChatBox = ({
       sender: user._id,
       text: message,
       image: imgPublicId,
+      sender_profile_image: user.profile_image,
     };
     await socket.emit("send-msg", msgToSend);
     setChatMessages((prevMessages: any) => [
@@ -134,6 +135,7 @@ const ChatBox = ({
       sender: user._id,
       text: message,
       image: imgPublicId,
+      sender_profile_image: user.profile_image,
     };
     await socket.emit("send-grp-msg", msgToSend);
     setChatMessages((prevMessages: any) => [
@@ -392,10 +394,8 @@ const ChatBox = ({
                         <CldImage
                           className="m-auto rounded-full h-[30px]"
                           src={
-                            msg.sender === user._id && !activeChat.group_chat
-                              ? user.profile_image
-                              : msg.user?.profile_image
-                              ? msg.user.profile_image
+                            msg.sender_profile_image
+                              ? msg.sender_profile_image
                               : "mrokrrlw2ssnr3tf3vy2"
                           }
                           height={30}
