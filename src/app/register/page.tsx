@@ -214,7 +214,7 @@ export default function Register() {
                       className="text-[#ffffff] bg-[#7083FF] py-1 rounded my-4 md:my-6"
                     >
                       {!loading ? (
-                        "Login"
+                        "Register"
                       ) : (
                         <div className="flex items-center justify-center w-full my-1.5">
                           <Loader />
