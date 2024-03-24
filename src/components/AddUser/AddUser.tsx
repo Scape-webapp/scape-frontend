@@ -8,11 +8,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { ChatListApi, searchUserApi } from "@/services/api.service";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import moment from "moment";
 import uniqWith from "lodash/uniqWith";
 import { CldImage } from "next-cloudinary";
 import "./AddUser.css";
+import { debounce } from "lodash";
+import Loader from "../Common/Loader/Loader";
 
 enum ActiveScreen {
   GROUPCHAT = "groupChat",
@@ -40,6 +42,7 @@ export default function AddUser({
   const [searchResult, setSearchResult] = useState<any>(null);
   const [isSearching, setIsSearching] = useState(false);
   const [userArray, setUserArray] = useState<any>([]);
+  const [userLoading, setuserLoading] = useState(false);
 
   const getChatList = async () => {
     try {
@@ -61,9 +64,18 @@ export default function AddUser({
 
   const getUser = async () => {
     try {
+      if (!userSearch) {
+        setIsSearching(false);
+        setSearchResult(null);
+        return;
+      }
+      setuserLoading(true);
       const searchUser: any = await searchUserApi(userSearch);
       setSearchResult(searchUser.data);
-    } catch (e) {}
+    } catch (e) {
+    } finally {
+      setuserLoading(false);
+    }
   };
 
   const handleChange = (e: any) => {
@@ -71,6 +83,10 @@ export default function AddUser({
     setuserSearch(searchQuery);
     setIsSearching(searchQuery.trim() !== "");
   };
+
+  const debouncedResults = useMemo(() => {
+    return debounce(handleChange, 1000);
+  }, []);
 
   const handleAddUser = () => {
     if (userArray.length > 0) {
@@ -86,7 +102,15 @@ export default function AddUser({
 
   useEffect(() => {
     getChatList();
+
+    return () => {
+      debouncedResults.cancel();
+    };
   }, []);
+
+  useEffect(() => {
+    getUser();
+  }, [userSearch]);
 
   return (
     <div className="bg-[#303841] h-screen max-w-[380px] min-w-[380px]">
@@ -159,10 +183,8 @@ export default function AddUser({
               />
             )}
             <input
-              onChange={handleChange}
-              onKeyDown={getUser}
+              onChange={debouncedResults}
               type="text"
-              value={userSearch}
               placeholder="Search"
               className="text-white bg-transparent w-full focus:outline-none placeholder:text-white"
             />
@@ -173,51 +195,64 @@ export default function AddUser({
               onClick={getUser}
             />
           </div>
-          <div className=" ">
-            {searchResult?._id !== user._id && searchResult ? (
-              <>
-                <div
-                  className="bg-[#36404A] flex flex-row py-2 px-3 cursor-pointer "
-                  key={searchResult?._id}
-                >
-                  <div className="flex">
-                    <CldImage
-                      className="m-auto rounded-full h-[45px]"
-                      src={
-                        searchResult.profile_image
-                          ? searchResult.profile_image
-                          : "mrokrrlw2ssnr3tf3vy2"
-                      }
-                      height={45}
-                      width={45}
-                      alt="dummy"
-                    />
+          <div className="flex flex-col gap-2">
+            {searchResult?.length > 0 && userSearch ? (
+              searchResult.map(
+                (searchedUser: any) =>
+                  user._id !== searchedUser?._id && (
                     <div
-                      className="flex flex-col ms-4"
-                      onClick={() => {
-                        setActiveChat({
-                          id: searchResult?._id,
-                          user_name: searchResult?.user_name,
-                          profile_image: searchResult?.profile_image,
-                        });
-                      }}
+                      className="bg-[#36404A] flex flex-row py-2 px-3 cursor-pointer justify-between"
+                      key={searchedUser?._id}
                     >
-                      <p className="text-lg text-white">
-                        {searchResult?.user_name}
-                      </p>
+                      <div className="flex w-full justify-between">
+                        <div className="flex justify-between">
+                          <CldImage
+                            className="rounded-full h-[45px]"
+                            src={
+                              searchedUser.profile_image
+                                ? searchedUser.profile_image
+                                : "mrokrrlw2ssnr3tf3vy2"
+                            }
+                            height={45}
+                            width={45}
+                            alt="dummy"
+                          />
+                          <div
+                            className="flex flex-col ms-4"
+                            onClick={() => {
+                              const userList = [
+                                ...userArray,
+                                {
+                                  _id: searchedUser._id,
+                                  user_name: searchedUser.user_name,
+                                  profile_image: searchedUser.profile_image,
+                                },
+                              ]; // new array need to update
+                              setUserArray(userList);
+                            }}
+                          >
+                            <p className="text-lg text-white">
+                              {searchedUser?.user_name}
+                            </p>
+                          </div>
+                        </div>
+                        <div>
+                          <p className="text-[#455A64] text-sm mt-1">
+                            {moment(searchedUser.createdAt).format("L")}
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-[#455A64] text-sm mt-2 ">
-                        {moment(searchResult.createdAt).format("L")}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </>
-            ) : (searchResult !== null &&
-                searchResult.length === 0 &&
-                userSearch !== null) ||
-              searchResult?._id === user._id ? (
+                  )
+              )
+            ) : userLoading ? (
+              <div className="flex items-center justify-center w-full my-1.5">
+                <Loader />
+              </div>
+            ) : searchResult !== null &&
+              searchResult.length === 0 &&
+              userSearch !== null &&
+              !userLoading ? (
               <>
                 <p className="text-white text-center ">No result found</p>
               </>
