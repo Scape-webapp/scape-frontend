@@ -5,7 +5,7 @@ export const getProfileDetails = (id: any) => {
 };
 
 export const patchProfileDetails = (filter: any) => {
-  return protectedaxiosInstance.patch(`/user`, filter);
+  return protectedaxiosInstance.patch(`/user/update-profile`, filter);
 };
 
 export const registerApi = (data: any) => {

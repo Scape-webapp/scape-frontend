@@ -52,10 +52,10 @@ export default function GroupChat({
   const [searchResult, setSearchResult] = useState<any>(null);
   const [isSearching, setIsSearching] = useState(false);
   const getGrp = async () => {
-    try {
-      const searchUser: any = await searchGroupApi(userSearch);
-      setSearchResult(searchUser.data);
-    } catch (e) {}
+    const searchList: any[] = (userList || []).filter((ele: any) =>
+      ele?.name?.match(new RegExp(userSearch, "gi"))
+    );
+    setSearchResult(searchList);
   };
 
   const handleChange = (e: any) => {
@@ -67,6 +67,10 @@ export default function GroupChat({
   useEffect(() => {
     getGroupChatList();
   }, []);
+
+  useEffect(() => {
+    if (userSearch) getGrp();
+  }, [userSearch]);
 
   useEffect(() => {
     if (socket) {
@@ -111,7 +115,6 @@ export default function GroupChat({
               )}
               <input
                 onChange={handleChange}
-                onKeyDown={getGrp}
                 type="text"
                 value={userSearch}
                 placeholder="Search"
@@ -124,42 +127,59 @@ export default function GroupChat({
                 onClick={getGrp}
               />
             </div>
-            <div className=" ">
-              {searchResult?._id !== user._id && searchResult ? (
-                <>
+            <div className="flex flex-col gap-2">
+              {searchResult?.length > 0 && userSearch ? (
+                searchResult.map((searchedGrp: any) => (
                   <div
-                    className="bg-[#36404A] flex flex-row py-2 px-3 cursor-pointer "
-                    key={searchResult?._id}
+                    className="bg-[#36404A] flex flex-row py-2 px-3 cursor-pointer justify-between"
+                    key={searchedGrp?._id}
+                    onClick={() => {
+                      const chat = {
+                        id: searchedGrp._id,
+                        user_name: searchedGrp.name,
+                        profile_image: searchedGrp.profile_image,
+                        group_chat: true,
+                      };
+                      searchedGrp?.isRead === false
+                        ? (searchedGrp.isRead = true)
+                        : null;
+                      setList([...list]);
+                      listRef.current = [...list];
+                      setActiveChat(chat);
+                      setgroupInfoVisible(false);
+                      activeChatRef.current = chat;
+                    }}
                   >
-                    <div className="flex ">
-                      <CldImage
-                        className="m-auto rounded-full h-[50px]"
-                        src={
-                          searchResult.profile_image
-                            ? searchResult.profile_image
-                            : "mrokrrlw2ssnr3tf3vy2"
-                        }
-                        height={50}
-                        width={50}
-                        alt="profile"
-                      />
-                      <div className="flex flex-col ms-4">
-                        <p className="text-lg text-white">
-                          {searchResult?.user_name}
-                        </p>
+                    <div className="flex w-full justify-between">
+                      <div className="flex justify-between">
+                        <CldImage
+                          className="m-auto rounded-full h-[50px]"
+                          src={
+                            searchedGrp.profile_image
+                              ? searchedGrp.profile_image
+                              : "mrokrrlw2ssnr3tf3vy2"
+                          }
+                          height={50}
+                          width={50}
+                          alt="profile"
+                        />
+                        <div className="flex flex-col ms-4">
+                          <p className="text-lg text-white">
+                            {searchedGrp?.name}
+                          </p>
+                        </div>
                       </div>
                       <div>
                         <p className="text-[#455A64] text-sm mt-2 ">
-                          {moment(searchResult.createdAt).format("L")}
+                          {moment(searchedGrp.createdAt).format("L")}
                         </p>
                       </div>
                     </div>
                   </div>
-                </>
-              ) : (searchResult !== null &&
-                  searchResult.length === 0 &&
-                  userSearch !== null) ||
-                searchResult?._id === user._id ? (
+                ))
+              ) : searchResult !== null &&
+                searchResult.length === 0 &&
+                userSearch !== null ? (
                 <>
                   <p className="text-white text-center ">No result found</p>
                 </>

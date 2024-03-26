@@ -39,7 +39,7 @@ export default function LeftSideBar({
   const user = useSelector((state: RootState) => state.user.user);
   const [searchResult, setSearchResult] = useState<any>(null);
   const [isSearching, setIsSearching] = useState(false);
-  const [userLoading, setuserLoading] = useState(true);
+  const [userLoading, setuserLoading] = useState(false);
 
   enum activeBar {
     CHAT = "chat",
