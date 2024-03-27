@@ -127,14 +127,14 @@ export default function NewGroupProfile({
                   className="text-[#787e83] bg-transparent w-full focus:outline-none placeholder:text-[#909DAB]"
                 />
               </div>
-              <FontAwesomeIcon
+              {/* <FontAwesomeIcon
                 className="cursor-pointer"
                 icon={faFaceSmile}
                 size="xl"
                 color="#7083FF"
                 onClick={handleIconClick}
-              />
-              {pickerVisible && (
+              /> */}
+              {/* {pickerVisible && (
                 <div className="absolute bottom-0">
                   <Picker
                     data={data}
@@ -145,7 +145,7 @@ export default function NewGroupProfile({
                     onEmojiSelect={handleEmojiSelect}
                   />
                 </div>
-              )}
+              )} */}
             </div>
           </div>
           <p className="text-white text-xl mt-2  py-2">Description</p>
