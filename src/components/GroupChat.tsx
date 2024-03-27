@@ -224,12 +224,9 @@ export default function GroupChat({
                             <p className="text-lg text-white">{element.name}</p>
 
                             <p className="text-[#455A64] w-[150px] text-sm truncate ...">
-                              {element.senderName[element.senderName.length - 1]
-                                ?._id === user._id
+                              {element.lastMsgName?._id === user._id
                                 ? "You "
-                                : element.senderName[
-                                    element.senderName.length - 1
-                                  ]?.user_name}
+                                : element.lastMsgName?.user_name}
                               :{" "}
                               {
                                 element.message[element.message.length - 1]

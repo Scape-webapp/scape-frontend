@@ -373,6 +373,7 @@ const ChatBox = ({
                             : "bg-[#7083FF] rounded-br-lg"
                         }`}
                       >
+
                         {msg.image ? (
                           <>
                             <CldImage
@@ -386,7 +387,7 @@ const ChatBox = ({
                         ) : (
                           <p className="text-white text-base">{msg.text}</p>
                         )}
-                        {/* <p className="text-white text-base">{msg.text}</p> */}
+                        {/* <p className="text-white text-base">{msg.user}</p> */}
                       </div>
                       {(msg.sender === user._id &&
                         msg.sender[0] !== chatMessages[i + 1]?.sender[0]) ||
