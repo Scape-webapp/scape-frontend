@@ -190,31 +190,30 @@ const ChatBox = ({
             setChatMessages((prev: any) => [...prev, data]);
           } else {
             // thi create notification bug in normal chat
-          //   let list: any = userList;
-          //   console.log("list in group chat notification ", list);
-          //   list = [...list, { _id: data?.groupId }];
-          //   console.log("list after update : ", list);
-          //   const userIndex = (list || []).findIndex((group: any) => {
-          //     console.log({ group });
-          //     console.log("user._id", group._id);
-          //     console.log("data?.groupId;", data?.groupId);
-          //     return group._id === data?.groupId;
-          //   });
-          //   console.log({ userIndex });
-          //   list[userIndex] = {
-          //     ...list[userIndex],
-          //     text: data.text,
-          //     isRead: false,
-          //   };
-
-          //   const chatList = [...list].sort((a, b) => {
-          //     const isReadA: any = a.isRead === false;
-          //     const isReadB: any = b.isRead === false;
-          //     return isReadB - isReadA;
-          //   });
-          //   setList([...chatList]);
-          //   listRef.current = [...chatList];
-          // }
+            //   let list: any = userList;
+            //   console.log("list in group chat notification ", list);
+            //   list = [...list, { _id: data?.groupId }];
+            //   console.log("list after update : ", list);
+            //   const userIndex = (list || []).findIndex((group: any) => {
+            //     console.log({ group });
+            //     console.log("user._id", group._id);
+            //     console.log("data?.groupId;", data?.groupId);
+            //     return group._id === data?.groupId;
+            //   });
+            //   console.log({ userIndex });
+            //   list[userIndex] = {
+            //     ...list[userIndex],
+            //     text: data.text,
+            //     isRead: false,
+            //   };
+            //   const chatList = [...list].sort((a, b) => {
+            //     const isReadA: any = a.isRead === false;
+            //     const isReadB: any = b.isRead === false;
+            //     return isReadB - isReadA;
+            //   });
+            //   setList([...chatList]);
+            //   listRef.current = [...chatList];
+          }
         }
       });
     }
@@ -380,7 +379,6 @@ const ChatBox = ({
                             : "bg-[#7083FF] rounded-br-lg"
                         }`}
                       >
-
                         {msg.image ? (
                           <>
                             <CldImage
