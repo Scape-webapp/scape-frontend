@@ -34,7 +34,7 @@ function HomePage() {
             </button>
           </div>
         </div>
-        <div className="flex justify-center items-center gap-4">
+        <div className="grid md:flex justify-center items-center gap-4">
           <div className="py-10">
             <h1 className="text-3xl md:text-5xl text-center md:text-left font-bold text-white mb-10">
               A Place to make friends & mates
@@ -51,7 +51,7 @@ function HomePage() {
               Let's Chat
             </button>
           </div>
-          <div className="hidden md:block">
+          <div className="block">
             <Image src={SideImage} alt="SideImage" width={500} height={500} />
           </div>
         </div>
