@@ -14,7 +14,7 @@ function HomePage() {
   const router = useRouter();
   return (
     <>
-      <div className="bg-[#7083FF] px-5 md:px-20 2xl:h-auto h-screen">
+      <div className="bg-[#7083FF] px-5 md:px-20 2xl:h-auto md:h-screen">
         <div className="py-8 flex justify-between items-center">
           <div className="text-white text-2xl md:text-3xl flex font-bold text-center items-center gap-3">
             <Image
@@ -44,7 +44,7 @@ function HomePage() {
             </h3>
             <button
               onClick={() => router.push("/login")}
-              className="bg-[#ffffff]  hover:bg-[#343A40] hover:text-white flex items-center gap-4 focus:ring rounded-[20px] px-8 py-2 font-bold cursor-pointer shadow-md"
+              className="bg-[#ffffff] m-auto md:m-0 hover:bg-[#343A40] hover:text-white flex items-center gap-4 focus:ring rounded-[20px] px-8 py-2 font-bold cursor-pointer shadow-md"
             >
               {/* <Image src={ArrowIcon} alt="ArrowIcon" width={20} height={20} /> */}
               <FontAwesomeIcon icon={faPaperPlane} size="lg" bounce />
